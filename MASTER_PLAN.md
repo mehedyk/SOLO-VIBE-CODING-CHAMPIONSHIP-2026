@@ -20,6 +20,9 @@ The five uploaded HTML files (AXIOMA, Forge, Atelier, Calculus field guide, The 
 | D8 | First lesson = subtraction with regrouping, **demonstration content**, labelled "not official curriculum alignment" until the NCTB edition/objective is verified | Source textbook was not provided. |
 | D9 | Integers only for exact arithmetic; fractions later via BigInt-free rational pairs | Avoids float artefacts. |
 
+## Competition constraints (from the official PDF)
+Track: Educational. Score: M01–M08 = 60, two declared advanced challenges = 40 (we declare **A03 + A07**; extra challenges earn nothing). Judges verify live behaviour and may ask live questions and run hidden cases, so every claim in the docs must be demonstrable on the deployed app. Submission needs a public repo, a live URL and a YouTube video; see SUBMISSION.md.
+
 ## Phases
 | Phase | Deliverable | Status |
 |---|---|---|
