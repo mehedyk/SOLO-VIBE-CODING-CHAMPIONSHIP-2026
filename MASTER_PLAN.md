@@ -27,7 +27,7 @@ Track: Educational. Score: M01–M08 = 60, two declared advanced challenges = 40
 | Phase | Deliverable | Status |
 |---|---|---|
 | 0 | Inspect, plan, decisions, doc skeleton, asset prompts, animated README | ✅ |
-| 1 | Exact maths engine (subtraction/regrouping), numerals, 10 tests; then SVG template, presenter mode, bilingual UI | 🟡 engine ✅, UI ⬜ |
+| 1 | Exact maths engine, SVG place-value board, prediction gate, presenter mode, bilingual (bn default/en) UI with Kalpurush, practice cards, tests | ✅ |
 | 2 | Public catalogue, search/filter, lesson delivery, i18n bn/en, print view | ⬜ |
 | 3 | MongoDB persistence, guest progress (local) + optional saved attempts, indexes | ⬜ |
 | 4 | Authentication, sessions, capability model, suspension, audit log | ⬜ |
@@ -47,7 +47,15 @@ Track: Educational. Score: M01–M08 = 60, two declared advanced challenges = 40
 | Boundary + invalid input rejected with a code | validate tests | ✅ passed |
 | Equivalent forms accepted (০২৫ = 25) | parse tests | ✅ passed |
 | Decimals/letters/negatives rejected, not guessed | parse tests | ✅ passed |
-| Keyboard, reduced motion, phone/projector, Bangla labels | Phase 1 UI | ⬜ not run |
+| Prediction gate once per column; Previous cancels it | ui-logic tests + browser | ✅ passed |
+| bn/en dictionaries have identical keys & placeholders; no ASCII digits in bn notes | `tests/ui-logic.test.ts` | ✅ passed |
+| Keyboard (Tab, Enter, ←/→, arrows ignored inside inputs) | `tests/e2e/ui_check.py` (real Chromium) | ✅ passed |
+| Reduced motion (OS setting and manual toggle) | e2e | ✅ passed |
+| Layouts 1920/1366/768/390/320 px, no page-level horizontal scroll, long Bangla labels | e2e | ✅ passed |
+| Text alternative, board title/desc, Bangla/English routes, 404 for unknown language | e2e | ✅ passed |
+| Font file blocked → page still usable | e2e | ✅ passed |
+| Screen-reader behaviour with a real assistive technology | — | ⬜ **not tested** |
+| Touch-device and real projector testing | — | ⬜ **not tested** |
 | All authorization/workflow rows | Phases 4–8 | ⬜ not run |
 
 ## Free-tier operating rule
