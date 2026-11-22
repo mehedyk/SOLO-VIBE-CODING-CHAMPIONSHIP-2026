@@ -1,6 +1,6 @@
 {
   "name": "primary-visual-lab",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "test": "node --import tsx --test \"tests/**/*.test.ts\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "e2e": "python3 tests/e2e/ui_check.py"
   },
   "dependencies": {
     "mongodb": "^7.9.1",
@@ -22,6 +23,6 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "tsx": "^4.23.15",
-    "typescript": "^7.0.2"
+    "typescript": "~5.9.3"
   }
 }
