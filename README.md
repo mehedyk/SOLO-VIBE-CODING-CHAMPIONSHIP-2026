@@ -54,6 +54,9 @@ Bangla is the default; English is one switch away. Bangla text uses **Kalpurush*
 ## 💸 Free to run
 Vercel Hobby + MongoDB Atlas M0 + GitHub. **Secrets live only in Vercel Environment Variables**; the repo contains an empty `.env.example`. Never commit `.env*`.
 
+## 🏆 Hack the Vibe 2026
+Track: **Educational Problem Solver** · Advanced challenges: **A03** (access control) and **A07** (multi-step workflow). Details and checklist: [SUBMISSION](SUBMISSION.md). Repo: https://github.com/mehedyk/SOLO-VIBE-CODING-CHAMPIONSHIP-2026
+
 ## 🚀 Run the tests
 ```bash
 npm install
@@ -61,6 +64,6 @@ npm test
 ```
 
 ## 🗂 Docs
-[MASTER_PLAN](MASTER_PLAN.md) · [TEST_PLAN](TEST_PLAN.md) · [LIMITATIONS](LIMITATIONS.md) · [ASSET_PROMPTS](ASSET_PROMPTS.md) (logo / favicon / banner prompts for other AIs)
+[MASTER_PLAN](MASTER_PLAN.md) · [TEST_PLAN](TEST_PLAN.md) · [LIMITATIONS](LIMITATIONS.md) · [SUBMISSION](SUBMISSION.md) · [ASSET_PROMPTS](ASSET_PROMPTS.md) (logo / favicon / banner prompts for other AIs)
 
 <img src="assets/divider.svg" width="900" alt=""/>
