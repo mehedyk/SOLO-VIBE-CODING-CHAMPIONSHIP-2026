@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 24" width="900" height="24" role="presentation">
+  <line x1="10" y1="12" x2="890" y2="12" stroke="#fbbf24" stroke-opacity=".35" stroke-width="2"/>
+  <rect y="5" width="14" height="14" rx="3" fill="#34d399">
+    <animate attributeName="x" values="10;876;10" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1"/>
+  </rect>
+</svg>
