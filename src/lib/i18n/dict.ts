@@ -1,0 +1,211 @@
+import { formatInt } from "../math/numerals";
+
+export const LANGS = ["bn", "en"] as const;
+export type Lang = (typeof LANGS)[number];
+export const isLang = (x: string): x is Lang => (LANGS as readonly string[]).includes(x);
+
+const bn = {
+  appName: "প্রাইমারি ভিজ্যুয়াল ল্যাব",
+  tagline: "সংখ্যা কীভাবে বদলায়, চোখে দেখে বুঝি",
+  skip: "মূল অংশে যান",
+  switchLang: "English",
+  switchLangLabel: "Switch to English",
+  homeIntro: "শিক্ষক শ্রেণিকক্ষের পর্দায় ধাপে ধাপে দেখাতে পারেন; শিক্ষার্থীও একা চেষ্টা করতে পারে। নিবন্ধন ছাড়াই ব্যবহার করা যায়।",
+  homeStatusTitle: "বর্তমান অবস্থা",
+  homeStatus: "এটি প্রথম ধাপ (ফেজ ১): একটি পাঠ ও তার ইন্টারঅ্যাকশন। ক্যাটালগ, লগইন, রিভিউ ও প্রকাশনা পরের ধাপে আসছে।",
+  openStudent: "শিক্ষার্থীর ভিউ",
+  openPresent: "শ্রেণিকক্ষ মোড",
+  lessonTitle: "হাতে নিয়ে বিয়োগ (দশক ভেঙে একক)",
+  objective: "লক্ষ্য: একক ঘরে যথেষ্ট না থাকলে ১টি দশককে ১০টি এককে ভেঙে (মোট মান না বদলে) বিয়োগ করা এবং ব্লকের সঙ্গে লেখা হিসাব মেলানো।",
+  prerequisite: "আগে জানা দরকার: ১০টি একক = ১টি দশক, ১০টি দশক = ১টি শতক; তিন অঙ্কের সংখ্যা পড়া।",
+  sourceDemo: "উৎস: ডেমো বিষয়বস্তু। পাঠ্যবইয়ের নির্দিষ্ট সংস্করণ ও অধ্যায়ের সঙ্গে এখনো মেলানো হয়নি; পরিভাষা যাচাই বাকি।",
+  reviewStatus: "ডেমো · সংস্করণ v0 · পর্যালোচিত নয়",
+  minuendLabel: "বিয়োজ্য (বড় সংখ্যা)",
+  subtrahendLabel: "বিয়োজক (যেটি বাদ যাবে)",
+  rangeHint: "০ থেকে ৯৯৯ এর মধ্যে পূর্ণসংখ্যা; বাংলা বা ইংরেজি অঙ্কে লেখা যায়।",
+  err_empty: "ঘরটি ফাঁকা; একটি সংখ্যা লিখুন।",
+  err_not_integer: "শুধু পূর্ণসংখ্যা লিখুন; দশমিক, চিহ্ন বা অক্ষর চলবে না।",
+  err_too_long: "সংখ্যাটি খুব লম্বা।",
+  err_out_of_range: "সংখ্যা ০ থেকে ৯৯৯ এর মধ্যে হতে হবে।",
+  err_subtrahend_larger: "বিয়োজক বিয়োজ্যের চেয়ে বড় হতে পারবে না; এই পাঠে ফল ০ বা তার বেশি।",
+  unitOnes: "একক",
+  unitTens: "দশক",
+  unitHundreds: "শতক",
+  colLabel: "{unit} ঘর",
+  remainingLabel: "বোর্ডে আছে",
+  removedLabel: "সরানো হয়েছে",
+  valueCheck: "বোর্ডে {a} + সরানো {b} = {m} (মোট মান একই)",
+  stepOf: "ধাপ {i} / {n}",
+  prev: "আগের ধাপ",
+  next: "পরের ধাপ",
+  reset: "আবার শুরু",
+  textMode: "লেখায় দেখুন",
+  boardMode: "ব্লকে দেখুন",
+  reduceMotion: "কম নড়াচড়া",
+  fullscreen: "পূর্ণ পর্দা",
+  exitFullscreen: "পূর্ণ পর্দা বন্ধ",
+  showNotes: "শিক্ষক-নোট দেখান",
+  hideNotes: "শিক্ষক-নোট লুকান",
+  controls: "পাঠের নিয়ন্ত্রণ",
+  textStepsTitle: "ধাপগুলো (লেখায়)",
+  writtenTitle: "লেখা হিসাব",
+  rowBoard: "বোর্ডের সংখ্যা",
+  rowSub: "বিয়োজক",
+  rowAnswer: "উত্তর (এ পর্যন্ত)",
+  teacherTitle: "শিক্ষকের ব্যাখ্যা",
+  boardDesc: "শতকের ঘরে {h}টি, দশকের ঘরে {t}টি, এককের ঘরে {o}টি আছে। সরানো হয়েছে: শতক {rh}, দশক {rt}, একক {ro}।",
+  note_start: "শুরুতে {m} আছে, শতক, দশক ও এককের ব্লকে সাজানো।",
+  note_exchange: "{from} ঘর থেকে ১টি {from} ভেঙে ১০টি {to} করা হলো। এখন {to} ঘরে {count}টি আছে (দরকার {need}টি)। মোট মান একই আছে।",
+  note_remove: "{place} ঘর থেকে {remove}টি সরানো হলো; বাকি {left}টি।",
+  note_result: "{m} − {s} = {answer}। ব্লক আর লেখা হিসাব একই উত্তর দেয়।",
+  predHeading: "আগে অনুমান করো",
+  predQ: "{unit} ঘরে এখন আছে {c}টি, সরাতে হবে {s}টি। সরানো যাবে কি?",
+  predYes: "হ্যাঁ, সরানো যাবে",
+  predNo: "না, আগে ভাঙতে হবে",
+  predWhyCan: "{c} ≥ {s}, তাই সরাসরি সরানো যায়।",
+  predWhyCannot: "{c} < {s}, তাই আগে পরের ঘর থেকে ভেঙে নিতে হবে।",
+  predRight: "ঠিক! {why}",
+  predWrong: "এখনো নয়। {why}",
+  predContinue: "পরের ধাপ দেখাও",
+  predSkip: "অনুমান বাদ দিয়ে এগোও",
+  guidedTitle: "নির্দেশিত অনুশীলন",
+  guidedPrompt: "{m} − {s} = কত? ব্লক দেখে হিসাব করে লেখো।",
+  transferTitle: "নতুন একটি প্রশ্ন",
+  transferPrompt: "{m} − {s} = কত? এবার নিজে চেষ্টা করো।",
+  answerLabel: "তোমার উত্তর",
+  check: "মিলিয়ে দেখো",
+  correctMsg: "সঠিক উত্তর!",
+  wrongGeneric: "মেলেনি। ব্লকের ধাপগুলো আবার দেখে চেষ্টা করো।",
+  wrongSmaller: "প্রতিটি ঘরে ছোট সংখ্যাকে বড় সংখ্যা থেকে বাদ দিয়েছ মনে হচ্ছে। এককের ঘরে সরানোর মতো যথেষ্ট না থাকলে আগে ১টি দশক ভেঙে নিতে হয়।",
+  wrongForgot: "ভাঙার পর যে ঘর থেকে ভেঙেছ সেখানে ১টি কমাতে ভুলে গেছ কি? ঘরটিতে এখন ১টি কম আছে।",
+  newExample: "নতুন উদাহরণ",
+  loadInBoard: "বোর্ডে দেখো",
+  noMastery: "মনে রেখো: একটি সঠিক উত্তর মানে পুরোপুরি শেখা নয়; আরও কয়েকটি উদাহরণে চেষ্টা করো।",
+  sessionStats: "এই সেশনে (সংরক্ষিত নয়): চেষ্টা {n}, সঠিক {c}",
+  notesTitle: "শিক্ষক-নোট",
+  note1: "প্রতিটি ঘরের আগে শিক্ষার্থীদের অনুমান করতে বলুন: সরানো যাবে কি?",
+  note2: "ভাঙার সময় জোর দিন: ১টি দশক = ১০টি একক, তাই মোট মান বদলায় না।",
+  note3: "সাধারণ ভুল: প্রতিটি ঘরে ছোট সংখ্যা বড় থেকে বাদ দেওয়া (যেমন ৫২ − ২৭ = ৩৫)।",
+  note4: "দশকের ঘরে শূন্য থাকলে (যেমন ৩০৫ − ১৬৮) শতক থেকে আগে ভাঙতে হয়; ধাপগুলো ধীরে দেখান।",
+  note5: "প্রদর্শনের আগে পাঠ্যবইয়ের পরিভাষা ও উদাহরণের সঙ্গে মিলিয়ে নিন; এই পাঠ এখনো যাচাই করা হয়নি।",
+  presentHint: "কিবোর্ডের ← ও → চাপ দিয়েও ধাপ বদলানো যায়।",
+  footer: "ডেমো বিষয়বস্তু · কোনো শেখার ফলাফলের দাবি নেই",
+};
+
+export type Dict = { [K in keyof typeof bn]: string };
+
+const en: Dict = {
+  appName: "Primary Visual Lab",
+  tagline: "See how numbers change",
+  skip: "Skip to main content",
+  switchLang: "বাংলা",
+  switchLangLabel: "বাংলায় দেখুন",
+  homeIntro: "A teacher can lead a class step by step on one shared screen; a learner can also explore alone. No sign-up needed.",
+  homeStatusTitle: "Current status",
+  homeStatus: "This is the first step (Phase 1): one lesson and its interaction. Catalogue, sign-in, review and publishing come in later phases.",
+  openStudent: "Learner view",
+  openPresent: "Classroom mode",
+  lessonTitle: "Subtraction with regrouping (break a ten into ones)",
+  objective: "Objective: when the ones column does not have enough, break 1 ten into 10 ones (the total value does not change), subtract, and match the blocks to the written method.",
+  prerequisite: "Before this: 10 ones = 1 ten, 10 tens = 1 hundred; reading numbers up to three digits.",
+  sourceDemo: "Source: demonstration content. Not yet matched to a specific textbook edition or chapter; terminology is unverified.",
+  reviewStatus: "Demo · version v0 · not reviewed",
+  minuendLabel: "Start number (the larger one)",
+  subtrahendLabel: "Number to take away",
+  rangeHint: "A whole number from 0 to 999; Bangla or English digits are fine.",
+  err_empty: "This box is empty; type a number.",
+  err_not_integer: "Type a whole number only; no decimals, signs or letters.",
+  err_too_long: "That number is too long.",
+  err_out_of_range: "The number must be between 0 and 999.",
+  err_subtrahend_larger: "The number taken away cannot be larger than the start number; this lesson keeps answers at 0 or more.",
+  unitOnes: "ones",
+  unitTens: "tens",
+  unitHundreds: "hundreds",
+  colLabel: "{unit} column",
+  remainingLabel: "On the board",
+  removedLabel: "Taken away",
+  valueCheck: "On board {a} + taken away {b} = {m} (total value unchanged)",
+  stepOf: "Step {i} of {n}",
+  prev: "Previous step",
+  next: "Next step",
+  reset: "Start over",
+  textMode: "Show as text",
+  boardMode: "Show blocks",
+  reduceMotion: "Reduce motion",
+  fullscreen: "Full screen",
+  exitFullscreen: "Exit full screen",
+  showNotes: "Show teacher notes",
+  hideNotes: "Hide teacher notes",
+  controls: "Lesson controls",
+  textStepsTitle: "Steps (as text)",
+  writtenTitle: "Written method",
+  rowBoard: "Number on the board",
+  rowSub: "Take away",
+  rowAnswer: "Answer so far",
+  teacherTitle: "Teacher explanation",
+  boardDesc: "{h} in the hundreds column, {t} in the tens column, {o} in the ones column. Taken away: hundreds {rh}, tens {rt}, ones {ro}.",
+  note_start: "We start with {m}, shown as hundreds, tens and ones blocks.",
+  note_exchange: "Break 1 of the {from} into 10 {to}. The {to} column now has {count} (we need {need}). The total value is unchanged.",
+  note_remove: "Take {remove} away from the {place} column; {left} are left.",
+  note_result: "{m} − {s} = {answer}. The blocks and the written method give the same answer.",
+  predHeading: "Predict first",
+  predQ: "The {unit} column has {c} now and we must take away {s}. Can we?",
+  predYes: "Yes, we can take them away",
+  predNo: "No, we must break one first",
+  predWhyCan: "{c} ≥ {s}, so we can take them away directly.",
+  predWhyCannot: "{c} < {s}, so we first break one from the next column.",
+  predRight: "Right! {why}",
+  predWrong: "Not quite. {why}",
+  predContinue: "Show the next step",
+  predSkip: "Skip the prediction",
+  guidedTitle: "Guided practice",
+  guidedPrompt: "{m} − {s} = ? Work it out from the blocks.",
+  transferTitle: "A new question",
+  transferPrompt: "{m} − {s} = ? Now try it yourself.",
+  answerLabel: "Your answer",
+  check: "Check",
+  correctMsg: "Correct!",
+  wrongGeneric: "That does not match. Look through the block steps again and try once more.",
+  wrongSmaller: "It looks like you took the smaller digit from the larger one in each column. If the ones column does not have enough, break 1 ten first.",
+  wrongForgot: "After breaking, did you forget to take 1 away from the column you broke? That column now has 1 fewer.",
+  newExample: "New example",
+  loadInBoard: "Show on board",
+  noMastery: "Remember: one correct answer does not mean you have fully learned this; try a few more examples.",
+  sessionStats: "This session (not saved): attempts {n}, correct {c}",
+  notesTitle: "Teacher notes",
+  note1: "Before each column, ask learners to predict: can we take them away?",
+  note2: "When breaking, stress: 1 ten = 10 ones, so the total value does not change.",
+  note3: "Common error: subtracting the smaller digit from the larger in each column (e.g. 52 − 27 = 35).",
+  note4: "If the tens column is zero (e.g. 305 − 168), break from the hundreds first; go slowly.",
+  note5: "Check the textbook's terminology and examples before presenting; this lesson is not yet verified against it.",
+  presentHint: "You can also use the ← and → keys to change steps.",
+  footer: "Demonstration content · no learning-outcome claims",
+};
+
+export const dict: Record<Lang, Dict> = { bn, en };
+
+export function fill(s: string, params: Record<string, string | number>): string {
+  return s.replace(/\{(\w+)\}/g, (_, k: string) => (k in params ? String(params[k]) : `{${k}}`));
+}
+
+export function unitName(place: number, lang: Lang): string {
+  const d = dict[lang];
+  return place === 0 ? d.unitOnes : place === 1 ? d.unitTens : d.unitHundreds;
+}
+
+export function noteText(note: { key: string; params: Record<string, number> }, lang: Lang): string {
+  const d = dict[lang];
+  const f = (n: number) => formatInt(n, lang);
+  const p = note.params;
+  const g = (k: string) => p[k] ?? 0;
+  switch (note.key) {
+    case "start": return fill(d.note_start, { m: f(g("minuend")) });
+    case "exchange":
+      return fill(d.note_exchange, { from: unitName(g("from"), lang), to: unitName(g("to"), lang), count: f(g("count")), need: f(g("need")) });
+    case "remove":
+      return fill(d.note_remove, { place: unitName(g("place"), lang), remove: f(g("remove")), left: f(g("left")) });
+    case "result":
+      return fill(d.note_result, { m: f(g("minuend")), s: f(g("subtrahend")), answer: f(g("answer")) });
+    default: return "";
+  }
+}
