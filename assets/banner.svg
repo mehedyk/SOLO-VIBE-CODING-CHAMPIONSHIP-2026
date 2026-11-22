@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 260" width="900" height="260" role="img" aria-label="Primary Visual Lab banner: ten ones exchange into one ten">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f2a43"/><stop offset="1" stop-color="#14532d"/>
+    </linearGradient>
+    <style>
+      .t{font:800 40px 'Noto Sans Bengali','Kalpurush','Segoe UI',sans-serif;fill:#fff}
+      .s{font:500 18px 'Segoe UI',Arial,sans-serif;fill:#cfe8ff}
+      .u{fill:#fbbf24}.tn{fill:#34d399}
+    </style>
+  </defs>
+  <rect width="900" height="260" rx="18" fill="url(#bg)"/>
+  <text class="t" x="40" y="88">প্রাইমারি ভিজ্যুয়াল ল্যাব</text>
+  <text class="s" x="40" y="122">Primary Visual Lab · see how numbers change</text>
+  <!-- ten ones exchange into one ten, looping -->
+  <g transform="translate(40,160)">
+    <g>
+      <rect class="u" x="0"   y="0" width="22" height="22" rx="4"/><rect class="u" x="28"  y="0" width="22" height="22" rx="4"/>
+      <rect class="u" x="56"  y="0" width="22" height="22" rx="4"/><rect class="u" x="84"  y="0" width="22" height="22" rx="4"/>
+      <rect class="u" x="112" y="0" width="22" height="22" rx="4"/><rect class="u" x="140" y="0" width="22" height="22" rx="4"/>
+      <rect class="u" x="168" y="0" width="22" height="22" rx="4"/><rect class="u" x="196" y="0" width="22" height="22" rx="4"/>
+      <rect class="u" x="224" y="0" width="22" height="22" rx="4"/><rect class="u" x="252" y="0" width="22" height="22" rx="4"/>
+      <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.4;0.5;0.95;1" dur="6s" repeatCount="indefinite"/>
+    </g>
+    <rect class="tn" x="0" y="34" width="274" height="22" rx="4">
+      <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.45;0.55;0.95;1" dur="6s" repeatCount="indefinite"/>
+    </rect>
+    <text class="s" x="300" y="17">10 ones</text>
+    <text class="s" x="300" y="52">= 1 ten  (value unchanged)</text>
+  </g>
+  <g fill="none" stroke="#ffffff22" stroke-width="2"><circle cx="800" cy="130" r="60"/><circle cx="800" cy="130" r="90"/></g>
+  <text x="780" y="148" font-size="56" fill="#ffffff" font-family="Segoe UI,Arial,sans-serif" font-weight="800">৫২−২৭</text>
+</svg>
