@@ -1,5 +1,9 @@
 # LIMITATIONS (truthful scope)
-- Phase 0–1 only: the exact subtraction engine and its tests exist; the UI, database, auth, review and workflow are **not built yet** (see MASTER_PLAN.md).
+- Phase 1 only: one lesson (subtraction with regrouping, 0–999) with its engine and UI. Database, auth, review, workflow, catalogue, reports are **not built yet** (see MASTER_PLAN.md). Practice results exist only in the browser session and are not saved.
+- The Bangla term "হাতে নিয়ে বিয়োগ" and the other Bangla wording were written by an AI and **need review by a Bangla-speaking primary teacher** against the textbook.
+- On phones (≤800 px) the block board keeps a minimum width so its text stays legible; it scrolls sideways inside its own box. A phone is not the intended classroom screen.
+- No real screen-reader, touch-device or projector testing has been done.
+- No report-an-issue action yet (Phase 8), so the lesson page does not show one rather than showing a fake button.
 - The first lesson is **demonstration content**. It is **not** claimed as NCTB/official curriculum aligned; the textbook edition and objective are unverified.
 - Reference project and live site were read from source only; not run in a browser.
 - Kalpurush font: the supplied note (Akkhor52/Lipighor) says free for personal use and commercial use needs permission from the designer; it forbids modifying/renaming and redistributing modified copies. We ship the **unmodified** file for the Bangla UI. **Confirm the licence for your deployment before public/commercial launch**; swap for an OFL font (e.g. Noto Sans Bengali) if unsure.
