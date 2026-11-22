@@ -1,0 +1,382 @@
+[
+ {
+  "name": "root redirects to /bn",
+  "pass": true,
+  "detail": "http://localhost:3100/bn"
+ },
+ {
+  "name": "html lang=bn by default",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "Bangla app name rendered",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "Kalpurush font file served 200",
+  "pass": true,
+  "detail": "[('http://localhost:3100/fonts/Kalpurush.ttf', 200)]"
+ },
+ {
+  "name": "Kalpurush font loaded in document",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "body font-family starts with Kalpurush",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "lesson title (bn)",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "demo/unreviewed badge visible",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "start step: value check shows 52 (bn digits)",
+  "pass": true,
+  "detail": "বোর্ডে ৫২ + সরানো ০ = ৫২ (মোট মান একই)"
+ },
+ {
+  "name": "prediction gate appears before ones step",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "Next disabled while prediction open",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "wrong prediction gets specific feedback",
+  "pass": true,
+  "detail": "আগে অনুমান করো\n\nএকক ঘরে এখন আছে ২টি, সরাতে হবে ৭টি। সরানো যাবে কি?\n\nএখনো নয়। ২ < ৭, তাই আগে পরের ঘর থেকে ভেঙে নিতে হবে।\n\nপরের ধাপ দেখাও"
+ },
+ {
+  "name": "exchange step note mentions total value unchanged",
+  "pass": true,
+  "detail": "দশক ঘর থেকে ১টি দশক ভেঙে ১০টি একক করা হলো। এখন একক ঘরে ১২টি আছে (দরকার ৭টি)। মোট মান একই আছে।"
+ },
+ {
+  "name": "after exchange ones column = 12 (১২)",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "total value stays 52 at every visited step",
+  "pass": true,
+  "detail": "[True, True, True, True, True, True, True]"
+ },
+ {
+  "name": "final note shows 52 − 27 = 25 in Bangla digits",
+  "pass": true,
+  "detail": "৫২ − ২৭ = ২৫। ব্লক আর লেখা হিসাব একই উত্তর দেয়।"
+ },
+ {
+  "name": "written method: 4 cells per row (aligned header and body)",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "written method answer digits shown at the end (২ and ৫)",
+  "pass": true,
+  "detail": "\tশতক\tদশক\tএকক\nবোর্ডের সংখ্যা\t০\t২\t৫\nবিয়োজক\t−০\t−২\t−৭\nউত্তর (এ পর্যন্ত)\t০\t২\t৫"
+ },
+ {
+  "name": "reset returns to step 1",
+  "pass": true,
+  "detail": "ধাপ ১ / ৬"
+ },
+ {
+  "name": "previous step button works and clears prediction",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "ArrowRight advances (opens prediction)",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "Tab moves focus to a real control",
+  "pass": true,
+  "detail": "BUTTON"
+ },
+ {
+  "name": "prediction answerable by keyboard (Enter)",
+  "pass": true,
+  "detail": "আগে অনুমান করো\n\nএকক ঘরে এখন আছে ২টি, সরাতে হবে ৭টি। সরানো যাবে কি?\n\nঠিক! ২ < ৭, তাই আগে পরের ঘর থেকে ভেঙে নিতে হবে।\n\nপরের ধাপ দেখাও"
+ },
+ {
+  "name": "arrow keys do not change steps while typing in an input",
+  "pass": true,
+  "detail": "ধাপ ২ / ৬"
+ },
+ {
+  "name": "subtrahend larger -> clear alert",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "impossible state not drawn: board still shows previous valid lesson",
+  "pass": true,
+  "detail": "বোর্ডে ৫২ + সরানো ০ = ৫২ (মোট মান একই)"
+ },
+ {
+  "name": "out of range message",
+  "pass": true,
+  "detail": "সংখ্যা ০ থেকে ৯৯৯ এর মধ্যে হতে হবে।"
+ },
+ {
+  "name": "decimal rejected, not guessed",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "empty input message",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "Bangla-digit input accepted (305-168)",
+  "pass": true,
+  "detail": "বোর্ডে ৩০৫ + সরানো ০ = ৩০৫ (মোট মান একই)"
+ },
+ {
+  "name": "305-168 first exchange comes from hundreds (zero tens)",
+  "pass": true,
+  "detail": "শতক ঘর থেকে ১টি শতক ভেঙে ১০টি দশক করা হলো। এখন দশক ঘরে ১০টি আছে (দরকার ৮টি)। মোট মান একই আছে।"
+ },
+ {
+  "name": "guided: Bangla digits answer accepted as correct",
+  "pass": true,
+  "detail": "নির্দেশিত অনুশীলন\n\n৫২ − ২৭ = কত? ব্লক দেখে হিসাব করে লেখো।\n\nতোমার উত্তর\nমিলিয়ে দেখো\n\nসঠিক উত্তর!"
+ },
+ {
+  "name": "guided: 35 diagnosed as smaller-from-larger error",
+  "pass": true,
+  "detail": "নির্দেশিত অনুশীলন\n\n৫২ − ২৭ = কত? ব্লক দেখে হিসাব করে লেখো।\n\nতোমার উত্তর\nমিলিয়ে দেখো\n\nপ্রতিটি ঘরে ছোট সংখ্যাকে বড় সংখ্যা থেকে বাদ দিয়েছ মনে হচ্ছে। এককের ঘরে সরানোর মতো যথেষ্ট না থাকলে আগে ১টি দশক ভেঙে নিতে হয়।"
+ },
+ {
+  "name": "guided: letters give input error not 'wrong'",
+  "pass": true,
+  "detail": "নির্দেশিত অনুশীলন\n\n৫২ − ২৭ = কত? ব্লক দেখে হিসাব করে লেখো।\n\nতোমার উত্তর\nমিলিয়ে দেখো\n\nশুধু পূর্ণসংখ্যা লিখুন; দশমিক, চিহ্ন বা অক্ষর চলবে না।"
+ },
+ {
+  "name": "no mastery claim after correct answer; reminder shown",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "session stats labelled not saved",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "text mode shows ordered list, no svg board",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "board has accessible title/desc",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "no console/page errors on lesson",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "OS reduced-motion -> data-motion=reduce",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "new blocks have no animation under reduced motion",
+  "pass": true,
+  "detail": "none"
+ },
+ {
+  "name": "manual 'reduce motion' toggle disables animation",
+  "pass": true,
+  "detail": "none"
+ },
+ {
+  "name": "English route lang=en",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "English title",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "English body font is not Kalpurush",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "language switch keeps path, flips to bn",
+  "pass": true,
+  "detail": "/bn/lessons/subtraction-regrouping"
+ },
+ {
+  "name": "English prediction text",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "present projector-1920: no horizontal scroll",
+  "pass": true,
+  "detail": "[1920, 1920]"
+ },
+ {
+  "name": "present projector-1920: board visible and sized",
+  "pass": true,
+  "detail": "{'x': 397, 'y': 403.265625, 'width': 726, 'height': 441.25}"
+ },
+ {
+  "name": "present projector-1920: board text legible (>=12px rendered)",
+  "pass": true,
+  "detail": "{'x': 481.2751770019531, 'y': 438.950439453125, 'width': 67.40286254882812, 'height': 27}"
+ },
+ {
+  "name": "present projector-1920: Next button >=44px tall",
+  "pass": true,
+  "detail": "{'x': 536.46875, 'y': 952.671875, 'width': 140.359375, 'height': 65.375}"
+ },
+ {
+  "name": "present laptop-1366: no horizontal scroll",
+  "pass": true,
+  "detail": "[1366, 1366]"
+ },
+ {
+  "name": "present laptop-1366: board visible and sized",
+  "pass": true,
+  "detail": "{'x': 120, 'y': 403.265625, 'width': 726, 'height': 441.25}"
+ },
+ {
+  "name": "present laptop-1366: board text legible (>=12px rendered)",
+  "pass": true,
+  "detail": "{'x': 204.27517700195312, 'y': 438.950439453125, 'width': 67.40286254882812, 'height': 27}"
+ },
+ {
+  "name": "present laptop-1366: Next button >=44px tall",
+  "pass": true,
+  "detail": "{'x': 259.46875, 'y': 691.828125, 'width': 140.359375, 'height': 65.375}"
+ },
+ {
+  "name": "present tablet-768: no horizontal scroll",
+  "pass": true,
+  "detail": "[768, 768]"
+ },
+ {
+  "name": "present tablet-768: board visible and sized",
+  "pass": true,
+  "detail": "{'x': 35, 'y': -219.328125, 'width': 698, 'height': 424.234375}"
+ },
+ {
+  "name": "present tablet-768: board text legible (>=12px rendered)",
+  "pass": true,
+  "detail": "{'x': 115.96267700195312, 'y': -184.7520751953125, 'width': 64.32180786132812, 'height': 25}"
+ },
+ {
+  "name": "present tablet-768: Next button >=44px tall",
+  "pass": true,
+  "detail": "{'x': 166.90625, 'y': 775.75, 'width': 132.8125, 'height': 61.921875}"
+ },
+ {
+  "name": "present phone-390: no horizontal scroll",
+  "pass": true,
+  "detail": "[390, 390]"
+ },
+ {
+  "name": "present phone-390: board visible and sized",
+  "pass": true,
+  "detail": "{'x': 35, 'y': -356.296875, 'width': 560, 'height': 340.359375}"
+ },
+ {
+  "name": "present phone-390: board text legible (>=12px rendered)",
+  "pass": true,
+  "detail": "{'x': 99.55207824707031, 'y': -329.1156005859375, 'width': 52.181243896484375, 'height': 21}"
+ },
+ {
+  "name": "present phone-390: Next button >=44px tall",
+  "pass": true,
+  "detail": "{'x': 166.90625, 'y': 555.5625, 'width': 132.8125, 'height': 61.921875}"
+ },
+ {
+  "name": "present phone-320: no horizontal scroll",
+  "pass": true,
+  "detail": "[320, 320]"
+ },
+ {
+  "name": "present phone-320: board visible and sized",
+  "pass": true,
+  "detail": "{'x': 35, 'y': -751.171875, 'width': 560, 'height': 340.359375}"
+ },
+ {
+  "name": "present phone-320: board text legible (>=12px rendered)",
+  "pass": true,
+  "detail": "{'x': 99.55207824707031, 'y': -723.9906005859375, 'width': 52.181243896484375, 'height': 21}"
+ },
+ {
+  "name": "present phone-320: Next button >=44px tall",
+  "pass": true,
+  "detail": "{'x': 166.90625, 'y': 207.34375, 'width': 132.8125, 'height': 61.921875}"
+ },
+ {
+  "name": "present: teacher notes hidden by default",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "present: teacher notes can be shown",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "present: fullscreen control exists",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "present: control font >= 20px (readable from the back)",
+  "pass": true,
+  "detail": "23.4"
+ },
+ {
+  "name": "present: no hover dependency (no :hover-only rules in CSS)",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "student desktop: no horizontal scroll with long Bangla labels",
+  "pass": true,
+  "detail": "[1366, 1366]"
+ },
+ {
+  "name": "student phone: no horizontal scroll with long Bangla labels",
+  "pass": true,
+  "detail": "[390, 390]"
+ },
+ {
+  "name": "font blocked: page still renders Bangla text with fallback",
+  "pass": true,
+  "detail": "[]"
+ },
+ {
+  "name": "unknown language returns 404",
+  "pass": true,
+  "detail": "404"
+ }
+]
