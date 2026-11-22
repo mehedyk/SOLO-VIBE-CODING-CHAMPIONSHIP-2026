@@ -80,9 +80,9 @@ export function buildSubtractionSteps(minuend: number, subtrahend: number): Step
       // q <= 2 is guaranteed because subtrahend <= minuend (validated), see tests.
       if (q > 2) throw new Error("unreachable: validated input must be able to regroup");
       // Break one unit of column q into ten units of column q-1.
-      counts[q] -= 1;
-      counts[q - 1] += 10;
-      push("exchange", "exchange", { from: q, to: q - 1, count: counts[q - 1], need: s[p] }, p, q as Place);
+      counts[q] = counts[q]! - 1;
+      counts[q - 1] = counts[q - 1]! + 10;
+      push("exchange", "exchange", { from: q, to: q - 1, count: counts[q - 1]!, need: s[p] }, p, q as Place);
     }
     counts[p] -= s[p];
     removed[p] += s[p];
@@ -101,4 +101,17 @@ export function buildSubtractionSteps(minuend: number, subtrahend: number): Step
 /** Check a learner answer. Exact integer compare; format variants handled by parseNumeral. */
 export function isCorrectAnswer(minuend: number, subtrahend: number, answer: number): boolean {
   return Number.isInteger(answer) && answer === minuend - subtrahend;
+}
+
+export type Diagnosis = "correct" | "smaller_from_larger" | "forgot_to_reduce" | "other";
+
+/** Name the most likely reason an answer is wrong, so feedback can be specific. */
+export function diagnoseAnswer(minuend: number, subtrahend: number, answer: number): Diagnosis {
+  const correct = minuend - subtrahend;
+  if (answer === correct) return "correct";
+  const m = digitsOf(minuend), s = digitsOf(subtrahend);
+  const smaller = [0, 1, 2].reduce((acc, i) => acc + Math.abs(m[i]! - s[i]!) * PLACE_VALUE[i]!, 0);
+  if (answer === smaller) return "smaller_from_larger";
+  if (answer === correct + 10 || answer === correct + 100) return "forgot_to_reduce";
+  return "other";
 }
