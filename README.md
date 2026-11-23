@@ -11,7 +11,7 @@
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas%20M0-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
 [![Vercel](https://img.shields.io/badge/Vercel-Hobby-000?style=for-the-badge&logo=vercel)](https://vercel.com)
 [![Bangla first](https://img.shields.io/badge/%E0%A6%AC%E0%A6%BE%E0%A6%82%E0%A6%B2%E0%A6%BE-default-fbbf24?style=for-the-badge)](#-bilingual)
-[![Tests](https://img.shields.io/badge/unit-19%20passed-34D399?style=for-the-badge)](TEST_PLAN.md) [![Browser](https://img.shields.io/badge/browser-76%20passed-34D399?style=for-the-badge)](TEST_PLAN.md)
+[![Tests](https://img.shields.io/badge/unit-36%20passed-34D399?style=for-the-badge)](TEST_PLAN.md) [![Browser](https://img.shields.io/badge/browser-111%20passed-34D399?style=for-the-badge)](TEST_PLAN.md)
 [![Cost](https://img.shields.io/badge/cost-%240-0f2a43?style=for-the-badge)](#-free-to-run)
 
 **Teacher-led visual maths lessons for primary school.**
@@ -44,7 +44,8 @@ The engine checks that **the total value never changes during an exchange** acro
 |:--:|---|:--:|
 | 0 | Inspect, plan, docs | ✅ |
 | 1 | First lesson: exact engine, SVG board, presenter mode, bilingual UI | ✅ |
-| 2–10 | Catalogue, DB, auth, review, workflow, moderation, deploy | ⬜ see [MASTER_PLAN](MASTER_PLAN.md) |
+| 2 | Catalogue + search/filter/sort, addition lesson, print prep page | ✅ |
+| 3–10 | DB, auth, review, workflow, moderation, deploy | ⬜ see [MASTER_PLAN](MASTER_PLAN.md) |
 
 The first lesson is **demonstration content**, not claimed as official curriculum alignment.
 
@@ -59,6 +60,9 @@ The first lesson is **demonstration content**, not claimed as official curriculu
 </div>
 
 ## ✨ What works now
+- 📚 **Catalogue** with Bangla/English search, topic filter and sorting (works without JavaScript)
+- ➕ **Two lessons** on one shared engine interface: subtraction and addition with regrouping
+- 🖨 **Teacher prep page** (checklist, steps as text, practice lines) that prints cleanly
 - 🧱 Place-value blocks that stay in sync with the numbers, the written method and the explanation
 - 🔮 A **prediction question** before each column, with specific feedback
 - ➗ Exact integer arithmetic; exchanges never change the total value (checked exhaustively)
@@ -78,7 +82,7 @@ Track: **Educational Problem Solver** · Advanced challenges: **A03** (access co
 ## 🚀 Run the tests
 ```bash
 npm install
-npm test        # 19 unit tests
+npm test        # 36 unit tests
 npm run dev     # open http://localhost:3000  (redirects to /bn)
 ```
 Browser checks: see [TEST_PLAN](TEST_PLAN.md).
