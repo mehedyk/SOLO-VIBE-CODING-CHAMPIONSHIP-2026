@@ -378,5 +378,180 @@
   "name": "unknown language returns 404",
   "pass": true,
   "detail": "404"
+ },
+ {
+  "name": "catalogue: title and 2 lessons listed",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "catalogue: results count announced (role=status)",
+  "pass": true,
+  "detail": "২টি পাঠ পাওয়া গেছে"
+ },
+ {
+  "name": "catalogue: demo/unreviewed + class-unverified labels visible",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "catalogue: review filter hidden when only one review state exists (no fake filter)",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "catalogue: Bangla search 'বিয়োগ' -> 1 result",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "catalogue: topic filter addition -> 1 result",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "catalogue: no match -> empty state, not blank",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "catalogue: hostile query params do not break the page",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "catalogue: script in query is shown as text, not executed",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "catalogue: form works as plain GET (no JS needed) and keeps values",
+  "pass": true,
+  "detail": "http://localhost:3100/bn/lessons?q=addition&topic=&sort=topic"
+ },
+ {
+  "name": "catalogue: clear filters restores all",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "catalogue: keyboard-reachable controls (label for/ids)",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "addition: Bangla title",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "addition: value check starts as 48 + still-to-add 37 = 85",
+  "pass": true,
+  "detail": "বোর্ডে ৪৮ + এখনো যোগ হয়নি ৩৭ = ৮৫ (মোট মান একই)"
+ },
+ {
+  "name": "addition: prediction asks 10-or-more question for ones",
+  "pass": true,
+  "detail": "আগে অনুমান করো\n\nএকক ঘরে এখন আছে ৮টি, যোগ করতে হবে ৭টি। যোগ করলে কি ১০ বা তার বেশি হবে?\n\nহ্যাঁ, ১০ বা বেশি হবে\nনা, ১০-এর কম থাকবে"
+ },
+ {
+  "name": "addition: wrong prediction explained with the sum 8 + 7 = 15",
+  "pass": true,
+  "detail": "আগে অনুমান করো\n\nএকক ঘরে এখন আছে ৮টি, যোগ করতে হবে ৭টি। যোগ করলে কি ১০ বা তার বেশি হবে?\n\nএখনো নয়। ৮ + ৭ = ১৫, যা ১০ বা বেশি; তাই ১০টিকে পরের ঘরের ১টিতে বদলাতে হবে।\n\nপরের ধাপ দেখাও"
+ },
+ {
+  "name": "addition: total value stays 85 at every step",
+  "pass": true,
+  "detail": "[True, True, True, True, True, True, True, True, True]"
+ },
+ {
+  "name": "addition: carry note shows exchange of 10 for 1",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "addition: final note 48 + 37 = 85",
+  "pass": true,
+  "detail": "৪৮ + ৩৭ = ৮৫। ব্লক আর লেখা হিসাব একই উত্তর দেয়।"
+ },
+ {
+  "name": "addition: Bangla-digit answer 85 correct",
+  "pass": true,
+  "detail": "নির্দেশিত অনুশীলন\n\n৪৮ + ৩৭ = কত? ব্লক দেখে হিসাব করে লেখো।\n\nতোমার উত্তর\nমিলিয়ে দেখো\n\nসঠিক উত্তর!"
+ },
+ {
+  "name": "addition: 75 diagnosed as forgotten carry",
+  "pass": true,
+  "detail": "নির্দেশিত অনুশীলন\n\n৪৮ + ৩৭ = কত? ব্লক দেখে হিসাব করে লেখো।\n\nতোমার উত্তর\nমিলিয়ে দেখো\n\nঘর বদলানোর সময় পরের ঘরে ১টি যোগ করতে ভুলে গেছ কি? ১০টি বদলালে পরের ঘরে ১টি বাড়ে।"
+ },
+ {
+  "name": "addition: sum over 999 rejected with clear message",
+  "pass": true,
+  "detail": "যোগফল ৯৯৯ এর বেশি হতে পারবে না।"
+ },
+ {
+  "name": "addition: 95+55 shows 150 total",
+  "pass": true,
+  "detail": "বোর্ডে ৯৫ + এখনো যোগ হয়নি ৫৫ = ১৫০ (মোট মান একই)"
+ },
+ {
+  "name": "addition: no page errors",
+  "pass": true,
+  "detail": "[]"
+ },
+ {
+  "name": "addition present (en): title and Next",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "addition en: prediction text",
+  "pass": true,
+  "detail": "Predict first\n\nThe ones column has 8 now and we add 7. Will it reach 10 or more?\n\nYes, 10 or more\nNo, fewer than 10\nSkip the prediction"
+ },
+ {
+  "name": "addition present: no horizontal scroll",
+  "pass": true,
+  "detail": "[1366, 1366]"
+ },
+ {
+  "name": "print page: steps listed as text, checklist and practice with answer lines",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "print page: demo/unreviewed note shown",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "print media hides site header and print button",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "print page (en, addition): example line with plus sign",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "unknown lesson slug returns 404",
+  "pass": true,
+  "detail": "404"
+ },
+ {
+  "name": "unknown lesson print returns 404",
+  "pass": true,
+  "detail": "404"
+ },
+ {
+  "name": "catalogue phone: no horizontal scroll",
+  "pass": true,
+  "detail": "[390, 390]"
+ },
+ {
+  "name": "home links to catalogue and lists both lessons",
+  "pass": true,
+  "detail": ""
  }
 ]
