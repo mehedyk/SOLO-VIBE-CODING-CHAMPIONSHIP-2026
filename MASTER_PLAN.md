@@ -28,7 +28,7 @@ Track: Educational. Score: M01–M08 = 60, two declared advanced challenges = 40
 |---|---|---|
 | 0 | Inspect, plan, decisions, doc skeleton, asset prompts, animated README | ✅ |
 | 1 | Exact maths engine, SVG place-value board, prediction gate, presenter mode, bilingual (bn default/en) UI with Kalpurush, practice cards, tests | ✅ |
-| 2 | Public catalogue, search/filter, lesson delivery, i18n bn/en, print view | ⬜ |
+| 2 | Public catalogue (search, topic filter, sort), per-lesson routes, second lesson (addition with regrouping) on a shared engine interface, print/prep page | ✅ |
 | 3 | MongoDB persistence, guest progress (local) + optional saved attempts, indexes | ⬜ |
 | 4 | Authentication, sessions, capability model, suspension, audit log | ⬜ |
 | 5 | Contributor applications + admin decisions | ⬜ |
@@ -54,6 +54,11 @@ Track: Educational. Score: M01–M08 = 60, two declared advanced challenges = 40
 | Layouts 1920/1366/768/390/320 px, no page-level horizontal scroll, long Bangla labels | e2e | ✅ passed |
 | Text alternative, board title/desc, Bangla/English routes, 404 for unknown language | e2e | ✅ passed |
 | Font file blocked → page still usable | e2e | ✅ passed |
+| Addition engine: invariant board+pending = a+b at every step, one exchange moves exactly 10 → 1 | `tests/addition.test.ts` | ✅ passed |
+| Catalogue: whitelist query parsing, bn/en/cross-language search, filters combine, empty result | `tests/catalogue.test.ts` + e2e | ✅ passed |
+| Hostile query params / script text in search are inert | e2e | ✅ passed |
+| Print page: checklist, steps, practice lines; print media hides chrome | e2e | ✅ passed |
+| Unknown lesson slug/language → 404 | e2e | ✅ passed |
 | Screen-reader behaviour with a real assistive technology | — | ⬜ **not tested** |
 | Touch-device and real projector testing | — | ⬜ **not tested** |
 | All authorization/workflow rows | Phases 4–8 | ⬜ not run |
