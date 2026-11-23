@@ -29,7 +29,7 @@ Track: Educational. Score: M01–M08 = 60, two declared advanced challenges = 40
 | 0 | Inspect, plan, decisions, doc skeleton, asset prompts, animated README | ✅ |
 | 1 | Exact maths engine, SVG place-value board, prediction gate, presenter mode, bilingual (bn default/en) UI with Kalpurush, practice cards, tests | ✅ |
 | 2 | Public catalogue (search, topic filter, sort), per-lesson routes, second lesson (addition with regrouping) on a shared engine interface, print/prep page | ✅ |
-| 3 | MongoDB persistence, guest progress (local) + optional saved attempts, indexes | ⬜ |
+| 3 | MongoDB persistence, guest progress (local) + optional saved attempts, indexes | ✅ |
 | 4 | Authentication, sessions, capability model, suspension, audit log | ⬜ |
 | 5 | Contributor applications + admin decisions | ⬜ |
 | 6 | Structured authoring, validation, immutable versions + content hash, reviews | ⬜ |
@@ -37,6 +37,7 @@ Track: Educational. Score: M01–M08 = 60, two declared advanced challenges = 40
 | 8 | Reports, moderation, quarantine, replacement; A03 evidence | ⬜ |
 | 9 | Two more templates (fraction bars, number line) + small lesson set | ⬜ |
 | 10 | Security headers/CSP, a11y pass, deploy guide, demo runbook, final docs | ⬜ |
+| 11 | Future resources integration: Meadowbell hero, Meridian footer, brand identity SVG/PNG, Kalpurush fonts & custom 404 page | ⬜ |
 
 ## Requirement → test matrix (Phase 0–1 rows executed)
 | Requirement | Test | Result |
