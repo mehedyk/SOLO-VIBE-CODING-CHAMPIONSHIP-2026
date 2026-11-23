@@ -1,44 +1,77 @@
 # Future Potential Resources
 
-All assets and landing pages in this directory have been created independently without modifying any existing repository files outside of this folder.
+All assets and landing pages in this directory are maintained independently without modifying any existing repository files outside of this folder.
 
 ---
 
-## 1. Websites
+## 🎨 Redesigned Identity System: Primary Visual Lab / প্রাইমারি ভিজ্যুয়াল ল্যাব
 
-### 🌿 Meadowbell Hero Landing Page (`/meadowbell/index.html`)
-- **Concept:** A single-file, self-contained landing hero for the animated kids' farming series *"Hollyoak's Plucky Sprout Squad"* from fictional studio Meadowbell.
-- **Visuals:** Hand-painted anime (Ghibli-esque) aesthetic. Boy and beagle lie on a hillside looking up at cumulus clouds.
-- **Layers:** 9:8 plate image (`3ca5d10d-ea2f-4907-876f-33bde169469e.jpg`) layered precisely with square looping video (`d2cb5bef-f92b-4e91-ae93-8dc6555e56ac.mp4`) at 100% width, 112.5% height, top -6.25% so the meadow grass ripples and hair flutters seamlessly.
-- **Typography:** Grandstander 900 display typography and Inter.
-- **Features:** Web Animations API entrance sequence, responsive cards with hover elevation and art zoom, mobile breakpoint support with swipeable card carousel.
+The logo and brand identity have been rebuilt from the ground up to eliminate generic AI tropes (glossy 3D bubbles, floating cubes, neon sci-fi glows).
 
-### 🏛️ Meridian Footer (`/meridian/index.html`)
-- **Concept:** Single, self-contained full-viewport footer section for "meridian".
-- **Visuals:** Vintage engraved pen-and-ink illustration on pale sage (`#ebeee7`). Long stone arched viaduct bridge with stagecoach trotting across and exiting right.
-- **Blending:** Video pure-white background blended invisibly with `mix-blend-mode: multiply` into the pale sage paper background.
-- **Components:** Custom 8-point compass rose SVG mark, lowercase serif wordmark ("meridian"), tagline, dot-separated nav with left-to-right underline hover animation, dynamic copyright year, and IntersectionObserver video playback.
-- **Responsive:** Fluid layout on desktop, clean 4×2 grid on tablet, 2×4 grid on mobile with zero vertical or horizontal overflow.
-
-### 🗺️ Error 404 Page (`/error404/index.html`)
-- **Concept:** Dedicated full-viewport 404 page adapting the Meridian vintage engraved viaduct aesthetic ("Off the Beaten Track").
-- **Features:** Arched viaduct video background with multiply blending, custom engraved compass emblem, display serif typography, navigation back to home or Sprout Squad, completely responsive with zero scroll.
+### 💡 The Bespoke Design Concept: The "P" Place-Value Monogram
+- **Silhouette:** An iconic geometric letter **"P"** (standing for **Primary** Visual Lab).
+- **The Stem (1 Ten):** A tall, solid mint-green ten-rod (`#34d399`) with 10 harmonious unit divisions.
+- **The Loop (10 Ones):** Exactly 10 crisp, warm amber-yellow squares (`#fbbf24`) with rounded corners forming the upper bowl of the 'P' and docking into the pillar.
+- **The Mathematical Metaphor:** Seamlessly illustrates **"10 ones = 1 ten"** (regrouping and place value) while acting as a bold, memorable lettermark.
+- **Small-Scale Clarity:** Retains instant readability down to 16×16 favicon size without turning into mud.
 
 ---
 
-## 2. Generated Raster Images (`/images/`)
-High-resolution raster PNG images created using AI image generation adhering to the brand palette: deep navy (`#0f2a43`), forest green (`#14532d`), amber (`#fbbf24`), mint (`#34d399`), and white.
+## 📦 Brand Asset Files (`/images/`)
 
+### 1. Logo Marks & Variations
+| File Name | Format | Dimensions | Description |
+|---|---|---|---|
+| `logo_mark.png` | PNG | 2048 × 2048 | Core 'P' place-value mark centered on deep navy background (`#0f2a43`). |
+| `logo_mark_transparent.png` | PNG | 2048 × 2048 | High-resolution mark on transparent background. |
+| `logo_mark_white.png` | PNG | 2048 × 2048 | Pure monochrome white version for dark surfaces. |
+| `logo_mark_monochrome_navy.png` | PNG | 2048 × 2048 | Pure monochrome navy version for light paper/print. |
+| `logo_mark.svg` | SVG | Scalable vector | Clean, scalable vector code of the mark with zero raster clutter. |
+
+### 2. Wordmarks (English & Bangla)
+| File Name | Format | Dimensions | Description |
+|---|---|---|---|
+| `logo_wordmark.png` | PNG | 2400 × 800 | Horizontal lockup: mark + bold geometric sans "Primary Visual Lab" + amber "MATHEMATICS VISUALISER". |
+| `logo_wordmark_transparent.png` | PNG | 2400 × 800 | Transparent horizontal English lockup. |
+| `bangla_wordmark.png` | PNG | 2500 × 800 | Horizontal lockup: mark + authentic Bengali typography "প্রাইমারি ভিজ্যুয়াল ল্যাব" (with proper conjuncts প্র, ভ, জ্যু, ল্যা) + "গণিত ভিজ্যুয়ালাইজার". |
+| `bangla_wordmark_transparent.png` | PNG | 2500 × 800 | Transparent horizontal Bangla lockup. |
+
+### 3. App Icons & Favicon Suite
+| File Name | Format | Dimensions | Description |
+|---|---|---|---|
+| `app_icon.png` | PNG | 1024 × 1024 | iOS squircle on deep navy with subtle matte border, mark in 80% safe zone. |
+| `apple-touch-icon.png` | PNG | 180 × 180 | High-res Apple Touch icon for iOS home screens. |
+| `icon-192.png` & `icon-512.png` | PNG | 192×192 / 512×512 | Standard PWA web manifest icons. |
+| `icon-maskable-512.png` | PNG | 512 × 512 | Android adaptive maskable icon with safe-zone margin. |
+| `favicon.ico` | ICO | 16, 32, 48 px | Multi-resolution favicon container for browser tabs. |
+| `favicon.svg` | SVG | Scalable vector | Modern SVG favicon for crisp vector rendering in modern browsers. |
+
+### 4. Alternative Artistic Concept Explorations
+| File Name | Description |
+|---|---|
+| `art_concept_p_monogram.png` | High-impact Swiss modernist 2D illustration of the 'P' Monogram. |
+| `art_concept_tens_frame.png` | Modernist 2×5 tens-frame array interfacing with the mint pillar. |
+| `art_concept_geometric_arch.png` | Dynamic geometric arch of 10 blocks docking into the ten-rod. |
+| `art_concept_interlocking_frame.png` | Compact architectural interlock design. |
+| `art_concept_app_icon.png` | Alternate app icon styling. |
+
+### 5. Marketing & Classroom Illustrations
 | File Name | Dimensions | Description |
 |---|---|---|
-| `logo_mark.png` | 1024 × 1024 | Flat raster mark showing ten amber squares merging into one tall mint bar (10 ones exchanging into 1 ten) on deep navy. |
-| `logo_mark_with_label.png` | 1024 × 1024 | Alternate branded logo mark with Primary Visual Lab label. |
-| `logo_wordmark.png` | 1376 × 768 | Horizontal brand lockup with logo mark and English wordmark "Primary Visual Lab". |
-| `bangla_wordmark.png` | 1376 × 768 | Horizontal brand lockup featuring the logo mark and crisp Bengali typography "প্রাইমারি ভিজ্যুয়াল ল্যাব". |
-| `app_icon.png` | 1024 × 1024 | iOS squircle app icon on deep navy with 10 amber units transitioning into a mint ten-rod. |
-| `apple-touch-icon.png` | 180 × 180 | Apple touch icon variant. |
-| `icon-192.png` & `icon-512.png` | 192 × 192 / 512 × 512 | PWA and Android standard icons. |
-| `favicon.ico` | Multi-size ICO | Multi-resolution favicon (16, 32, 48 px). |
-| `readme_banner.png` | 1376 × 768 | GitHub repository README header banner with logo and "10 ones = 1 ten" place-value visualizer. |
-| `social_og_image.png` | 1376 × 768 | Social / OpenGraph preview card: "See how numbers change", showing 52 − 27 regrouping with exchange arrow. |
-| `teacher_splash_illustration.png` | 1200 × 896 | Warm classroom illustration of teacher's hand gesturing toward an interactive screen showing place-value blocks (no human faces). |
+| `readme_banner.png` | 1376 × 768 | GitHub repository README banner with logo and "10 ones = 1 ten" infographic. |
+| `social_og_image.png` | 1376 × 768 | OpenGraph social preview: "See how numbers change" with 52 − 27 regrouping. |
+| `teacher_splash_illustration.png` | 1200 × 896 | Warm classroom illustration of teacher's hand pointing at touch screen math manipulatives (no human faces). |
+
+---
+
+## 🌐 Websites
+
+- **🌿 Meadowbell Hero Landing Page:** [`/meadowbell/index.html`](file:///k:/Hackathons/SOLO-VIBE-CODING-CHAMPIONSHIP-2026/future%20potential%20resources/meadowbell/index.html)
+  - **Quality Enhancements:**
+    - Downloaded and packaged all original full-fidelity media locally under [`meadowbell/assets/`](file:///k:/Hackathons/SOLO-VIBE-CODING-CHAMPIONSHIP-2026/future%20potential%20resources/meadowbell/assets/) to avoid CloudFront CDN latency and streaming compression drops.
+    - **Eliminated Sky Pixel Breaking:** The 960×960 video originally stretched across the entire viewport, covering the 2160×1920 plate with 8-bit YUV 4:2:0 macroblocking in the sky gradient. Using an intelligent vertical gradient mask, the upper sky and cumulus clouds (which are static in the scene) now preserve the full, pristine 2K hand-painted plate resolution, while the dynamic middle and bottom layers (rippling grass, nodding daisies, boy's fluttering shirt and hair, dog's ears) play in seamless motion.
+    - **Anti-Jitter GPU Compositing:** Added `transform: translate3d(0, 0, 0)` and hardware layer acceleration to prevent subpixel fractional rounding tearing on Windows high-DPI screens.
+    - **Film Cel Dither:** Added microscopic film grain overlay to eliminate digital color quantization stepping.
+    - **High-Res Chapter Cards:** Enhanced micro-contrast on all 3 chapter cards with retina 2x resolution.
+- **🏛️ Meridian Footer:** [`/meridian/index.html`](file:///k:/Hackathons/SOLO-VIBE-CODING-CHAMPIONSHIP-2026/future%20potential%20resources/meridian/index.html)
+- **🗺️ Error 404 Page:** [`/error404/index.html`](file:///k:/Hackathons/SOLO-VIBE-CODING-CHAMPIONSHIP-2026/future%20potential%20resources/error404/index.html)
