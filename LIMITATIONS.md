@@ -1,5 +1,5 @@
 # LIMITATIONS (truthful scope)
-- Phase 1 only: one lesson (subtraction with regrouping, 0–999) with its engine and UI. Database, auth, review, workflow, catalogue, reports are **not built yet** (see MASTER_PLAN.md). Practice results exist only in the browser session and are not saved.
+- Phases 1–2: two demo lessons (subtraction and addition with regrouping, 0–999). The catalogue reads a **static in-code registry**; it moves to MongoDB in Phase 3. Database, auth, review, workflow, catalogue, reports are **not built yet** (see MASTER_PLAN.md). Practice results exist only in the browser session and are not saved.
 - The Bangla term "হাতে নিয়ে বিয়োগ" and the other Bangla wording were written by an AI and **need review by a Bangla-speaking primary teacher** against the textbook.
 - On phones (≤800 px) the block board keeps a minimum width so its text stays legible; it scrolls sideways inside its own box. A phone is not the intended classroom screen.
 - No real screen-reader, touch-device or projector testing has been done.
@@ -9,3 +9,6 @@
 - Kalpurush font: the supplied note (Akkhor52/Lipighor) says free for personal use and commercial use needs permission from the designer; it forbids modifying/renaming and redistributing modified copies. We ship the **unmodified** file for the Bangla UI. **Confirm the licence for your deployment before public/commercial launch**; swap for an OFL font (e.g. Noto Sans Bengali) if unsure.
 - Vercel Hobby is for non-commercial use; Atlas M0 has storage/connection limits; Hobby cron is infrequent.
 - No claim of learning impact. Correct answers ≠ mastery.
+- The catalogue has only two lessons, so search and filters are real but thin. The review-status filter is hidden until at least two review states exist, instead of showing a control that does nothing.
+- The class/grade field is shown as "not yet verified" on every lesson because no textbook edition has been confirmed.
+- The print page is a browser-print stylesheet; it was checked with print-media emulation, not on a physical printer.
