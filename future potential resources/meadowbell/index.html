@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hollyoak's Plucky Sprout Squad — Meadowbell</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Grandstander:wght@900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --u: calc(100vw / 1440);
+      --font-display: "Grandstander", cursive, sans-serif;
+      --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+      --green-btn: #5b875c;
+      --sage-pill: rgba(173, 196, 174, 0.45);
+      --mint-pill: rgba(204, 218, 173, 0.6);
+      --blue-shadow: 0 calc(4 * var(--u)) calc(18 * var(--u)) rgba(28, 70, 120, 0.28);
+    }
+
+    body {
+      background-color: #8bbad6;
+      font-family: var(--font-sans);
+      color: #ffffff;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .hero-container {
+      position: relative;
+      width: 100vw;
+      height: calc(1280 * var(--u));
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Scene: Plate and overlying video */
+    .scene-viewport {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .scene-plate {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Video overlaid at 100% width, 112.5% height, top -6.25% */
+    .scene-video {
+      position: absolute;
+      left: 0;
+      top: -6.25%;
+      width: 100%;
+      height: 112.5%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+
+    /* Top Navigation Elements */
+    .nav-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: calc(80 * var(--u));
+      z-index: 10;
+      pointer-events: auto;
+    }
+
+    .logo {
+      position: absolute;
+      left: calc(31 * var(--u));
+      top: calc(23 * var(--u));
+      display: flex;
+      align-items: center;
+      gap: calc(8 * var(--u));
+      font-family: var(--font-display);
+      font-size: calc(29.5 * var(--u));
+      font-weight: 900;
+      color: #ffffff;
+      text-decoration: none;
+      line-height: 1;
+      text-shadow: 0 calc(2 * var(--u)) calc(8 * var(--u)) rgba(0,0,0,0.2);
+    }
+
+    .logo svg {
+      width: calc(26 * var(--u));
+      height: calc(26 * var(--u));
+      fill: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .nav-pill {
+      position: absolute;
+      left: calc(443 * var(--u));
+      top: calc(13 * var(--u));
+      width: calc(546 * var(--u));
+      height: calc(50 * var(--u));
+      background: var(--sage-pill);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: calc(25 * var(--u));
+      display: flex;
+      align-items: center;
+      padding-left: calc(49 * var(--u));
+      box-shadow: 0 calc(2 * var(--u)) calc(12 * var(--u)) rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: calc(54 * var(--u));
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: calc(19.5 * var(--u));
+      color: #ffffff;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: transform 0.25s ease, opacity 0.2s ease;
+      display: inline-block;
+    }
+
+    .nav-links a:hover {
+      transform: translateY(calc(-2 * var(--u)));
+      opacity: 0.92;
+    }
+
+    .join-nav-btn {
+      position: absolute;
+      left: calc(1311 * var(--u));
+      top: calc(14 * var(--u));
+      width: calc(105 * var(--u));
+      height: calc(45 * var(--u));
+      background: #ffffff;
+      border-radius: calc(22.5 * var(--u));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: calc(18.5 * var(--u));
+      color: var(--green-btn);
+      text-decoration: none;
+      box-shadow: 0 calc(2 * var(--u)) calc(10 * var(--u)) rgba(0, 0, 0, 0.12);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+    }
+
+    .join-nav-btn:hover {
+      transform: translateY(calc(-2 * var(--u)));
+      box-shadow: 0 calc(4 * var(--u)) calc(14 * var(--u)) rgba(0, 0, 0, 0.18);
+    }
+
+    /* Central Copy Block */
+    .copy-block {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .kicker {
+      position: absolute;
+      top: calc(203 * var(--u));
+      font-family: var(--font-display);
+      font-size: calc(40.5 * var(--u));
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-shadow: var(--blue-shadow);
+      line-height: 1;
+    }
+
+    .headline {
+      position: absolute;
+      top: calc(261 * var(--u));
+      font-family: var(--font-display);
+      font-size: calc(143.5 * var(--u));
+      font-weight: 900;
+      line-height: calc(118 * var(--u));
+      color: #ffffff;
+      text-transform: uppercase;
+      text-shadow: var(--blue-shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .headline-line {
+      display: inline-block;
+    }
+
+    .subline {
+      position: absolute;
+      top: calc(520 * var(--u));
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: calc(21.2 * var(--u));
+      line-height: calc(27 * var(--u));
+      color: #ffffff;
+      text-shadow: 0 calc(2 * var(--u)) calc(10 * var(--u)) rgba(28, 70, 120, 0.3);
+      max-width: calc(750 * var(--u));
+    }
+
+    .hero-actions {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: auto;
+    }
+
+    .btn-join-hero {
+      position: absolute;
+      left: calc(550 * var(--u));
+      top: calc(617 * var(--u));
+      width: calc(144 * var(--u));
+      height: calc(59 * var(--u));
+      background: #ffffff;
+      border-radius: calc(29.5 * var(--u));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: calc(22 * var(--u));
+      color: var(--green-btn);
+      text-decoration: none;
+      box-shadow: 0 calc(4 * var(--u)) calc(16 * var(--u)) rgba(0, 0, 0, 0.14);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+    }
+
+    .btn-join-hero:hover {
+      transform: translateY(calc(-2 * var(--u)));
+      box-shadow: 0 calc(6 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-preview-hero {
+      position: absolute;
+      left: calc(707 * var(--u));
+      top: calc(619 * var(--u));
+      width: calc(184 * var(--u));
+      height: calc(58 * var(--u));
+      background: var(--mint-pill);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: calc(29 * var(--u));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: calc(10 * var(--u));
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: calc(19.5 * var(--u));
+      color: #ffffff;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 calc(4 * var(--u)) calc(16 * var(--u)) rgba(0, 0, 0, 0.1);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+    }
+
+    .btn-preview-hero:hover {
+      transform: translateY(calc(-2 * var(--u)));
+      box-shadow: 0 calc(6 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.16);
+    }
+
+    .play-icon {
+      width: calc(16 * var(--u));
+      height: calc(16 * var(--u));
+      fill: #ffffff;
+      flex-shrink: 0;
+    }
+
+    /* Chapters Row */
+    .chapters-section {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: auto;
+      z-index: 10;
+    }
+
+    .chapters-title {
+      position: absolute;
+      left: calc(137 * var(--u));
+      top: calc(866 * var(--u));
+      font-family: var(--font-display);
+      font-size: calc(36 * var(--u));
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: 0.03em;
+      text-shadow: 0 calc(3 * var(--u)) calc(10 * var(--u)) rgba(0, 0, 0, 0.2);
+    }
+
+    .chapters-link {
+      position: absolute;
+      left: calc(1308 * var(--u));
+      top: calc(876 * var(--u));
+      transform: translateX(-100%);
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: calc(22 * var(--u));
+      color: #ffffff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: calc(4 * var(--u));
+      text-shadow: 0 calc(2 * var(--u)) calc(8 * var(--u)) rgba(0, 0, 0, 0.2);
+      transition: color 0.2s ease;
+    }
+
+    .chapters-link .chevron {
+      display: inline-block;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .chapters-link:hover .chevron {
+      transform: translateX(calc(4 * var(--u)));
+    }
+
+    .chapter-card {
+      position: absolute;
+      top: calc(913 * var(--u));
+      width: calc(378 * var(--u));
+      height: calc(273 * var(--u));
+      border-radius: calc(15 * var(--u));
+      overflow: hidden;
+      box-shadow: 0 calc(8 * var(--u)) calc(24 * var(--u)) rgba(0, 0, 0, 0.18);
+      cursor: pointer;
+      transform: translateY(0);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+      background: #8aa992;
+    }
+
+    .chapter-card.card-1 { left: calc(133 * var(--u)); }
+    .chapter-card.card-2 { left: calc(531 * var(--u)); }
+    .chapter-card.card-3 { left: calc(929 * var(--u)); }
+
+    .chapter-card:hover {
+      transform: translateY(calc(-8 * var(--u)));
+      box-shadow: 0 calc(16 * var(--u)) calc(32 * var(--u)) rgba(0, 0, 0, 0.25);
+    }
+
+    .chapter-card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .chapter-card:hover .chapter-card-img {
+      transform: scale(1.05);
+    }
+
+    .card-play-btn {
+      position: absolute;
+      bottom: calc(20 * var(--u));
+      left: calc(20 * var(--u));
+      width: calc(36 * var(--u));
+      height: calc(36 * var(--u));
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(4px);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 calc(2 * var(--u)) calc(8 * var(--u)) rgba(0, 0, 0, 0.2);
+    }
+
+    .card-play-btn svg {
+      width: calc(14 * var(--u));
+      height: calc(14 * var(--u));
+      fill: var(--green-btn);
+      margin-left: calc(2 * var(--u));
+    }
+
+    /* Phones (<= 820px) responsive styles */
+    @media (max-width: 820px) {
+      .hero-container {
+        height: auto;
+        min-height: 100vh;
+        overflow-x: hidden;
+        padding-bottom: 40px;
+      }
+
+      .scene-viewport {
+        position: fixed;
+        width: calc(100vh * (9 / 8));
+        height: 100vh;
+        left: 18%;
+        transform: translateX(-18%);
+      }
+
+      .nav-bar {
+        position: relative;
+        height: 64px;
+        padding: 16px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        position: static;
+        font-size: 24px;
+        gap: 6px;
+      }
+
+      .logo svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      .nav-pill {
+        display: none;
+      }
+
+      .join-nav-btn {
+        position: static;
+        width: 86px;
+        height: 38px;
+        font-size: 15px;
+        border-radius: 19px;
+      }
+
+      .copy-block {
+        position: relative;
+        top: auto;
+        left: auto;
+        padding: 30px 20px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .kicker {
+        position: static;
+        font-size: 22px;
+        margin-bottom: 8px;
+      }
+
+      .headline {
+        position: static;
+        font-size: 51px;
+        line-height: 1.05;
+        white-space: normal;
+        margin-bottom: 16px;
+      }
+
+      .subline {
+        position: static;
+        font-size: 16px;
+        line-height: 1.4;
+        max-width: 90%;
+        margin-bottom: 24px;
+      }
+
+      .hero-actions {
+        position: static;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        width: 100%;
+        margin-bottom: 40px;
+      }
+
+      .btn-join-hero {
+        position: static;
+        width: 130px;
+        height: 48px;
+        font-size: 18px;
+        border-radius: 24px;
+      }
+
+      .btn-preview-hero {
+        position: static;
+        width: 160px;
+        height: 48px;
+        font-size: 16px;
+        border-radius: 24px;
+      }
+
+      .play-icon {
+        width: 14px;
+        height: 14px;
+      }
+
+      .chapters-section {
+        position: relative;
+        top: auto;
+        left: auto;
+        height: auto;
+        padding: 0 20px;
+      }
+
+      .chapters-header-mobile {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 16px;
+      }
+
+      .chapters-title {
+        position: static;
+        font-size: 26px;
+      }
+
+      .chapters-link {
+        position: static;
+        transform: none;
+        font-size: 16px;
+      }
+
+      .chapters-cards-wrapper {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 12px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .chapter-card {
+        position: relative;
+        top: auto;
+        left: auto !important;
+        flex: 0 0 280px;
+        height: 200px;
+        scroll-snap-align: start;
+        border-radius: 14px;
+      }
+
+      .card-play-btn {
+        width: 32px;
+        height: 32px;
+        bottom: 14px;
+        left: 14px;
+      }
+
+      .card-play-btn svg {
+        width: 12px;
+        height: 12px;
+      }
+    }
+
+    /* Reduced Motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      .scene-video {
+        display: none !important;
+      }
+      *, *::before, *::after {
+        animation-duration: 0.001s !important;
+        transition-duration: 0.001s !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero-container" id="hero">
+    <!-- Visual Scene: 9:8 Plate image and looping video overlay -->
+    <div class="scene-viewport">
+      <img
+        class="scene-plate"
+        src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/3ca5d10d-ea2f-4907-876f-33bde169469e.jpg"
+        alt="Hollyoak's hillside afternoon scene with boy and beagle"
+      >
+      <video
+        class="scene-video"
+        src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/d2cb5bef-f92b-4e91-ae93-8dc6555e56ac.mp4"
+        autoplay
+        loop
+        muted
+        playsinline
+        aria-hidden="true"
+      ></video>
+    </div>
+
+    <!-- Navigation -->
+    <header class="nav-bar">
+      <a href="#" class="logo" id="ui-logo" aria-label="Meadowbell home">
+        <svg viewBox="0 0 24 24">
+          <!-- Two-leaf sprout icon -->
+          <path d="M12 22C12 17 8 15 3 15C3 8 9 4 12 4C12 4 13 8 13 11C15 7 19 6 21 6C22 13 16 16 12 16.5V22Z" />
+        </svg>
+        Meadowbell
+      </a>
+
+      <nav class="nav-pill" id="ui-nav-pill" aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="#">Farm</a></li>
+          <li><a href="#">Gear</a></li>
+          <li><a href="#">Chapters</a></li>
+          <li><a href="#">Our Crew</a></li>
+        </ul>
+      </nav>
+
+      <a href="#" class="join-nav-btn" id="ui-join-nav">Join us</a>
+    </header>
+
+    <!-- Copy Block (Centered) -->
+    <div class="copy-block">
+      <div class="kicker" id="ui-kicker">HOLLYOAK'S</div>
+      <h1 class="headline" id="ui-headline">
+        <span class="headline-line" id="ui-hl-1">PLUCKY</span>
+        <span class="headline-line" id="ui-hl-2">SPROUT SQUAD</span>
+      </h1>
+      <p class="subline" id="ui-subline">
+        Learn the Ways of the Meadow with<br>
+        Hollyoak's Plucky Sprout Squad! Each chapter is<br>
+        packed with play, chores, and wonder.
+      </p>
+    </div>
+
+    <!-- Actions -->
+    <div class="hero-actions">
+      <a href="#" class="btn-join-hero" id="ui-btn-join">Join us</a>
+      <a href="#" class="btn-preview-hero" id="ui-btn-preview">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M7 4.5V19.5L19 12L7 4.5Z" />
+        </svg>
+        <span>Watch preview</span>
+      </a>
+    </div>
+
+    <!-- Chapters Row -->
+    <div class="chapters-section">
+      <div class="chapters-header-mobile">
+        <h2 class="chapters-title" id="ui-chapters-title">CHAPTERS</h2>
+        <a href="#" class="chapters-link" id="ui-chapters-link">
+          browse all chapters <span class="chevron">›</span>
+        </a>
+      </div>
+
+      <div class="chapters-cards-wrapper">
+        <!-- Card 1 -->
+        <article class="chapter-card card-1" id="ui-card-1" tabindex="0">
+          <img
+            class="chapter-card-img"
+            src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/cd2d844f-ae3f-4fa9-8067-b077530b6e71.webp"
+            alt="Vegetable garden with tomato stakes and cottage"
+          >
+          <div class="card-play-btn" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M8 5V19L19 12L8 5Z" />
+            </svg>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="chapter-card card-2" id="ui-card-2" tabindex="0">
+          <img
+            class="chapter-card-img"
+            src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/48f5b97e-c27c-4afd-9427-eb35aebd1751.webp"
+            alt="Boy and dog on a hill path among sheep above the sea"
+          >
+          <div class="card-play-btn" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M8 5V19L19 12L8 5Z" />
+            </svg>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="chapter-card card-3" id="ui-card-3" tabindex="0">
+          <img
+            class="chapter-card-img"
+            src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/cde5384e-ce4d-423f-925a-451b779066e0.webp"
+            alt="Girl in a straw hat flying a kite on a breezy hill"
+          >
+          <div class="card-play-btn" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M8 5V19L19 12L8 5Z" />
+            </svg>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Entrance Motion: Web Animations API timeline run once
+    document.addEventListener("DOMContentLoaded", () => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReducedMotion) return;
+
+      const easeOutBack = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+      const easeOutQuad = "cubic-bezier(0.25, 1, 0.5, 1)";
+
+      // Nav elements drop in
+      const navElements = [
+        document.getElementById("ui-logo"),
+        document.getElementById("ui-nav-pill"),
+        document.getElementById("ui-join-nav")
+      ].filter(Boolean);
+
+      navElements.forEach((el, index) => {
+        el.animate([
+          { opacity: 0, transform: "translateY(-30px)" },
+          { opacity: 1, transform: "translateY(0)" }
+        ], {
+          duration: 650,
+          delay: 80 * index,
+          easing: easeOutQuad,
+          fill: "forwards"
+        });
+      });
+
+      // Kicker un-blurs
+      const kicker = document.getElementById("ui-kicker");
+      if (kicker) {
+        kicker.animate([
+          { opacity: 0, filter: "blur(12px)", transform: "scale(0.95)" },
+          { opacity: 1, filter: "blur(0px)", transform: "scale(1)" }
+        ], {
+          duration: 700,
+          delay: 200,
+          easing: easeOutQuad,
+          fill: "forwards"
+        });
+      }
+
+      // Headline lines spring up out of blur, 0.16s apart
+      const hl1 = document.getElementById("ui-hl-1");
+      const hl2 = document.getElementById("ui-hl-2");
+
+      if (hl1) {
+        hl1.animate([
+          { opacity: 0, filter: "blur(14px)", transform: "translateY(36px) scale(0.96)" },
+          { opacity: 1, filter: "blur(0px)", transform: "translateY(0) scale(1)" }
+        ], {
+          duration: 800,
+          delay: 360,
+          easing: easeOutBack,
+          fill: "forwards"
+        });
+      }
+
+      if (hl2) {
+        hl2.animate([
+          { opacity: 0, filter: "blur(14px)", transform: "translateY(36px) scale(0.96)" },
+          { opacity: 1, filter: "blur(0px)", transform: "translateY(0) scale(1)" }
+        ], {
+          duration: 800,
+          delay: 520, // 0.16s later
+          easing: easeOutBack,
+          fill: "forwards"
+        });
+      }
+
+      // Subline, buttons, chapters title/link, and cards rise in turn
+      const sequentialItems = [
+        document.getElementById("ui-subline"),
+        document.getElementById("ui-btn-join"),
+        document.getElementById("ui-btn-preview"),
+        document.getElementById("ui-chapters-title"),
+        document.getElementById("ui-chapters-link"),
+        document.getElementById("ui-card-1"),
+        document.getElementById("ui-card-2"),
+        document.getElementById("ui-card-3")
+      ].filter(Boolean);
+
+      sequentialItems.forEach((item, idx) => {
+        item.animate([
+          { opacity: 0, transform: "translateY(28px)" },
+          { opacity: 1, transform: "translateY(0)" }
+        ], {
+          duration: 650,
+          delay: 680 + (idx * 80),
+          easing: easeOutQuad,
+          fill: "forwards"
+        });
+      });
+    });
+  </script>
+</body>
+</html>
