@@ -29,7 +29,9 @@
       font-family: var(--font-sans);
       color: #ffffff;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
+      text-rendering: optimizeLegibility;
     }
 
     .hero-container {
@@ -38,9 +40,10 @@
       height: calc(1280 * var(--u));
       overflow: hidden;
       user-select: none;
+      background: #8bbad6;
     }
 
-    /* Scene: Plate and overlying video */
+    /* Scene: 9:8 Viewport matching 1440x1280 */
     .scene-viewport {
       position: absolute;
       inset: 0;
@@ -49,8 +52,11 @@
       z-index: 0;
       overflow: hidden;
       pointer-events: none;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
     }
 
+    /* High-Fidelity 2K Plate Image (2160x1920) */
     .scene-plate {
       position: absolute;
       top: 0;
@@ -59,9 +65,21 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      image-rendering: -webkit-optimize-contrast;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      filter: saturate(1.02) contrast(1.01);
     }
 
-    /* Video overlaid at 100% width, 112.5% height, top -6.25% */
+    /*
+      Motion Video Overlay (960x960 square)
+      Positioned at 100% width, 112.5% height, top -6.25% per specification.
+      Equipped with hardware-compositing fixes to prevent subpixel jitter.
+      A refined vertical gradient mask ensures the 2K crystal-clear sky and clouds
+      remain razor-sharp from the master plate without 8-bit video compression artifacts,
+      while all dynamic grass waves, nodding daisies, fluttering shirt, hair, and dog ears
+      play with seamless motion in the middle and bottom.
+    */
     .scene-video {
       position: absolute;
       left: 0;
@@ -71,6 +89,41 @@
       object-fit: cover;
       display: block;
       pointer-events: none;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      will-change: transform;
+      /* Seamless blend keeping 2K sky crisp & animated grass lively */
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 22%,
+        rgba(0, 0, 0, 0.45) 34%,
+        rgba(0, 0, 0, 0.95) 46%,
+        #000000 55%,
+        #000000 100%
+      );
+      mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 22%,
+        rgba(0, 0, 0, 0.45) 34%,
+        rgba(0, 0, 0, 0.95) 46%,
+        #000000 55%,
+        #000000 100%
+      );
+    }
+
+    /* Subtle film-cel texture to eliminate any digital gradient stepping */
+    .film-cel-dither {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.022;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
     /* Top Navigation Elements */
@@ -97,7 +150,12 @@
       color: #ffffff;
       text-decoration: none;
       line-height: 1;
-      text-shadow: 0 calc(2 * var(--u)) calc(8 * var(--u)) rgba(0,0,0,0.2);
+      text-shadow: 0 calc(2 * var(--u)) calc(8 * var(--u)) rgba(0,0,0,0.22);
+      transition: transform 0.25s ease;
+    }
+
+    .logo:hover {
+      transform: translateY(calc(-2 * var(--u)));
     }
 
     .logo svg {
@@ -121,7 +179,7 @@
       align-items: center;
       padding-left: calc(49 * var(--u));
       box-shadow: 0 calc(2 * var(--u)) calc(12 * var(--u)) rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.28);
     }
 
     .nav-links {
@@ -227,7 +285,7 @@
       font-size: calc(21.2 * var(--u));
       line-height: calc(27 * var(--u));
       color: #ffffff;
-      text-shadow: 0 calc(2 * var(--u)) calc(10 * var(--u)) rgba(28, 70, 120, 0.3);
+      text-shadow: 0 calc(2 * var(--u)) calc(10 * var(--u)) rgba(28, 70, 120, 0.32);
       max-width: calc(750 * var(--u));
     }
 
@@ -379,6 +437,7 @@
       object-fit: cover;
       display: block;
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      image-rendering: -webkit-optimize-contrast;
     }
 
     .chapter-card:hover .chapter-card-img {
@@ -391,8 +450,9 @@
       left: calc(20 * var(--u));
       width: calc(36 * var(--u));
       height: calc(36 * var(--u));
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(4px);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -592,29 +652,42 @@
 <body>
 
   <div class="hero-container" id="hero">
-    <!-- Visual Scene: 9:8 Plate image and looping video overlay -->
+    <!-- Visual Scene: 9:8 Plate image and overlying video -->
     <div class="scene-viewport">
-      <img
-        class="scene-plate"
-        src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/3ca5d10d-ea2f-4907-876f-33bde169469e.jpg"
-        alt="Hollyoak's hillside afternoon scene with boy and beagle"
-      >
+      <!-- 2K Master Plate Image with local high-res asset + CDN fallback -->
+      <picture>
+        <source srcset="./assets/plate_crisp.webp" type="image/webp">
+        <source srcset="./assets/plate_original.jpg" type="image/jpeg">
+        <img
+          class="scene-plate"
+          src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/3ca5d10d-ea2f-4907-876f-33bde169469e.jpg"
+          alt="Hollyoak's hillside afternoon scene with boy and beagle"
+          loading="eager"
+        >
+      </picture>
+
+      <!-- Motion Video: Loop overlay with local source + CDN fallback -->
       <video
         class="scene-video"
-        src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/d2cb5bef-f92b-4e91-ae93-8dc6555e56ac.mp4"
         autoplay
         loop
         muted
         playsinline
+        preload="auto"
         aria-hidden="true"
-      ></video>
+      >
+        <source src="./assets/scene_motion.mp4" type="video/mp4">
+        <source src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/d2cb5bef-f92b-4e91-ae93-8dc6555e56ac.mp4" type="video/mp4">
+      </video>
+
+      <!-- Anti-banding film dither layer -->
+      <div class="film-cel-dither" aria-hidden="true"></div>
     </div>
 
     <!-- Navigation -->
     <header class="nav-bar">
       <a href="#" class="logo" id="ui-logo" aria-label="Meadowbell home">
         <svg viewBox="0 0 24 24">
-          <!-- Two-leaf sprout icon -->
           <path d="M12 22C12 17 8 15 3 15C3 8 9 4 12 4C12 4 13 8 13 11C15 7 19 6 21 6C22 13 16 16 12 16.5V22Z" />
         </svg>
         Meadowbell
@@ -669,11 +742,16 @@
       <div class="chapters-cards-wrapper">
         <!-- Card 1 -->
         <article class="chapter-card card-1" id="ui-card-1" tabindex="0">
-          <img
-            class="chapter-card-img"
-            src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/cd2d844f-ae3f-4fa9-8067-b077530b6e71.webp"
-            alt="Vegetable garden with tomato stakes and cottage"
-          >
+          <picture>
+            <source srcset="./assets/card1_crisp.webp" type="image/webp">
+            <source srcset="./assets/card1.webp" type="image/webp">
+            <img
+              class="chapter-card-img"
+              src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/cd2d844f-ae3f-4fa9-8067-b077530b6e71.webp"
+              alt="Vegetable garden with tomato stakes and cottage"
+              loading="lazy"
+            >
+          </picture>
           <div class="card-play-btn" aria-hidden="true">
             <svg viewBox="0 0 24 24">
               <path d="M8 5V19L19 12L8 5Z" />
@@ -683,11 +761,16 @@
 
         <!-- Card 2 -->
         <article class="chapter-card card-2" id="ui-card-2" tabindex="0">
-          <img
-            class="chapter-card-img"
-            src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/48f5b97e-c27c-4afd-9427-eb35aebd1751.webp"
-            alt="Boy and dog on a hill path among sheep above the sea"
-          >
+          <picture>
+            <source srcset="./assets/card2_crisp.webp" type="image/webp">
+            <source srcset="./assets/card2.webp" type="image/webp">
+            <img
+              class="chapter-card-img"
+              src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/48f5b97e-c27c-4afd-9427-eb35aebd1751.webp"
+              alt="Boy and dog on a hill path among sheep above the sea"
+              loading="lazy"
+            >
+          </picture>
           <div class="card-play-btn" aria-hidden="true">
             <svg viewBox="0 0 24 24">
               <path d="M8 5V19L19 12L8 5Z" />
@@ -697,11 +780,16 @@
 
         <!-- Card 3 -->
         <article class="chapter-card card-3" id="ui-card-3" tabindex="0">
-          <img
-            class="chapter-card-img"
-            src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/cde5384e-ce4d-423f-925a-451b779066e0.webp"
-            alt="Girl in a straw hat flying a kite on a breezy hill"
-          >
+          <picture>
+            <source srcset="./assets/card3_crisp.webp" type="image/webp">
+            <source srcset="./assets/card3.webp" type="image/webp">
+            <img
+              class="chapter-card-img"
+              src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/cde5384e-ce4d-423f-925a-451b779066e0.webp"
+              alt="Girl in a straw hat flying a kite on a breezy hill"
+              loading="lazy"
+            >
+          </picture>
           <div class="card-play-btn" aria-hidden="true">
             <svg viewBox="0 0 24 24">
               <path d="M8 5V19L19 12L8 5Z" />
@@ -776,7 +864,7 @@
           { opacity: 1, filter: "blur(0px)", transform: "translateY(0) scale(1)" }
         ], {
           duration: 800,
-          delay: 520, // 0.16s later
+          delay: 520,
           easing: easeOutBack,
           fill: "forwards"
         });
