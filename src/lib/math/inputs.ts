@@ -1,7 +1,8 @@
 import { parseNumeral } from "./numerals";
-import { validate, LIMITS, isCorrectAnswer, diagnoseAnswer, type Diagnosis } from "./subtraction";
+import { validate, LIMITS, isCorrectAnswer, diagnoseAnswer } from "./subtraction";
+import { validateAddition, diagnoseAddition } from "./addition";
 
-export type InputError = "empty" | "not_integer" | "too_long" | "out_of_range" | "subtrahend_larger";
+export type InputError = "empty" | "not_integer" | "too_long" | "out_of_range" | "subtrahend_larger" | "sum_too_large";
 export type InputCheck =
   | { ok: true; m: number; s: number }
   | { ok: false; field: "m" | "s"; code: InputError };
@@ -21,14 +22,37 @@ export function checkInputs(mRaw: string, sRaw: string): InputCheck {
 export type AnswerCheck =
   | { kind: "invalid"; code: "empty" | "not_integer" | "too_long" }
   | { kind: "correct" }
-  | { kind: "wrong"; diagnosis: Exclude<Diagnosis, "correct"> };
+  | { kind: "wrong"; diagnosis: "smaller_from_larger" | "forgot_to_reduce" | "forgot_carry" | "other" };
 
 export function checkAnswer(m: number, s: number, raw: string): AnswerCheck {
   const p = parseNumeral(raw);
   if (!p.ok) return { kind: "invalid", code: p.reason };
   if (isCorrectAnswer(m, s, p.value)) return { kind: "correct" };
-  return { kind: "wrong", diagnosis: diagnoseAnswer(m, s, p.value) as Exclude<Diagnosis, "correct"> };
+  return { kind: "wrong", diagnosis: diagnoseAnswer(m, s, p.value) as "smaller_from_larger" | "forgot_to_reduce" | "other" };
 }
+
+export function checkAdditionInputs(aRaw: string, bRaw: string): InputCheck {
+  const a = parseNumeral(aRaw);
+  if (!a.ok) return { ok: false, field: "m", code: a.reason };
+  const b = parseNumeral(bRaw);
+  if (!b.ok) return { ok: false, field: "s", code: b.reason };
+  if (a.value > LIMITS.max) return { ok: false, field: "m", code: "out_of_range" };
+  if (b.value > LIMITS.max) return { ok: false, field: "s", code: "out_of_range" };
+  const v = validateAddition(a.value, b.value);
+  if (!v.ok) return { ok: false, field: "s", code: v.code === "sum_too_large" ? "sum_too_large" : "out_of_range" };
+  return { ok: true, m: a.value, s: b.value };
+}
+
+export function checkAdditionAnswer(a: number, b: number, raw: string): AnswerCheck {
+  const p = parseNumeral(raw);
+  if (!p.ok) return { kind: "invalid", code: p.reason };
+  if (p.value === a + b) return { kind: "correct" };
+  return { kind: "wrong", diagnosis: diagnoseAddition(a, b, p.value) as "forgot_carry" | "other" };
+}
+
+export const ADD_TRANSFER: ReadonlyArray<readonly [number, number]> = [
+  [48, 37], [76, 58], [167, 246], [395, 408], [549, 167],
+];
 
 /** Fixed transfer problems; each needs at least one exchange (tested). */
 export const TRANSFER: ReadonlyArray<readonly [number, number]> = [
