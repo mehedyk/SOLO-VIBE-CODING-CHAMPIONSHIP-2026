@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Pulse — Late edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Archivo:wdth,wght@75..110,400..600&display=swap" rel="stylesheet">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
+<style>
+:root{
+  --paper:#f1ecdf; --paper2:#e6dfcd; --ink:#171512; --ink2:#5a5449; --rule:#cfc6b2; --red:#b3301b;
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --sans:'Archivo',Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font:inherit;background:none;border:0;color:inherit;cursor:pointer}
+::selection{background:var(--ink);color:var(--paper)}
+.wrap{width:min(1280px,calc(100% - 3rem));margin-inline:auto}
+.mono{font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2)}
+h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.02;letter-spacing:-.02em;font-variation-settings:"opsz" 144}
+em{font-style:italic;font-weight:300}
+.red{color:var(--red)}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:60;mix-blend-mode:multiply;opacity:.9;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* links */
+.ul{background-image:linear-gradient(currentColor,currentColor);background-size:0 1px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .45s cubic-bezier(.2,.7,.2,1)}
+.ul:hover,a:hover .ul{background-size:100% 1px}
+.lnk{display:inline-flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:500;border-bottom:1px solid var(--ink);padding-bottom:2px}
+.lnk::after{content:"→";transition:transform .3s}
+.lnk:hover::after{transform:translateX(4px)}
+
+/* reveals — deliberately quiet */
+.r{opacity:0;transform:translateY(10px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--d,0)*80ms)}
+.r.in{opacity:1;transform:none}
+
+/* ───────── masthead ───────── */
+.mast{padding-top:.8rem}
+.topbar{display:flex;justify-content:space-between;gap:1rem;padding:.5rem 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.title-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:1rem;padding:1.6rem 0 1rem}
+.title-row .side{line-height:1.5;padding-bottom:1.2rem}
+.title-row .side.right{text-align:right}
+.masthead{font-size:clamp(4rem,13.5vw,12.5rem);letter-spacing:-.05em;line-height:.85;font-weight:500;text-align:center;white-space:nowrap}
+.masthead i{font-style:italic;font-weight:300}
+.sections{display:flex;justify-content:center;gap:2.4rem;border-top:1px solid var(--ink);border-bottom:3px double var(--ink);padding:.7rem 0;font-size:.85rem;font-weight:500;flex-wrap:wrap}
+.sections a{position:relative;padding:.1rem 0}
+.sections a.on::before{content:"";position:absolute;left:-.9rem;top:50%;width:5px;height:5px;background:var(--red);border-radius:50%;transform:translateY(-50%)}
+.sections a:not(.on){color:var(--ink2)}
+.sections a:hover{color:var(--ink)}
+
+/* sticky bar */
+.bar{position:fixed;top:0;left:0;right:0;z-index:40;background:var(--paper);border-bottom:1px solid var(--ink);transform:translateY(-101%);transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.bar.show{transform:none}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;height:48px;gap:2rem}
+.bar .b-logo{font-family:var(--serif);font-size:1.3rem;font-weight:500;letter-spacing:-.03em}
+.bar nav{display:flex;gap:1.6rem;font-size:.8rem}
+.bar nav a{color:var(--ink2)}.bar nav a:hover{color:var(--ink)}
+.bar .prog{position:absolute;left:0;bottom:-1px;height:1px;width:100%;background:var(--red);transform-origin:left;transform:scaleX(0)}
+
+/* ───────── front page ───────── */
+.front{display:grid;grid-template-columns:5fr 4fr 3fr;gap:0;padding:2.2rem 0 3rem}
+.front > *{padding:0 2rem}
+.front > *:first-child{padding-left:0}
+.front > *:last-child{padding-right:0}
+.front > * + *{border-left:1px solid var(--rule)}
+.kicker{color:var(--red);margin-bottom:.9rem}
+.lead .hl{font-size:clamp(2.4rem,4.6vw,4.4rem);margin-bottom:1.4rem}
+.lede{font-family:var(--serif);font-size:1.2rem;line-height:1.45;color:var(--ink2);max-width:46ch;margin-bottom:1.2rem;font-variation-settings:"opsz" 18}
+.byline{margin-bottom:1.6rem}
+.fig{display:flex;flex-direction:column;gap:.7rem}
+.globe{width:100%;aspect-ratio:1;border:1px solid var(--ink);position:relative;cursor:grab;background:var(--paper)}
+.globe:active{cursor:grabbing}
+.globe canvas{display:block;width:100%!important;height:100%!important}
+.globe .corner{position:absolute;font-family:var(--mono);font-size:.62rem;color:var(--ink2);letter-spacing:.05em}
+.globe .corner.tl{top:.5rem;left:.6rem}.globe .corner.br{bottom:.5rem;right:.6rem}
+.globe .corner.br b{color:var(--red);font-weight:400}
+.fig figcaption{line-height:1.6}
+.brief h3{font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2);padding-bottom:.6rem;border-bottom:1px solid var(--ink);margin-bottom:.2rem}
+.brief li{list-style:none;padding:.9rem 0;border-bottom:1px solid var(--rule);font-family:var(--serif);font-size:1.02rem;line-height:1.3;font-variation-settings:"opsz" 18}
+.brief li span{display:block;margin-top:.35rem}
+.brief li a:hover{color:var(--red)}
+
+/* ───────── wire ───────── */
+.wire{display:flex;background:var(--ink);color:var(--paper);overflow:hidden;font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase}
+.wire .lbl{flex:none;padding:.75rem 1.2rem;border-right:1px solid rgba(241,236,223,.25);display:flex;align-items:center;gap:.6rem}
+.wire .lbl i{width:6px;height:6px;background:var(--red);border-radius:50%;animation:blink 1.4s steps(1) infinite}
+@keyframes blink{50%{opacity:.2}}
+.wire .track{display:flex;white-space:nowrap;animation:mq 60s linear infinite}
+.wire:hover .track{animation-play-state:paused}
+.wire .track span{padding:.75rem 1.6rem;border-right:1px solid rgba(241,236,223,.15)}
+.wire .track span b{color:#e0b6ad;font-weight:400;margin-right:.8rem}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ───────── frames (scroll scrub) ───────── */
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;padding:1rem 0 1.2rem;border-bottom:1px solid var(--ink);margin-bottom:2rem;flex-wrap:wrap}
+.sec-title{font-size:clamp(2.2rem,4.4vw,3.8rem)}
+.frames-head{padding-top:4rem}
+.frames-head .note{max-width:34ch;font-size:.85rem;color:var(--ink2)}
+.f-track{height:460vh;position:relative}
+.f-sticky{position:sticky;top:0;height:100vh;overflow:hidden;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+#fcanvas{position:absolute;inset:0;width:100%;height:100%}
+.f-ui{position:absolute;inset:0;pointer-events:none}
+.f-counter{position:absolute;top:1.4rem;left:1.5rem;display:flex;gap:1.2rem;align-items:baseline}
+.f-counter .big{font-family:var(--serif);font-size:2.2rem;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+.f-status{position:absolute;top:1.6rem;right:4rem}
+.f-status .dot{display:inline-block;width:6px;height:6px;background:var(--red);border-radius:50%;margin-right:.5rem;vertical-align:1px}
+.f-caps{position:absolute;left:1.5rem;bottom:1.5rem;width:min(420px,calc(100% - 3rem))}
+.cap{position:absolute;bottom:0;left:0;right:0;background:var(--paper);border:1px solid var(--ink);padding:1.2rem 1.4rem;opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s}
+.cap.on{opacity:1;transform:none}
+.cap .n{display:block;margin-bottom:.4rem;color:var(--red)}
+.cap h3{font-size:1.9rem;margin-bottom:.4rem}
+.cap p{font-size:.88rem;color:var(--ink2);max-width:40ch}
+.f-rail{position:absolute;right:2rem;top:14vh;bottom:14vh;width:1px;background:var(--rule)}
+.f-rail::after{content:"";position:absolute;left:-4px;width:9px;top:0;bottom:0;background:repeating-linear-gradient(to bottom,var(--ink2) 0 1px,transparent 1px calc(100%/8))}
+.f-rail span{position:absolute;left:-3.5px;width:8px;height:8px;background:var(--red);border-radius:50%;top:0;transform:translateY(-50%)}
+.f-hint{position:absolute;bottom:1.6rem;right:2rem;writing-mode:vertical-rl;transform:rotate(180deg)}
+
+/* ───────── latest ───────── */
+.latest{padding-top:5rem}
+.tabs{display:flex;gap:1.6rem}
+.tabs button{padding:.3rem 0;color:var(--ink2);border-bottom:1px solid transparent;font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;text-transform:uppercase}
+.tabs button.on{color:var(--ink);border-color:var(--ink)}
+.tabs button:hover{color:var(--red)}
+.stories{display:grid;grid-template-columns:repeat(3,1fr)}
+.story{padding:1.2rem 1.6rem 2rem;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:.8rem;animation:fadein .5s both}
+.story:nth-child(3n+1){padding-left:0}
+.story:nth-child(3n){border-right:0;padding-right:0}
+.story[hidden]{display:none}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}}
+.story-top{display:flex;justify-content:space-between}
+.story-top .num{color:var(--ink)}
+.story-img{overflow:hidden;background:var(--paper2);aspect-ratio:3/2}
+.story-img img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);transition:filter .6s,transform 1.4s cubic-bezier(.2,.7,.2,1)}
+.story:hover .story-img img{filter:none;transform:scale(1.03)}
+.story h3{font-size:1.55rem}
+.story p{font-size:.9rem;color:var(--ink2)}
+.story .byline{margin:0;margin-top:auto}
+.story.feat{grid-column:1/-1;display:grid;grid-template-columns:1.1fr .9fr;gap:2.5rem;padding:1.4rem 0 2.4rem;border-right:0;border-bottom:1px solid var(--ink)}
+.story.feat .story-img{grid-column:2;grid-row:1/6;aspect-ratio:4/3}
+.story.feat h3{font-size:clamp(2rem,3.6vw,3.2rem)}
+.story.feat p{font-size:1.05rem;font-family:var(--serif);font-variation-settings:"opsz" 18}
+
+/* ───────── long read ───────── */
+.longread{padding:6rem 0}
+.lr-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.lr-media{position:sticky;top:5rem}
+.lr-media .frame{overflow:hidden;border:1px solid var(--ink);aspect-ratio:4/5;background:var(--paper2)}
+.lr-media img{width:100%;height:110%;object-fit:cover;filter:grayscale(.3) sepia(.15);will-change:transform}
+.lr-media figcaption{margin-top:.6rem;line-height:1.6}
+.lr-text h2{font-size:clamp(2.4rem,4vw,3.8rem);margin-bottom:1.6rem}
+.lr-text p{font-family:var(--serif);font-size:1.12rem;line-height:1.55;font-variation-settings:"opsz" 18;margin-bottom:1.2rem;max-width:56ch}
+.lr-text .drop::first-letter{font-size:4.6rem;float:left;line-height:.8;padding:.3rem .5rem 0 0;font-weight:500;color:var(--red)}
+.lr-text blockquote{font-family:var(--serif);font-style:italic;font-weight:300;font-size:1.9rem;line-height:1.2;border-left:2px solid var(--red);padding:.3rem 0 .3rem 1.4rem;margin:2rem 0}
+.lr-text blockquote small{display:block;font-style:normal;font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);margin-top:.8rem}
+
+/* ───────── most read ───────── */
+.mostread{padding-bottom:5rem}
+.mostread ol{list-style:none}
+.mostread li{display:grid;grid-template-columns:5rem 1fr auto;align-items:center;gap:1.5rem;padding:1.3rem 0;border-bottom:1px solid var(--rule)}
+.mostread li:first-child{border-top:1px solid var(--ink)}
+.mostread .num{font-family:var(--serif);font-size:3.2rem;font-weight:300;line-height:1;color:var(--ink2);font-variant-numeric:tabular-nums}
+.mostread h3{font-size:clamp(1.3rem,2.2vw,1.9rem);transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+.mostread li:hover h3{transform:translateX(8px)}
+.mostread li:hover .num{color:var(--red)}
+.mostread .arr{font-family:var(--serif);font-size:1.6rem;opacity:0;transform:translateX(-8px);transition:.4s}
+.mostread li:hover .arr{opacity:1;transform:none}
+
+/* ───────── briefing ───────── */
+.brf .box{border:1px solid var(--ink);display:grid;grid-template-columns:1.2fr 1fr;gap:3rem;padding:3rem;position:relative;background:var(--paper)}
+.brf .box::after{content:"";position:absolute;inset:6px;border:1px solid var(--rule);pointer-events:none}
+.brf h2{font-size:clamp(2rem,3.6vw,3.4rem);margin:.6rem 0 1rem}
+.brf p{color:var(--ink2);max-width:40ch}
+.form{display:flex;flex-direction:column;justify-content:center;gap:1.2rem}
+.form label{display:block}
+.form input{width:100%;background:none;border:0;border-bottom:1px solid var(--ink);padding:.7rem 0;font:inherit;font-family:var(--serif);font-size:1.4rem;color:var(--ink);outline:0}
+.form input::placeholder{color:var(--rule)}
+.form input:focus{border-bottom-width:2px}
+.form button{align-self:flex-start;background:var(--ink);color:var(--paper);padding:.9rem 1.6rem;font-size:.85rem;font-weight:500;transition:background .3s}
+.form button:hover{background:var(--red)}
+.form small{color:var(--ink2);font-size:.75rem}
+.form.ok button{background:var(--red)}
+
+/* ───────── footer ───────── */
+footer{margin-top:6rem;border-top:3px double var(--ink);padding:3rem 0 1.5rem}
+.fgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;padding-bottom:3rem}
+footer h4{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);margin-bottom:.9rem;font-weight:400}
+footer ul{list-style:none;display:grid;gap:.4rem;font-size:.9rem}
+footer .colophon{font-size:.85rem;color:var(--ink2);max-width:36ch;line-height:1.6}
+.f-big{font-family:var(--serif);font-size:clamp(4rem,17vw,16rem);line-height:.8;letter-spacing:-.06em;text-align:center;-webkit-text-stroke:1px var(--ink);color:transparent;font-weight:500;user-select:none;margin:1rem 0 2rem}
+.fbottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-top:1px solid var(--rule);padding-top:1rem}
+
+@media (max-width:1000px){
+  .front{grid-template-columns:1fr 1fr}
+  .front > *{padding:0!important;border-left:0!important}
+  .front .lead{grid-column:1/-1;padding-bottom:2rem!important;border-bottom:1px solid var(--rule);margin-bottom:2rem}
+  .front .brief{padding-left:2rem!important;border-left:1px solid var(--rule)!important}
+  .stories{grid-template-columns:1fr 1fr}
+  .story:nth-child(n){padding-left:1.2rem;padding-right:1.2rem;border-right:1px solid var(--rule)}
+  .story:nth-child(2n){border-right:0}
+  .story.feat{grid-template-columns:1fr}.story.feat .story-img{grid-column:1;grid-row:auto}
+  .lr-grid{grid-template-columns:1fr}.lr-media{position:static}
+  .brf .box{grid-template-columns:1fr;padding:2rem}
+  .fgrid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .title-row{grid-template-columns:1fr}.title-row .side{display:none}
+  .masthead{font-size:19vw}
+  .front{grid-template-columns:1fr}.front .brief{padding-left:0!important;border-left:0!important;margin-top:2rem}
+  .stories{grid-template-columns:1fr}.story:nth-child(n){padding-left:0;padding-right:0;border-right:0}
+  .mostread li{grid-template-columns:3rem 1fr}.mostread .arr{display:none}
+  .f-rail{right:1rem}.f-hint{display:none}.f-status{right:1.5rem;top:auto;bottom:calc(1.5rem + 140px)}
+  .bar nav{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.r{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<!-- sticky bar -->
+<div class="bar" id="bar">
+  <div class="wrap">
+    <a href="#top" class="b-logo">The Pulse</a>
+    <nav><a href="#frames">In pictures</a><a href="#latest">Latest</a><a href="#longread">Long read</a><a href="#mostread">Most read</a><a href="#subscribe">Briefing</a></nav>
+    <span class="mono" id="clock2">—</span>
+  </div>
+  <span class="prog" id="prog"></span>
+</div>
+
+<!-- masthead -->
+<header class="mast" id="top">
+  <div class="wrap">
+    <div class="topbar mono">
+      <span id="date">—</span>
+      <span>Late edition · № 1,204</span>
+      <span>London 14° · Rain later</span>
+      <span>Free online · £3.20 print</span>
+    </div>
+    <div class="title-row">
+      <div class="side mono">Est. 2019<br>Independent &amp; reader-funded</div>
+      <h1 class="masthead">The <i>Pulse</i></h1>
+      <div class="side mono right">Vol. XII<br>No. 43</div>
+    </div>
+    <nav class="sections">
+      <a class="on" href="#top">Front page</a><a href="#frames">In pictures</a><a href="#latest">Latest</a><a href="#longread">Long read</a><a href="#mostread">Most read</a><a href="#subscribe">Briefing</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- front page -->
+<section class="front wrap">
+  <article class="lead">
+    <p class="kicker mono r">Science · Live coverage</p>
+    <h2 class="hl r" style="--d:1">Cities are quietly rewriting the rules of the <em>night sky</em></h2>
+    <p class="lede r" style="--d:2">Forty-one municipalities have switched off, dimmed or re-aimed their streetlights since January. Astronomers are delighted. Insurers, less so. We spent three nights on the roofs of Leeds to find out who's right.</p>
+    <p class="byline mono r" style="--d:3">By Maya Reyes · Photographs by Tom Achebe · 6 min · Updated <span id="clock">—</span></p>
+    <a href="#longread" class="lnk r" style="--d:4">Continue reading</a>
+  </article>
+
+  <figure class="fig r" style="--d:2">
+    <div class="globe" id="globe">
+      <span class="corner tl">Fig. 1</span>
+      <span class="corner br"><b>●</b> <span id="dispatch">0</span> dispatches / 24h</span>
+    </div>
+    <figcaption class="mono">Dispatch density, past 24 hours, by bureau. Drag to rotate. Source: Pulse newsroom desk.</figcaption>
+  </figure>
+
+  <aside class="brief r" style="--d:3">
+    <h3>In brief</h3>
+    <ul>
+      <li><a href="#" class="ul">Rate pause surprises markets; sterling steadies</a><span class="mono">Business · 08:12</span></li>
+      <li><a href="#" class="ul">Lunar lander phones home from the south pole</a><span class="mono">Space · 07:40</span></li>
+      <li><a href="#" class="ul">The village that banned clocks, one month on</a><span class="mono">World · 06:55</span></li>
+      <li><a href="#" class="ul">Corrections &amp; clarifications</a><span class="mono">Page 2</span></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- wire -->
+<div class="wire">
+  <div class="lbl"><i></i>On the wire</div>
+  <div class="track" id="wire"></div>
+</div>
+
+<!-- frames -->
+<section id="frames">
+  <div class="wrap frames-head">
+    <div class="sec-head">
+      <div>
+        <p class="kicker mono r">In pictures</p>
+        <h2 class="sec-title r" style="--d:1">How a story is made, <em>in 64 frames</em></h2>
+      </div>
+      <p class="note r" style="--d:2">Scroll slowly. Each notch of the wheel moves the sequence one frame forward; scroll up to rewind it.</p>
+    </div>
+  </div>
+  <div class="f-track" id="ftrack">
+    <div class="f-sticky">
+      <canvas id="fcanvas"></canvas>
+      <div class="f-ui">
+        <div class="f-counter mono"><span class="big" id="fCur">001</span><span>/ <span id="fTot">064</span></span></div>
+        <div class="f-status mono" id="fStatus"><span class="dot"></span>Rendering frames…</div>
+        <div class="f-caps">
+          <div class="cap on" data-at="0"><span class="n mono">Chapter I</span><h3>Gather</h3><p>Reporters in 180 countries file raw notes, audio and footage into one shared desk. Nothing is discarded yet.</p></div>
+          <div class="cap" data-at=".36"><span class="n mono">Chapter II</span><h3>Verify</h3><p>Every claim is broken apart, sourced and cross-checked. The story is at its most fragile here — and its most honest.</p></div>
+          <div class="cap" data-at=".7"><span class="n mono">Chapter III</span><h3>Publish</h3><p>The pieces come back together, in order, under a byline. Then the desk starts again.</p></div>
+        </div>
+        <div class="f-rail"><span id="fMark"></span></div>
+        <span class="f-hint mono">Scroll to scrub</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- latest -->
+<section class="latest wrap" id="latest">
+  <div class="sec-head">
+    <h2 class="sec-title r">Latest</h2>
+    <div class="tabs r" id="tabs">
+      <button class="on" data-cat="all">All</button><button data-cat="tech">Tech</button><button data-cat="world">World</button><button data-cat="culture">Culture</button><button data-cat="science">Science</button>
+    </div>
+  </div>
+  <div class="stories" id="stories"></div>
+</section>
+
+<!-- long read -->
+<section class="longread" id="longread">
+  <div class="wrap lr-grid">
+    <figure class="lr-media r">
+      <div class="frame"><img id="lrImg" src="https://picsum.photos/seed/pulse-lab/1000/1300" alt=""></div>
+      <figcaption class="mono">A sensor buoy, 11 km off Cascais, Portugal. The lab has 340 of them. Photograph: Inês Carvalho</figcaption>
+    </figure>
+    <div class="lr-text">
+      <p class="kicker mono r">Long read · 14 min</p>
+      <h2 class="r" style="--d:1">Inside the lab that's teaching oceans to <em>remember</em></h2>
+      <p class="drop r" style="--d:2">The first thing you notice about the lab is that it doesn't look like one. It is a converted sardine cannery, and it smells faintly of the fact. The second thing you notice is the wall: three hundred and forty small screens, each one a buoy, each one blinking at a slightly different rate.</p>
+      <p class="r">"They're not measuring the sea," says Dr Rui Ferreira, who runs the place on a budget he describes as "optimistic". "They're learning what it usually does, so they can tell us the moment it stops doing that."</p>
+      <blockquote class="r">"A thermometer forgets. We wanted something that doesn't."<small>Dr Rui Ferreira, Instituto do Mar</small></blockquote>
+      <p class="r">What the buoys have found, over five years, is a pattern nobody had a model for — a slow, seasonal shift in the way warm water stacks on cold that seems to predict Atlantic storm tracks roughly eleven days earlier than anything currently in use.</p>
+      <a href="#" class="lnk r">Read the full piece</a>
+    </div>
+  </div>
+</section>
+
+<!-- most read -->
+<section class="mostread wrap" id="mostread">
+  <div class="sec-head"><h2 class="sec-title r">Most read this week</h2><span class="mono r">Updated hourly</span></div>
+  <ol id="mostlist"></ol>
+</section>
+
+<!-- briefing -->
+<section class="brf wrap" id="subscribe">
+  <div class="box r">
+    <div>
+      <p class="kicker mono">The morning briefing</p>
+      <h2>Five stories. Five minutes. <em>Every morning, 6:30.</em></h2>
+      <p>Written by a person, at a desk, who has read everything so you don't have to. No algorithm, no clickbait. Unsubscribe with one click, no guilt.</p>
+    </div>
+    <form class="form" id="form">
+      <label><span class="mono">Email address</span><input type="email" placeholder="you@somewhere.com" required></label>
+      <button type="submit" id="formBtn">Sign me up</button>
+      <small>We'll never sell your address. Read our <a class="ul" href="#">privacy note</a>.</small>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div><p class="colophon">The Pulse is an independent, reader-funded newsroom. Set in Fraunces and Archivo. Printed in London, published everywhere.</p></div>
+      <div><h4>Sections</h4><ul><li><a class="ul" href="#">Tech</a></li><li><a class="ul" href="#">World</a></li><li><a class="ul" href="#">Culture</a></li><li><a class="ul" href="#">Science</a></li></ul></div>
+      <div><h4>The paper</h4><ul><li><a class="ul" href="#">About</a></li><li><a class="ul" href="#">Ethics code</a></li><li><a class="ul" href="#">Corrections</a></li><li><a class="ul" href="#">Jobs</a></li></ul></div>
+      <div><h4>Elsewhere</h4><ul><li><a class="ul" href="#">RSS</a></li><li><a class="ul" href="#">Mastodon</a></li><li><a class="ul" href="#">Instagram</a></li><li><a class="ul" href="#">Podcast</a></li></ul></div>
+    </div>
+    <div class="f-big">The Pulse</div>
+    <div class="fbottom mono"><span>© <span id="year"></span> Pulse Media Ltd.</span><span>Vol. XII · No. 43 · Late edition</span></div>
+  </div>
+</footer>
+
+<!-- ═══════════════ UI script ═══════════════ -->
+<script>
+const STORIES=[
+ {cat:'tech',feat:true,title:'The chip that thinks in light, not electrons',ex:'Photonic processors have left the lab. We visited the fab in Eindhoven where they\'re being made — and asked why nobody is talking about the electricity bill.',by:'Sam Okafor',read:'8 min',time:'12 min ago',seed:'photonic'},
+ {cat:'world',title:'A new rail line stitches three capitals together overnight',ex:'After a decade of delays, the first passengers boarded at dawn.',by:'Léa Marchand',read:'5 min',time:'34 min ago',seed:'rail'},
+ {cat:'culture',title:'Why the world\'s most-streamed song has no chorus',ex:'A structural rebellion is quietly reshaping pop, one skipped hook at a time.',by:'Dev Anand',read:'4 min',time:'1 hr ago',seed:'music'},
+ {cat:'science',title:'Bees have been voting all along — we just learned to count',ex:'A decade-long study decodes the democracy of the hive.',by:'Maya Reyes',read:'6 min',time:'2 hr ago',seed:'bees'},
+ {cat:'tech',title:'Your next browser might not have tabs',ex:'Designers are rethinking a 25-year-old metaphor. Some of them are right.',by:'Sam Okafor',read:'3 min',time:'3 hr ago',seed:'browser'},
+ {cat:'world',title:'The village that banned clocks for a month',ex:'An experiment in slow living goes viral, and sparks a very fast argument.',by:'Léa Marchand',read:'7 min',time:'4 hr ago',seed:'village'},
+ {cat:'culture',title:'Museums are lending art to living rooms',ex:'A pilot scheme puts minor masterpieces on loan to ordinary households.',by:'Dev Anand',read:'5 min',time:'5 hr ago',seed:'museum'},
+];
+const MOST=[['The quiet return of the paper map','World · 9 min'],['How a 19-year-old cracked a 40-year-old cipher','Tech · 6 min'],['Cities that hum: the architecture of sound','Culture · 11 min'],['The last lighthouse keepers','Long read · 18 min'],['Inside the seed vault, one year later','Science · 7 min']];
+const WIRE=[['Markets','Global indices open higher after surprise rate pause'],['Space','Private lander touches down on lunar south pole'],['Climate','Record-low Arctic ice extent recorded this week'],['Tech','Open-source model tops benchmark leaderboard'],['Sport','Underdog seals title in final-second stunner'],['Health','Universal flu vaccine enters phase three']];
+
+const stories=document.getElementById('stories');
+function renderStories(cat='all'){
+  let n=0;
+  stories.innerHTML=STORIES.filter(s=>cat==='all'||s.cat===cat).map(s=>`
+   <article class="story ${s.feat&&cat==='all'?'feat':''}" style="animation-delay:${n*50}ms">
+     <div class="story-top mono"><span class="num">${String(++n).padStart(2,'0')}</span><span>${s.cat}</span><span>${s.time}</span></div>
+     <a href="#" class="story-img"><img src="https://picsum.photos/seed/${s.seed}/900/600" alt="" loading="lazy"></a>
+     <h3><a href="#" class="ul">${s.title}</a></h3>
+     <p>${s.ex}</p>
+     <p class="byline mono">By ${s.by} · ${s.read}</p>
+   </article>`).join('');
+}
+renderStories();
+document.getElementById('tabs').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  document.querySelector('#tabs .on').classList.remove('on');b.classList.add('on');renderStories(b.dataset.cat);
+});
+document.getElementById('mostlist').innerHTML=MOST.map((m,i)=>`<li><span class="num">${String(i+1).padStart(2,'0')}</span><div><h3><a href="#">${m[0]}</a></h3><span class="mono">${m[1]}</span></div><span class="arr">→</span></li>`).join('');
+const w=WIRE.map(([k,v])=>`<span><b>${k}</b>${v}</span>`).join('');document.getElementById('wire').innerHTML=w+w;
+
+/* date / clocks */
+const now=new Date();
+document.getElementById('date').textContent=now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+document.getElementById('year').textContent=now.getFullYear();
+const tick=()=>{const t=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});document.getElementById('clock').textContent=t;document.getElementById('clock2').textContent=t+' GMT'};tick();setInterval(tick,10000);
+let disp=1180;const dEl=document.getElementById('dispatch');dEl.textContent=disp.toLocaleString();setInterval(()=>{disp+=Math.random()<.5?1:2;dEl.textContent=disp.toLocaleString()},2500);
+
+/* reveals */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.r').forEach(el=>io.observe(el));
+
+/* sticky bar + progress */
+const bar=document.getElementById('bar'),prog=document.getElementById('prog'),mast=document.querySelector('.mast');
+addEventListener('scroll',()=>{
+  bar.classList.toggle('show',scrollY>mast.offsetHeight);
+  prog.style.transform=`scaleX(${scrollY/(document.documentElement.scrollHeight-innerHeight)})`;
+},{passive:true});
+
+/* form */
+const form=document.getElementById('form'),fb=document.getElementById('formBtn');
+form.addEventListener('submit',e=>{e.preventDefault();form.classList.add('ok');fb.textContent='You\'re on the list';form.querySelector('input').value='';setTimeout(()=>{form.classList.remove('ok');fb.textContent='Sign me up'},3500)});
+</script>
+
+<!-- ═══════════════ Three.js: globe + frame sequence ═══════════════ -->
+<script type="module">
+import * as THREE from 'three';
+const PAPER=0xf1ecdf, PAPER2=0xe6dfcd, INK=0x171512, RULE=0xcfc6b2, RED=0xb3301b;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ────────────── 1. DOT GLOBE ────────────── */
+const gWrap=document.getElementById('globe');
+const gR=new THREE.WebGLRenderer({antialias:true,alpha:true});
+gR.setPixelRatio(Math.min(devicePixelRatio,2));
+gWrap.appendChild(gR.domElement);
+const gS=new THREE.Scene(), gC=new THREE.PerspectiveCamera(30,1,.1,20); gC.position.z=4.6;
+const globe=new THREE.Group(); gS.add(globe); globe.rotation.x=.35;
+
+// occluder so back-side dots/lines are hidden
+globe.add(new THREE.Mesh(new THREE.SphereGeometry(.985,48,48),new THREE.MeshBasicMaterial({color:PAPER})));
+// fibonacci dots
+{const N=3200,pos=new Float32Array(N*3),phi=Math.PI*(3-Math.sqrt(5));
+ for(let i=0;i<N;i++){const y=1-(i/(N-1))*2,r=Math.sqrt(1-y*y),t=phi*i;pos.set([Math.cos(t)*r,y,Math.sin(t)*r],i*3)}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+ globe.add(new THREE.Points(g,new THREE.PointsMaterial({color:INK,size:.016,sizeAttenuation:true})))}
+// graticule
+{const circle=(n=96)=>{const p=[];for(let i=0;i<=n;i++){const a=i/n*Math.PI*2;p.push(new THREE.Vector3(Math.cos(a),Math.sin(a),0))}return new THREE.BufferGeometry().setFromPoints(p)};
+ const m=new THREE.LineBasicMaterial({color:RULE});
+ for(let i=0;i<6;i++){const l=new THREE.Line(circle(),m);l.rotation.y=i/6*Math.PI;globe.add(l)}
+ for(const lat of[-60,-30,0,30,60]){const r=Math.cos(lat*Math.PI/180),l=new THREE.Line(circle(),m);l.scale.setScalar(r);l.rotation.x=Math.PI/2;l.position.y=Math.sin(lat*Math.PI/180);globe.add(l)}}
+// bureau pings
+const pings=[];
+{const ll=(lat,lon)=>{const p=(90-lat)*Math.PI/180,t=(lon+180)*Math.PI/180;return new THREE.Vector3(-Math.sin(p)*Math.cos(t),Math.cos(p),Math.sin(p)*Math.sin(t))};
+ const cities=[[51.5,-.1],[40.7,-74],[35.7,139.7],[6.5,3.4],[-23.5,-46.6],[-33.9,151.2],[28.6,77.2],[-1.3,36.8],[19.4,-99.1],[55.7,37.6]];
+ cities.forEach((c,i)=>{const v=ll(...c),g=new THREE.Group();g.position.copy(v).multiplyScalar(1.002);g.lookAt(v.clone().multiplyScalar(2));
+  g.add(new THREE.Mesh(new THREE.CircleGeometry(.014,16),new THREE.MeshBasicMaterial({color:RED})));
+  const ring=new THREE.Mesh(new THREE.RingGeometry(.02,.026,32),new THREE.MeshBasicMaterial({color:RED,transparent:true}));g.add(ring);globe.add(g);
+  pings.push({ring,off:i*.37})})}
+// drag
+let drag=false,lx=0,ly=0,vy=.0025,vx=0;
+gWrap.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;gWrap.setPointerCapture(e.pointerId)});
+gWrap.addEventListener('pointermove',e=>{if(!drag)return;vy=(e.clientX-lx)*.005;vx=(e.clientY-ly)*.005;lx=e.clientX;ly=e.clientY});
+gWrap.addEventListener('pointerup',()=>drag=false);gWrap.addEventListener('pointercancel',()=>drag=false);
+function gResize(){const s=gWrap.clientWidth;gR.setSize(s,s,false)} gResize(); addEventListener('resize',gResize);
+
+/* ────────────── 2. FRAME SEQUENCE (scroll scrub) ────────────── */
+// To use real video frames instead of the generated ones:
+//   ffmpeg -i clip.mp4 -vf "fps=12,scale=1280:-1" frames/f_%03d.jpg
+//   then set: src: i => `frames/f_${String(i+1).padStart(3,'0')}.jpg`
+const SEQ={count:64,src:null};
+const fc=document.getElementById('fcanvas'),ctx=fc.getContext('2d'),ftrack=document.getElementById('ftrack');
+const fCur=document.getElementById('fCur'),fStatus=document.getElementById('fStatus'),fMark=document.getElementById('fMark');
+const caps=[...document.querySelectorAll('.cap')];
+document.getElementById('fTot').textContent=String(SEQ.count).padStart(3,'0');
+const frames=new Array(SEQ.count); let ready=0, shown=-1, cur=0;
+
+function fitCanvas(){const d=Math.min(devicePixelRatio,1.5);fc.width=Math.round(innerWidth*d);fc.height=Math.round(innerHeight*d);shown=-1}
+fitCanvas(); addEventListener('resize',fitCanvas);
+
+function drawFrame(i){
+  const f=frames[i]; if(!f) return;
+  const s=Math.max(fc.width/f.width,fc.height/f.height),w=f.width*s,h=f.height*s;
+  ctx.fillStyle='#f1ecdf';ctx.fillRect(0,0,fc.width,fc.height);
+  ctx.drawImage(f,(fc.width-w)/2,(fc.height-h)/2,w,h);
+  shown=i; fCur.textContent=String(i+1).padStart(3,'0');
+}
+function setStatus(){fStatus.innerHTML=ready<SEQ.count?`<span class="dot"></span>Rendering frames ${String(ready).padStart(3,'0')}/${SEQ.count}`:`64 frames · 12 fps · rendered in-browser`}
+
+if(SEQ.src){ // real image sequence
+  for(let i=0;i<SEQ.count;i++){const im=new Image();im.onload=()=>{frames[i]=im;ready++;setStatus();if(i===shown||shown<0)drawFrame(i)};im.src=SEQ.src(i)}
+}else{ // procedural: render 64 frames of a Three.js scene into an image sequence
+  const W=Math.min(960,Math.round(innerWidth*Math.min(devicePixelRatio,1.5))),H=Math.round(W*.6);
+  const fR=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});fR.setPixelRatio(1);fR.setSize(W,H,false);fR.setClearColor(PAPER);
+  const S=new THREE.Scene(),C=new THREE.PerspectiveCamera(28,W/H,.1,50);
+  const geo=new THREE.IcosahedronGeometry(1.25,1).toNonIndexed(),pos=geo.attributes.position;
+  const faceMat=new THREE.MeshBasicMaterial({color:PAPER2,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:1});
+  const inkMat=new THREE.LineBasicMaterial({color:INK});
+  const shards=[];let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+  for(let i=0;i<pos.count;i+=3){
+    const a=new THREE.Vector3().fromBufferAttribute(pos,i),b=new THREE.Vector3().fromBufferAttribute(pos,i+1),c=new THREE.Vector3().fromBufferAttribute(pos,i+2);
+    const cen=a.clone().add(b).add(c).divideScalar(3);
+    const tri=new THREE.BufferGeometry().setFromPoints([a.sub(cen),b.sub(cen),c.sub(cen)]);
+    const mesh=new THREE.Mesh(tri,faceMat);mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(tri),inkMat));
+    const g=new THREE.Group();g.add(mesh);g.position.copy(cen);S.add(g);
+    shards.push({g,base:cen.length(),dir:cen.clone().normalize(),axis:new THREE.Vector3(rnd()-.5,rnd()-.5,rnd()-.5).normalize(),spin:(rnd()-.5)*2.4,delay:rnd()*.35});
+  }
+  const core=new THREE.Mesh(new THREE.SphereGeometry(.45,32,32),new THREE.MeshBasicMaterial({color:RED}));S.add(core);
+  const coreEdge=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(.47,1)),new THREE.LineBasicMaterial({color:INK,transparent:true,opacity:.35}));S.add(coreEdge);
+  {const p=[];for(let i=0;i<=128;i++){const a=i/128*Math.PI*2;p.push(new THREE.Vector3(Math.cos(a)*2.7,0,Math.sin(a)*2.7))}
+   const orbit=new THREE.Line(new THREE.BufferGeometry().setFromPoints(p),new THREE.LineBasicMaterial({color:RULE}));orbit.rotation.x=.25;orbit.rotation.z=.3;S.add(orbit)}
+  const ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+  function setFrame(t){
+    const ex=ease(Math.sin(t*Math.PI));
+    shards.forEach(s=>{const l=clamp((ex-s.delay*.4)/(1-s.delay*.4),0,1);s.g.position.copy(s.dir).multiplyScalar(s.base+l*1.9);s.g.setRotationFromAxisAngle(s.axis,l*s.spin*Math.PI)});
+    core.scale.setScalar(.001+ex);coreEdge.scale.setScalar(.001+ex*1.15);coreEdge.rotation.y=t*4;
+    const ang=-.6+t*Math.PI*.95;C.position.set(Math.sin(ang)*6.2,1+Math.sin(t*Math.PI)*.9,Math.cos(ang)*6.2);C.lookAt(0,-.1,0);
+  }
+  let i=0;(function step(){
+    const end=Math.min(i+4,SEQ.count);
+    for(;i<end;i++){setFrame(i/(SEQ.count-1));fR.render(S,C);const cv=document.createElement('canvas');cv.width=W;cv.height=H;cv.getContext('2d').drawImage(fR.domElement,0,0);frames[i]=cv;ready++}
+    setStatus(); if(shown<0)drawFrame(0);
+    if(i<SEQ.count)setTimeout(step,0);else{fR.dispose();fR.forceContextLoss()}
+  })();
+}
+
+/* ────────────── shared loop ────────────── */
+const lrImg=document.getElementById('lrImg'),lrSec=document.getElementById('longread');
+let t0=performance.now();
+function loop(now){
+  requestAnimationFrame(loop);
+  const t=(now-t0)/1000;
+  // globe
+  if(!drag){vy+= (.0025-vy)*.03; vx*=.92}
+  globe.rotation.y+=vy; globe.rotation.x=clamp(globe.rotation.x+vx,-1,1);
+  pings.forEach(p=>{const ph=((t*.6+p.off)%1);p.ring.scale.setScalar(1+ph*3.2);p.ring.material.opacity=1-ph});
+  gR.render(gS,gC);
+  // frame scrub
+  const r=ftrack.getBoundingClientRect();
+  if(r.bottom>-200&&r.top<innerHeight+200){
+    const p=clamp(-r.top/(r.height-innerHeight),0,1);
+    const target=p*(SEQ.count-1);
+    cur=reduced?target:cur+(target-cur)*.35;
+    let idx=Math.round(cur); while(idx>0&&!frames[idx])idx--;   // if still rendering, hold last available frame
+    if(idx!==shown)drawFrame(idx);
+    fMark.style.top=(p*100)+'%';
+    let on=caps[0];caps.forEach(c=>{if(p>=+c.dataset.at)on=c});caps.forEach(c=>c.classList.toggle('on',c===on));
+  }
+  // long-read parallax
+  const lr=lrSec.getBoundingClientRect();
+  if(lr.bottom>0&&lr.top<innerHeight){const k=clamp((innerHeight-lr.top)/(innerHeight+lr.height),0,1);lrImg.style.transform=`translateY(${-k*10}%)`}
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
