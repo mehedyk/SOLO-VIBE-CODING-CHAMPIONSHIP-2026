@@ -93,3 +93,18 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   .board { min-width: 560px; } /* keep SVG text legible; the wrapper scrolls, the page does not */
 }
 @media print { .controls, .site-head, .skip, .practice, .inputs { display: none; } body { background: #fff; } }
+
+.cards-list { list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: 1rem; }
+.filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: end; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1rem; }
+select { font: inherit; font-size: 1.05rem; padding: .5rem .6rem; border: 2px solid var(--line); border-radius: 8px; min-height: 44px; width: 100%; background: #fff; }
+.count-line { font-weight: 700; margin: 1rem 0 .2rem; }
+.empty { background: #fff4d1; border: 1px solid var(--amber); border-radius: 10px; padding: 1rem; }
+.tags .badge { margin-inline-end: .3rem; }
+.printpage { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem; max-width: 800px; margin: 0 auto; }
+.printpage .line { display: inline-block; min-width: 8rem; border-bottom: 2px solid #000; }
+.pq li { margin: .8rem 0; font-size: 1.2rem; }
+@media print {
+  .no-print { display: none !important; }
+  .printpage { border: none; padding: 0; max-width: none; }
+  html { font-size: 14px; }
+}
