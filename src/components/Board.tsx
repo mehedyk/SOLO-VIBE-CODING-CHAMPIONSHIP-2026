@@ -1,8 +1,9 @@
-import type { Step, Cols } from "../lib/math/subtraction";
+import type { Cols } from "../lib/math/subtraction";
+import type { BoardStep } from "../lib/math/board";
 import { dict, fill, unitName, type Lang } from "../lib/i18n/dict";
 import { formatInt } from "../lib/math/numerals";
 
-interface Props { step: Step; prev?: Step; lang: Lang }
+interface Props { step: BoardStep; prev?: BoardStep; lang: Lang; title: string; sideLabel: string }
 
 const COL_ORDER = [2, 1, 0] as const; // hundreds | tens | ones, left to right
 const COL_W = 250;
@@ -30,19 +31,18 @@ function Blocks({ place, n, prevN, ghost }: { place: 0 | 1 | 2; n: number; prevN
   return <>{out}</>;
 }
 
-export function boardDescription(step: Step, lang: Lang): string {
+export function boardDescription(step: BoardStep, lang: Lang): string {
   const d = dict[lang];
   const f = (n: number) => formatInt(n, lang);
   return fill(d.boardDesc, {
     h: f(step.counts[2]), t: f(step.counts[1]), o: f(step.counts[0]),
-    rh: f(step.removed[2]), rt: f(step.removed[1]), ro: f(step.removed[0]),
+    rh: f(step.side[2]), rt: f(step.side[1]), ro: f(step.side[0]),
   });
 }
 
-export default function Board({ step, prev, lang }: Props) {
+export default function Board({ step, prev, lang, title, sideLabel }: Props) {
   const d = dict[lang];
   const prevCounts: Cols = prev?.counts ?? step.counts;
-  const title = d.lessonTitle;
   const desc = boardDescription(step, lang);
   return (
     <div className="boardwrap" tabIndex={0} role="region" aria-label={title}>
@@ -51,7 +51,7 @@ export default function Board({ step, prev, lang }: Props) {
       <desc id="board-desc">{desc}</desc>
       {COL_ORDER.map((p, di) => {
         const x0 = 10 + di * COL_W;
-        const active = step.place === p || step.from === p;
+        const active = step.place === p || step.from === p || step.to === p;
         return (
           <g key={p} transform={`translate(${x0},38)`}>
             <rect x={0} y={30} width={230} height={220} rx={10} className={active ? "panel active" : "panel"} />
@@ -63,22 +63,22 @@ export default function Board({ step, prev, lang }: Props) {
               <Blocks place={p} n={step.counts[p]} prevN={prevCounts[p]} ghost={false} />
             </g>
             <rect x={0} y={262} width={230} height={150} rx={10} className="panel removed" />
-            <text x={10} y={282} className="small">{d.removedLabel}</text>
-            <text x={218} y={282} textAnchor="end" className="count small">{formatInt(step.removed[p], lang)}</text>
+            <text x={10} y={282} className="small">{sideLabel}</text>
+            <text x={218} y={282} textAnchor="end" className="count small">{formatInt(step.side[p], lang)}</text>
             <g transform="translate(16,292) scale(0.62)">
-              <Blocks place={p} n={step.removed[p]} prevN={0} ghost />
+              <Blocks place={p} n={step.side[p]} prevN={0} ghost />
             </g>
           </g>
         );
       })}
-      {step.kind === "exchange" && step.from !== undefined && step.place !== undefined && (() => {
+      {step.kind === "exchange" && step.from !== undefined && step.to !== undefined && (() => {
         const fx = 10 + COL_ORDER.indexOf(step.from as 0 | 1 | 2) * COL_W + 115;
-        const tx = 10 + COL_ORDER.indexOf((step.from - 1) as 0 | 1 | 2) * COL_W + 115;
+        const tx = 10 + COL_ORDER.indexOf(step.to as 0 | 1 | 2) * COL_W + 115;
         return (
           <g aria-hidden="true">
             <path d={`M${fx},36 C${fx},6 ${tx},6 ${tx},36`} fill="none" stroke="#0f2a43" strokeWidth={3} markerEnd="url(#arr)" />
             <text x={(fx + tx) / 2} y={24} textAnchor="middle" className="xchg" paintOrder="stroke" stroke="#f6f8fb" strokeWidth={6}>
-              {formatInt(1, lang)} → {formatInt(10, lang)}
+              {step.to > step.from ? `${formatInt(10, lang)} → ${formatInt(1, lang)}` : `${formatInt(1, lang)} → ${formatInt(10, lang)}`}
             </text>
           </g>
         );
