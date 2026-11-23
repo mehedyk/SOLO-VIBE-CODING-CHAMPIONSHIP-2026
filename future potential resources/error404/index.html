@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Off the Beaten Track | Meridian</title>
+  <meta name="description" content="The page you are looking for has departed or does not appear on our maps. Return to safe travels.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #ebeee7;
+      --ink: #2b3a30;
+      --ink-soft: #3d4a41;
+      --muted: #6b746c;
+      --serif: "Fraunces", Georgia, "Times New Roman", serif;
+      --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .error-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      height: 100svh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--paper);
+      isolation: isolate;
+    }
+
+    .error__video {
+      order: 2;
+      flex: 1 1 0;
+      min-height: 0;
+      display: block;
+      width: 100%;
+      height: auto;
+      margin-top: -10vh;
+      margin-top: -10svh;
+      object-fit: cover;
+      object-position: 50% 35%;
+      mix-blend-mode: multiply;
+      position: relative;
+      z-index: 0;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .error__content {
+      order: 1;
+      flex: none;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: clamp(24px, 3.2vw, 44px) 20px 0;
+    }
+
+    .compass-mark {
+      width: clamp(48px, 4.4vw, 58px);
+      height: auto;
+      color: var(--ink);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .error__code {
+      font-family: var(--serif);
+      font-weight: 700;
+      font-variation-settings: "opsz" 120;
+      font-size: clamp(68px, 9vw, 108px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-top: 6px;
+    }
+
+    .error__title {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-variation-settings: "opsz" 60;
+      font-size: clamp(22px, 2.5vw, 32px);
+      line-height: 1.2;
+      color: var(--ink);
+      margin-top: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .error__desc {
+      margin-top: 12px;
+      font-size: clamp(14px, 1.2vw, 16.5px);
+      line-height: 1.55;
+      color: var(--ink-soft);
+      max-width: 38em;
+    }
+
+    .error__actions {
+      margin-top: clamp(20px, 2.8vw, 32px);
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--ink);
+      color: var(--paper);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      padding: 11px 24px;
+      border-radius: 999px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(43, 58, 48, 0.15);
+    }
+
+    .btn-primary:hover {
+      background: #1c261f;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(43, 58, 48, 0.22);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      padding: 10px 22px;
+      border-radius: 999px;
+      border: 1px solid var(--ink);
+      transition: all 0.25s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(43, 58, 48, 0.06);
+      transform: translateY(-2px);
+    }
+
+    .error__footnote {
+      margin-top: clamp(16px, 2vw, 24px);
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+
+    @media (max-width: 600px) {
+      .error__content {
+        padding: 28px 16px 0;
+      }
+      .error__actions {
+        flex-direction: column;
+        width: 100%;
+        max-width: 260px;
+      }
+      .btn-primary, .btn-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .error__video {
+        display: none;
+      }
+      .btn-primary, .btn-secondary {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="error-container">
+    <video
+      class="error__video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+      aria-hidden="true"
+      tabindex="-1"
+      disablepictureinpicture
+    >
+      <source
+        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260928_144832_2b6b23aa-4416-4fcb-9df4-132349c59edc.mp4"
+        type="video/mp4"
+      >
+    </video>
+
+    <div class="error__content">
+      <!-- Compass Rose Mark -->
+      <svg class="compass-mark" viewBox="0 0 64 64" role="img" aria-label="Meridian compass">
+        <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="2.2" />
+        <circle cx="32" cy="32" r="25.5" fill="none" stroke="currentColor" stroke-width=".8" opacity=".5" />
+        <g fill="currentColor" opacity=".85">
+          <path d="M32 32 L46 18 L35.2 34.4 Z" />
+          <path d="M32 32 L46 46 L29.6 35.2 Z" />
+          <path d="M32 32 L18 46 L28.8 29.6 Z" />
+          <path d="M32 32 L18 18 L34.4 28.8 Z" />
+        </g>
+        <g stroke="currentColor" stroke-width="1" stroke-linejoin="round">
+          <path d="M32 8 L35.5 28.5 L32 32 Z" fill="currentColor" />
+          <path d="M32 8 L28.5 28.5 L32 32 Z" fill="none" />
+          <path d="M56 32 L35.5 35.5 L32 32 Z" fill="currentColor" />
+          <path d="M56 32 L35.5 28.5 L32 32 Z" fill="none" />
+          <path d="M32 56 L28.5 35.5 L32 32 Z" fill="currentColor" />
+          <path d="M32 56 L35.5 35.5 L32 32 Z" fill="none" />
+          <path d="M8 32 L28.5 28.5 L32 32 Z" fill="currentColor" />
+          <path d="M8 32 L28.5 35.5 L32 32 Z" fill="none" />
+        </g>
+        <circle cx="32" cy="32" r="1.8" fill="var(--paper)" stroke="currentColor" stroke-width="1" />
+      </svg>
+
+      <div class="error__code">404</div>
+      <h1 class="error__title">Off the Beaten Track</h1>
+      <p class="error__desc">
+        The destination you are searching for does not appear on our parchment. The stagecoach has crossed the viaduct, but this route leads to unmapped territory.
+      </p>
+
+      <div class="error__actions">
+        <a href="../meridian/index.html" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          Return to Meridian
+        </a>
+        <a href="../meadowbell/index.html" class="btn-secondary">
+          Visit Sprout Squad
+        </a>
+      </div>
+
+      <p class="error__footnote">
+        © <span id="error-year">2026</span> Meridian Works Ltd. · All trails lead home.
+      </p>
+    </div>
+  </main>
+
+  <script>
+    const yEl = document.getElementById("error-year");
+    if (yEl) yEl.textContent = new Date().getFullYear();
+
+    (function() {
+      const video = document.querySelector(".error__video");
+      if (!video) return;
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        video.removeAttribute("autoplay");
+        video.pause();
+        return;
+      }
+
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
+          });
+        }, { threshold: 0.15 });
+        observer.observe(video);
+      }
+    })();
+  </script>
+</body>
+</html>
