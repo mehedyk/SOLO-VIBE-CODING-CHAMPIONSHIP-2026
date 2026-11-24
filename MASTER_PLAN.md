@@ -30,7 +30,7 @@ Track: Educational. Score: M01–M08 = 60, two declared advanced challenges = 40
 | 1 | Exact maths engine, SVG place-value board, prediction gate, presenter mode, bilingual (bn default/en) UI with Kalpurush, practice cards, tests | ✅ |
 | 2 | Public catalogue (search, topic filter, sort), per-lesson routes, second lesson (addition with regrouping) on a shared engine interface, print/prep page | ✅ |
 | 3 | MongoDB persistence, guest progress (local) + optional saved attempts, indexes | ✅ |
-| 4 | Authentication, sessions, capability model, suspension, audit log | ⬜ |
+| 4 | Authentication, sessions, capability model, suspension, audit log | ✅ |
 | 5 | Contributor applications + admin decisions | ⬜ |
 | 6 | Structured authoring, validation, immutable versions + content hash, reviews | ⬜ |
 | 7 | Publication workflow with failure/retry/recovery (A07) | ⬜ |
