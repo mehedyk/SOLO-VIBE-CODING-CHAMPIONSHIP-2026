@@ -20,6 +20,8 @@ export interface SessionDoc {
   token: string;
   expiresAt: string;
   revoked: boolean;
+  userAgent?: string;
+  ip?: string;
   createdAt: string;
 }
 
