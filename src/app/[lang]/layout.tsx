@@ -39,13 +39,15 @@ export default async function RootLayout({ children, params }: { children: React
     <html lang={lang}>
       <body>
         <a className="skip" href="#main">{d.skip}</a>
-        <header className="site-head flex items-center justify-between">
-          <Link href={`/${lang}`} className="brand flex items-center gap-2">
+        <header className="site-head">
+          <Link href={`/${lang}`} className="brand">
             <svg
-              className="w-6 h-6 shrink-0"
+              width="28"
+              height="28"
               viewBox="0 0 40 40"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              style={{ width: "28px", height: "28px", minWidth: "28px", maxWidth: "28px", flexShrink: 0 }}
               aria-hidden="true"
             >
               <rect x="6" y="4" width="8" height="32" rx="2" fill="#34d399" />
@@ -57,7 +59,7 @@ export default async function RootLayout({ children, params }: { children: React
             </svg>
             <span>{d.appName}</span>
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="head-actions">
             <ModeTypographyToggle lang={lang} />
             <LangSwitch lang={lang} />
           </div>
