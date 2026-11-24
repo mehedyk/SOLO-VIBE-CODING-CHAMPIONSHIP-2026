@@ -45,6 +45,12 @@ class MemoryCollection {
             doc[k] = (doc[k] || 0) + (v as number);
           }
         }
+        if (update.$push) {
+          for (const [k, v] of Object.entries(update.$push)) {
+            if (!Array.isArray(doc[k])) doc[k] = [];
+            doc[k].push(v);
+          }
+        }
         this.docs.set(id, doc);
         return { matchedCount: 1, modifiedCount: 1 };
       }
