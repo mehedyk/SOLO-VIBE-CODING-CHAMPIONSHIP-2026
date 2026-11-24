@@ -73,54 +73,30 @@ export default async function ManipulativePage({
           <div className="manipulative-card">
             <div className="manipulative-header">
               <div>
-                <h3>{isBn ? 'সংখ্যারেখা ও দূরত্বের স্কেল (১ম-৩য় শ্রেণি)' : 'Directed Number Line Scale (Class 1-3)'}</h3>
+                <h3>{isBn ? 'ইন্টারঅ্যাক্টিভ সংখ্যারেখা ও দূরত্বের স্কেল (১ম-৩য় শ্রেণি)' : 'Interactive Directed Number Line (Class 1-3)'}</h3>
                 <p className="meta">
                   {isBn
-                    ? 'সংখ্যারেখায় নির্দিষ্ট দূরত্বে লাফ দিয়ে যোগ ও বিয়োগের বাস্তব রূপ।'
-                    : 'Directed intervals demonstrating arithmetic leaps across positive coordinates.'}
+                    ? 'শুরুর অবস্থান ও লাফের পরিমাণ পরিবর্তন করে যোগ (+) ও বিয়োগের (−) দিক প্রত্যক্ষ করুন।'
+                    : 'Adjust start coordinate, jump magnitude, and operation to see dynamic directed leaps.'}
                 </p>
               </div>
             </div>
-            <NumberLine
-              step={{
-                kind: 'jump',
-                min: 0,
-                max: 20,
-                start: 4,
-                jump: 7,
-                current: 11,
-                target: 11,
-                operation: '+',
-                noteBn: '৪ + ৭ = ১১ (ডানদিকে ৭ ধাপ লাফ)',
-                noteEn: '4 + 7 = 11 (Jump forward by 7)',
-              }}
-            />
+            <NumberLine interactive={true} />
           </div>
         )}
         {slug === 'fractions' && (
           <div className="manipulative-card">
             <div className="manipulative-header">
               <div>
-                <h3>{isBn ? 'ভগ্নাংশ সমতুল্যতা ও বিভাজন বার (৩য়-৪র্থ শ্রেণি)' : 'Fraction Partitioning Bars (Class 3-4)'}</h3>
+                <h3>{isBn ? 'ইন্টারঅ্যাক্টিভ ভগ্নাংশ সমতুল্যতা ও বিভাজন বার (৩য়-৪র্থ শ্রেণি)' : 'Interactive Fraction Equivalence Bars (Class 3-4)'}</h3>
                 <p className="meta">
                   {isBn
-                    ? '১/২ এবং ২/৪ এর দৈর্ঘ্য সমান তা বার কেটে সরাসরি মিলিয়ে দেখার মডেল।'
-                    : 'Visually proved equivalence: 1/2 and 2/4 occupy identical linear spans.'}
+                    ? 'লব ও হর পরিবর্তন করে দুটি ভগ্নাংশের দৈর্ঘ্য সরাসরি পাশাপাশি মিলিয়ে সমতুল্যতা পরীক্ষা করুন।'
+                    : 'Slide numerators and denominators to prove fraction equivalence against the hairline reference.'}
                 </p>
               </div>
             </div>
-            <FractionBars
-              step={{
-                kind: 'compare',
-                bars: [
-                  { numerator: 1, denominator: 2, shaded: 1, label: '1/2', color: '#38bdf8' },
-                  { numerator: 2, denominator: 4, shaded: 2, label: '2/4', color: '#34d399' },
-                ],
-                equivalent: true,
-                noteBn: '১/২ এবং ২/৪ সমান দৈর্ঘ্য নির্দেশ করে।',
-                noteEn: '1/2 and 2/4 span identical lengths.',
-              }}
-            />
+            <FractionBars interactive={true} />
           </div>
         )}
         {slug === 'multiplication' && <MultiplicationGrid lang={lang as Lang} />}
