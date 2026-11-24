@@ -108,3 +108,89 @@ select { font: inherit; font-size: 1.05rem; padding: .5rem .6rem; border: 2px so
   .printpage { border: none; padding: 0; max-width: none; }
   html { font-size: 14px; }
 }
+
+/* ─── Mode Typography: Teacher (Formal) vs Student (Playful) ─── */
+:root {
+  --font-formal-bn: "Kalpurush", Georgia, "Times New Roman", serif;
+  --font-formal-en: Georgia, Cambria, "Times New Roman", serif;
+  --font-playful-bn: "Kalpurush", "Comic Sans MS", cursive, sans-serif;
+  --font-playful-en: "Comic Sans MS", "Chalkboard SE", "Trebuchet MS", system-ui, sans-serif;
+}
+
+/* Formal Teacher Mode */
+html[data-mode="teacher"] {
+  --radius-card: 8px;
+}
+html[data-mode="teacher"][lang="bn"] body {
+  font-family: var(--font-formal-bn);
+  letter-spacing: 0.01em;
+}
+html[data-mode="teacher"][lang="en"] body {
+  font-family: var(--font-formal-en);
+  letter-spacing: 0.01em;
+}
+html[data-mode="teacher"] h1,
+html[data-mode="teacher"] h2,
+html[data-mode="teacher"] h3 {
+  font-family: var(--font-formal-en);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+html[data-mode="teacher"][lang="bn"] h1,
+html[data-mode="teacher"][lang="bn"] h2,
+html[data-mode="teacher"][lang="bn"] h3 {
+  font-family: var(--font-formal-bn);
+}
+html[data-mode="teacher"] .lesson-card,
+html[data-mode="teacher"] .card {
+  border-radius: 8px;
+  border-color: #cbd5e1;
+}
+
+/* Playful Student Mode */
+html[data-mode="student"] {
+  --radius-card: 20px;
+}
+html[data-mode="student"][lang="bn"] body {
+  font-family: var(--font-playful-bn);
+  letter-spacing: 0.02em;
+}
+html[data-mode="student"][lang="en"] body {
+  font-family: var(--font-playful-en);
+}
+html[data-mode="student"] h1,
+html[data-mode="student"] h2,
+html[data-mode="student"] h3 {
+  font-family: var(--font-playful-en);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #0369a1;
+}
+html[data-mode="student"][lang="bn"] h1,
+html[data-mode="student"][lang="bn"] h2,
+html[data-mode="student"][lang="bn"] h3 {
+  font-family: var(--font-playful-bn);
+}
+html[data-mode="student"] .lesson-card,
+html[data-mode="student"] .card {
+  border-radius: 18px;
+  border-width: 2px;
+  border-color: #fde047;
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+html[data-mode="student"] .lesson-card:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 8px 20px rgba(251, 191, 36, 0.2);
+}
+html[data-mode="student"] button,
+html[data-mode="student"] .btn {
+  border-radius: 16px;
+  font-family: inherit;
+  transition: transform 0.15s ease;
+}
+html[data-mode="student"] button:hover:not(:disabled),
+html[data-mode="student"] .btn:hover {
+  transform: scale(1.03);
+}
+
