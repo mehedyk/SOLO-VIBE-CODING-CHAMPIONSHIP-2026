@@ -5,6 +5,7 @@ import { dict, fill, isLang } from "../../../lib/i18n/dict";
 import { formatInt } from "../../../lib/math/numerals";
 import { LESSONS, TOPICS, REVIEWS, SORTS, lessonText } from "../../../lib/lessons/registry";
 import { parseQuery, filterLessons, facetCounts } from "../../../lib/lessons/catalogue";
+import { NCTB_CURRICULUM } from "../../../lib/curriculum/nctb";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -78,12 +79,61 @@ export default async function Catalogue({ params, searchParams }: { params: Prom
                   <Link className="btn primary" href={`/${lang}/lessons/${l.slug}`}>{d.openStudent}</Link>
                   <Link className="btn" href={`/${lang}/lessons/${l.slug}/present`}>{d.openPresent}</Link>
                   <Link className="btn" href={`/${lang}/lessons/${l.slug}/print`}>{d.printView}</Link>
+                  <Link className="btn ghost" href={`/api/slides/${l.slug}`} download>
+                    {lang === 'bn' ? '📥 অফলাইন স্লাইড (HTML)' : '📥 Offline Slide'}
+                  </Link>
                 </div>
               </li>
             );
           })}
         </ul>
       )}
+
+      {/* NCTB Primary Curriculum Section (Class 1 to 5) */}
+      <section className="nctb-curriculum-section" style={{ marginTop: '3rem' }}>
+        <div className="section-header">
+          <h2>{lang === 'bn' ? '📚 জাতীয় শিক্ষাক্রম (NCTB) ১ম থেকে ৫ম শ্রেণি' : '📚 NCTB Primary Curriculum (Class 1-5)'}</h2>
+          <p className="meta">
+            {lang === 'bn'
+              ? 'সকল শ্রেণির পূর্ণ সিলেবাসভিত্তিক ইন্টারঅ্যাক্টিভ ভার্চুয়াল ল্যাব ও অফলাইন স্লাইড:'
+              : 'Complete curriculum labs with single-click offline presentation decks:'}
+          </p>
+        </div>
+
+        <div className="chapter-cards-list">
+          {NCTB_CURRICULUM.map((ch) => (
+            <div key={ch.id} className="chapter-row-card">
+              <div className="chapter-info">
+                <div className="chapter-index">
+                  <span className="grade-badge" style={{ marginRight: '0.5rem' }}>
+                    {lang === 'bn' ? `${formatInt(ch.grade, lang)}ম শ্রেণি` : `Class ${ch.grade}`}
+                  </span>
+                  <span>{lang === 'bn' ? `অধ্যায় ${formatInt(ch.chapterNumber, lang)}` : `Chapter ${ch.chapterNumber}`}</span>
+                </div>
+                <h4 className="chapter-title">{lang === 'bn' ? ch.titleBn : ch.titleEn}</h4>
+                <p className="chapter-objective">{lang === 'bn' ? ch.objectiveBn : ch.objectiveEn}</p>
+              </div>
+
+              <div className="chapter-actions">
+                <Link
+                  href={`/${lang}${ch.interactiveRoute}`}
+                  className="btn primary"
+                >
+                  {lang === 'bn' ? '🚀 ল্যাব খুলুন' : '🚀 Open Lab'}
+                </Link>
+                <Link
+                  href={`/api/slides/${ch.slideSlug}`}
+                  className="btn"
+                  download
+                  title="Download standalone offline HTML presentation"
+                >
+                  {lang === 'bn' ? '📥 স্লাইড (HTML)' : '📥 Slide (HTML)'}
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
