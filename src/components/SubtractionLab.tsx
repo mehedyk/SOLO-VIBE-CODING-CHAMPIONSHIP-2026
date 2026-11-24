@@ -1,7 +1,8 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Board from "./Board";
-import { buildSubtractionSteps, digitsOf, valueOf } from "../lib/math/subtraction";
+import type { BoardStep } from "../lib/math/board";
+import { buildSubtractionSteps, digitsOf, valueOf, type Step } from "../lib/math/subtraction";
 import { needsPrediction } from "../lib/math/prediction";
 import { checkAnswer, checkInputs, TRANSFER } from "../lib/math/inputs";
 import { formatInt } from "../lib/math/numerals";
@@ -32,6 +33,23 @@ export default function SubtractionLab({ lang, mode }: { lang: Lang; mode: Mode 
   const sDigits = digitsOf(nums.s);
   const step = steps[idx]!;
   const prev = idx > 0 ? steps[idx - 1] : undefined;
+
+  const toBoardStep = (s: Step | undefined): BoardStep | undefined => {
+    if (!s) return undefined;
+    return {
+      kind: s.kind,
+      place: s.place,
+      from: s.from,
+      to: s.from !== undefined ? ((s.from - 1) as Place) : undefined,
+      counts: s.counts,
+      side: s.removed,
+      answerDigits: s.answerDigits,
+      note: s.note,
+    };
+  };
+
+  const boardStep = toBoardStep(step)!;
+  const prevBoardStep = toBoardStep(prev);
 
   const resetFlow = useCallback(() => { setIdx(0); setDone(new Set()); setAsk(null); setPred(null); }, []);
 
@@ -117,7 +135,7 @@ export default function SubtractionLab({ lang, mode }: { lang: Lang; mode: Mode 
         <div className="visual">
           <p className="stepno" aria-live="off">{fill(d.stepOf, { i: f(idx + 1), n: f(steps.length) })}</p>
           {view === "board" ? (
-            <Board step={step} prev={prev} lang={lang} />
+            <Board step={boardStep} prev={prevBoardStep} lang={lang} title={d.lessonTitle} sideLabel={d.removedLabel} />
           ) : (
             <section aria-labelledby="text-steps">
               <h2 id="text-steps">{d.textStepsTitle}</h2>
