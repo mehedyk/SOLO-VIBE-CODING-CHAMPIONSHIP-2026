@@ -12,7 +12,7 @@ export function generateStaticParams() { return LANGS.map((lang) => ({ lang }));
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
-  if (!isLang(lang)) return {};
+  if (!isLang(lang)) notFound();
   return {
     title: { default: dict[lang].appName, template: `%s · ${dict[lang].appName}` },
     description: dict[lang].tagline,
@@ -35,30 +35,40 @@ export default async function RootLayout({ children, params }: { children: React
   const { lang } = await params;
   if (!isLang(lang)) notFound();
   const d = dict[lang];
+  const isBn = lang === 'bn';
+
   return (
     <html lang={lang}>
       <body>
         <a className="skip" href="#main">{d.skip}</a>
         <header className="site-head">
-          <Link href={`/${lang}`} className="brand">
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 40 40"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              style={{ width: "28px", height: "28px", minWidth: "28px", maxWidth: "28px", flexShrink: 0 }}
-              aria-hidden="true"
-            >
-              <rect x="6" y="4" width="8" height="32" rx="2" fill="#34d399" />
-              <rect x="18" y="4" width="6" height="6" rx="1.5" fill="#fbbf24" />
-              <rect x="26" y="4" width="6" height="6" rx="1.5" fill="#fbbf24" />
-              <rect x="26" y="12" width="6" height="6" rx="1.5" fill="#fbbf24" />
-              <rect x="26" y="20" width="6" height="6" rx="1.5" fill="#fbbf24" />
-              <rect x="18" y="20" width="6" height="6" rx="1.5" fill="#fbbf24" />
-            </svg>
-            <span>{d.appName}</span>
-          </Link>
+          <div className="head-left">
+            <Link href={`/${lang}`} className="brand">
+              <img
+                src="/images/logo_mark.svg"
+                alt="Primary Visual Lab Logo"
+                width={30}
+                height={30}
+                style={{ width: "30px", height: "30px", flexShrink: 0 }}
+                aria-hidden="true"
+              />
+              <span className="brand-text">{d.appName}</span>
+            </Link>
+
+            <nav className="head-nav" aria-label="Main Navigation">
+              <Link href={`/${lang}/lessons`} className="nav-link">
+                {isBn ? 'পাঠসমূহ (১ম-৫ম)' : 'Lessons (1-5)'}
+              </Link>
+              <Link href={`/${lang}/lessons/subtraction-regrouping`} className="nav-link">
+                {isBn ? 'ভিজ্যুয়াল ল্যাব' : 'Visual Lab'}
+              </Link>
+              <Link href={`/${lang}/login`} className="nav-link nav-demo-badge">
+                <span className="nav-key-icon">🔑</span>
+                <span>{isBn ? 'ডেমো অ্যাকাউন্ট' : 'Demo Login'}</span>
+              </Link>
+            </nav>
+          </div>
+
           <div className="head-actions">
             <ModeTypographyToggle lang={lang} />
             <LangSwitch lang={lang} />
