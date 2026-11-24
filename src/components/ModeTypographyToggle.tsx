@@ -68,7 +68,7 @@ export function ModeTypographyToggle({ lang }: ModeTypographyToggleProps) {
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="mode-toggle-wrap">
       {/* Curtain animation overlay */}
       <div aria-hidden="true" style={curtainStyle} />
 
@@ -76,11 +76,7 @@ export function ModeTypographyToggle({ lang }: ModeTypographyToggleProps) {
       <button
         onClick={toggleMode}
         type="button"
-        className={`mode-toggle-btn px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-300 flex items-center gap-1.5 shadow-sm border ${
-          mode === 'teacher'
-            ? 'bg-slate-800 text-amber-300 border-amber-400/40 hover:bg-slate-700'
-            : 'bg-amber-400 text-slate-950 border-amber-500 hover:bg-amber-300'
-        }`}
+        className={`mode-toggle-btn ${mode === 'teacher' ? 'mode-teacher' : 'mode-student'}`}
         title={
           mode === 'teacher'
             ? isBn
@@ -94,19 +90,19 @@ export function ModeTypographyToggle({ lang }: ModeTypographyToggleProps) {
       >
         {mode === 'teacher' ? (
           <>
-            <span className="text-sm">👨‍🏫</span>
-            <span className="font-serif tracking-wide">{isBn ? 'শিক্ষক মোড (ফর্মাল)' : 'Teacher (Formal)'}</span>
+            <span className="mode-icon">👨‍🏫</span>
+            <span className="mode-label">{isBn ? 'শিক্ষক মোড (ফর্মাল)' : 'Teacher (Formal)'}</span>
           </>
         ) : (
           <>
-            <span className="text-sm">🎒</span>
-            <span className="tracking-tight">{isBn ? 'শিক্ষার্থী মোড (মজার)' : 'Student (Playful)'}</span>
+            <span className="mode-icon">🎨</span>
+            <span className="mode-label">{isBn ? 'শিক্ষার্থী মোড (প্লেফুল)' : 'Student (Playful)'}</span>
           </>
         )}
       </button>
 
       {/* Curtain Theme Toggle Icon */}
-      <div className="hidden sm:flex items-center">
+      <div className="theme-toggle-inline">
         <ThemeToggle variant="icon" defaultTheme="dark" duration={DURATION} buttonSize={32} />
       </div>
     </div>
