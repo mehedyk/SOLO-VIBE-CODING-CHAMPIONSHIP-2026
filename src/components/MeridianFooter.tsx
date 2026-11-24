@@ -13,117 +13,157 @@ export function MeridianFooter({ lang }: MeridianFooterProps) {
 
   return (
     <footer className="meridian-footer">
+      {/* Living Ambient Video Background from 404 resource */}
+      <div className="footer-video-wrap" aria-hidden="true">
+        <video
+          className="footer-ambient-video"
+          autoPlay
+          loop
+          muted
+          playsInline
+          disablePictureInPicture
+        >
+          <source src="/video/meridian_ambient.mp4" type="video/mp4" />
+          <source
+            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260928_144832_2b6b23aa-4416-4fcb-9df4-132349c59edc.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <div className="footer-video-scrim" />
+      </div>
+
       <div className="footer-inner">
         <div className="footer-grid">
           {/* Brand Column */}
           <div className="footer-brand">
             <div className="footer-brand-header">
-              <svg
-                width="28"
-                height="28"
-                viewBox="0 0 40 40"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+              <img
+                src="/images/logo_mark.svg"
+                alt="Primary Visual Lab Logo"
                 className="footer-brand-mark"
-                style={{ width: '28px', height: '28px', minWidth: '28px', maxWidth: '28px' }}
-                aria-hidden="true"
-              >
-                {/* Ten-rod stem */}
-                <rect x="6" y="4" width="8" height="32" rx="2" fill="#34d399" />
-                {/* Ones squares forming P */}
-                <rect x="18" y="4" width="6" height="6" rx="1.5" fill="#fbbf24" />
-                <rect x="26" y="4" width="6" height="6" rx="1.5" fill="#fbbf24" />
-                <rect x="26" y="12" width="6" height="6" rx="1.5" fill="#fbbf24" />
-                <rect x="26" y="20" width="6" height="6" rx="1.5" fill="#fbbf24" />
-                <rect x="18" y="20" width="6" height="6" rx="1.5" fill="#fbbf24" />
-              </svg>
+                width={32}
+                height={32}
+                style={{ width: '32px', height: '32px' }}
+              />
               <span className="footer-brand-title">
                 {isBn ? 'প্রাইমারি ভিজ্যুয়াল ল্যাব' : 'Primary Visual Lab'}
               </span>
             </div>
             <p className="footer-brand-desc">
               {isBn
-                ? 'প্রাথমিক গণিতে সংখ্যা কীভাবে বদলায়, তা চোখে দেখে বোঝার ওপেন সোর্স শিক্ষা প্ল্যাটফর্ম।'
-                : 'Open-source visual mathematics laboratory designed for primary classroom screen workflows.'}
+                ? 'জাতীয় শিক্ষাক্রম ও পাঠ্যপুস্তক বোর্ড (NCTB) অনুমোদিত প্রাথমিক গণিতের সকল অধ্যায়ের ভিজ্যুয়াল ও ইন্টারঅ্যাক্টিভ শিক্ষা প্ল্যাটফর্ম।'
+                : 'Interactive visual mathematics laboratory designed for primary school students and educators based on national curriculum.'}
             </p>
-            <div className="footer-free-tier">
-              {isBn ? '১০০% ফ্রি টিয়ার পরিচালিত · Atlas M0 + Vercel' : '100% Free-Tier Architecture · Atlas M0 + Vercel'}
+            <div className="footer-curriculum-badge">
+              {isBn ? '✓ ১ম থেকে ৫ম শ্রেণি সম্পূর্ণ কারিকুলাম' : '✓ Full Curriculum: Classes 1 to 5'}
             </div>
           </div>
 
-          {/* Lessons Column */}
+          {/* Curriculum Classes Column */}
           <div className="footer-col">
-            <h4>{isBn ? 'মূল পাঠসমূহ' : 'Visual Labs'}</h4>
+            <h4>{isBn ? 'শ্রেণিভিত্তিক পাঠসমূহ' : 'Curriculum by Class'}</h4>
             <ul className="footer-links">
               <li>
-                <Link href={`/${lang}/lessons/subtraction-regrouping`}>
-                  {isBn ? 'হাতে রেখে বিয়োগ' : 'Subtraction with Regrouping'}
+                <Link href={`/${lang}/lessons?grade=1`}>
+                  {isBn ? '১ম শ্রেণি: গণনা ও প্রাথমিক আকৃতি' : 'Class 1: Counting & Basic Shapes'}
                 </Link>
               </li>
               <li>
-                <Link href={`/${lang}/lessons/addition-regrouping`}>
-                  {isBn ? 'হাতে রেখে যোগ' : 'Addition with Regrouping'}
+                <Link href={`/${lang}/lessons/subtraction-regrouping`}>
+                  {isBn ? '২য় শ্রেণি: স্থানীয় মান ও রিগ্রুপিং' : 'Class 2: Place Value & Regrouping'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/lessons?grade=3`}>
+                  {isBn ? '৩য় শ্রেণি: ভগ্নাংশ ও জ্যামিতিক কোণ' : 'Class 3: Fractions & Angles'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/lessons?grade=4`}>
+                  {isBn ? '৪র্থ শ্রেণি: সমতুল্য ভগ্নাংশ ও দশমিক' : 'Class 4: Decimals & Equivalence'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/lessons?grade=5`}>
+                  {isBn ? '৫ম শ্রেণি: ঐকিক নিয়ম ও উপাত্ত' : 'Class 5: Unitary Method & Charts'}
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Visual Manipulatives Column */}
+          <div className="footer-col">
+            <h4>{isBn ? 'ভিজ্যুয়াল ম্যানিপুলেটিভ' : 'Visual Manipulatives'}</h4>
+            <ul className="footer-links">
+              <li>
+                <Link href={`/${lang}/lessons/subtraction-regrouping`}>
+                  {isBn ? 'দশকের ব্লক ও এক্সচেঞ্জ' : 'Base-10 Blocks & Exchange'}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/lessons`}>
-                  {isBn ? 'পাঠ ক্যাটালগ ও ফিল্টার' : 'Full Lesson Catalogue'}
+                  {isBn ? 'ভগ্নাংশ বার কাটার বোর্ড' : 'Fraction Partitioning Bars'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/lessons`}>
+                  {isBn ? 'সংখ্যারেখা ও দূরত্বের স্কেল' : 'Directed Number Line Scale'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/lessons`}>
+                  {isBn ? 'গুণন ম্যাট্রিক্স ও আয়তাকার গ্রিড' : 'Multiplication Array Grid'}
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Teacher & Offline Tools Column */}
+          <div className="footer-col">
+            <h4>{isBn ? 'শিক্ষক ও অফলাইন সুবিধা' : 'Teacher & Offline'}</h4>
+            <ul className="footer-links">
+              <li>
+                <Link href={`/${lang}/lessons/subtraction-regrouping/present`}>
+                  {isBn ? 'প্রজেক্টর মোড (শ্রেণিকক্ষ)' : 'Classroom Projector Mode'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/api/slides/subtraction-regrouping`} download>
+                  {isBn ? 'অফলাইন স্লাইড ডেক (HTML)' : 'Download Offline Slides (HTML)'}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/lessons/subtraction-regrouping/print`}>
-                  {isBn ? 'ছাপার জন্য ওয়ার্কশিট' : 'Printable Worksheets'}
+                  {isBn ? 'ছাপানোর জন্য ওয়ার্কশিট' : 'Printable Worksheets'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/login`}>
+                  {isBn ? 'ডেমো অ্যাকাউন্টস (১-ক্লিক লগইন)' : 'Demo Accounts (1-Click Login)'}
                 </Link>
               </li>
             </ul>
-          </div>
-
-          {/* Architecture & Challenges Column */}
-          <div className="footer-col">
-            <h4>{isBn ? 'উন্নত চ্যালেঞ্জ (Track A03/A07)' : 'Advanced Challenges'}</h4>
-            <ul className="footer-links" style={{ color: '#94a3b8' }}>
-              <li>
-                <strong style={{ color: '#34d399' }}>A03:</strong>{' '}
-                {isBn ? 'ক্যাপাবিলিটি মডেল ও নিরাপত্তা অডিট লগ' : 'Capability Security & Audit Logs'}
-              </li>
-              <li>
-                <strong style={{ color: '#34d399' }}>A07:</strong>{' '}
-                {isBn ? 'বহু-ধাপ প্রকাশনা ওয়ার্কফ্লো ও রিকভারি' : 'Multi-Step Workflow & Recovery'}
-              </li>
-              <li style={{ color: '#64748b', fontSize: '0.8rem' }}>
-                {isBn ? 'কঠোর CSP ও XSS সুরক্ষা সক্ষম' : 'Strict CSP & Security Headers Active'}
-              </li>
-            </ul>
-          </div>
-
-          {/* Standards & Accessibility Column */}
-          <div className="footer-col">
-            <h4>{isBn ? 'মান ও গ্রহণযোগ্যতা' : 'Standards & A11y'}</h4>
-            <p>
-              {isBn
-                ? 'কীবোর্ড ও রিডিউসড মোশন সমর্থনসহ প্রজেক্টর উপযোগী উচ্চ কনট্রাস্ট ডিজাইন। কোনো অননুমোদিত ট্র্যাকার নেই।'
-                : 'Classroom projector-ready high contrast, keyboard navigable, reduced-motion friendly with zero third-party trackers.'}
-            </p>
-            <p style={{ color: '#64748b' }}>
-              {isBn ? 'লাইসেন্স: ওপেন সোর্স শিক্ষা গবেষণা' : 'Licence: Open Source Educational Research'}
-            </p>
           </div>
         </div>
 
         <div className="footer-bottom">
           <div>
-            © 2026 Primary Visual Lab · Hack the Vibe 2026 (CODE-ARENAX)
+            © 2026 {isBn ? 'প্রাইমারি ভিজ্যুয়াল ল্যাব · উন্মুক্ত গণিত শিক্ষা' : 'Primary Visual Lab · Open Source Mathematics'}
           </div>
-          <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
+          <div className="footer-bottom-links">
+            <Link href={`/${lang}/lessons`}>{isBn ? 'সকল পাঠ' : 'All Lessons'}</Link>
+            <span>·</span>
+            <Link href={`/${lang}/login`}>{isBn ? 'লগইন ও ভূমিকা' : 'Login & Roles'}</Link>
+            <span>·</span>
             <a
               href="https://github.com/mehedyk/SOLO-VIBE-CODING-CHAMPIONSHIP-2026"
               target="_blank"
               rel="noopener noreferrer"
             >
-              GitHub Repository
+              GitHub
             </a>
             <span>·</span>
-            <span>Kalpurush Bangla Unicode Font</span>
+            <span>Kalpurush Font</span>
           </div>
         </div>
       </div>
