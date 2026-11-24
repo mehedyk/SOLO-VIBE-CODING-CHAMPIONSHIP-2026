@@ -10,7 +10,7 @@ test('Security Headers: next.config.mjs configures strict CSP and headers', asyn
   const headersList = await nextConfig.headers();
   assert.ok(headersList.length > 0);
 
-  const globalHeaders = headersList[0].headers;
+  const globalHeaders = headersList[0]!.headers;
   const csp = globalHeaders.find((h: any) => h.key === 'Content-Security-Policy');
   assert.ok(csp, 'CSP is defined');
   assert.ok(csp.value.includes("default-src 'self'"));
