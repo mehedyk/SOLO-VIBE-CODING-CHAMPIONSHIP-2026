@@ -1,6 +1,6 @@
 import { Db } from 'mongodb';
 
-export type UserRole = 'guest' | 'contributor' | 'reviewer' | 'admin';
+export type UserRole = 'guest' | 'student' | 'teacher' | 'contributor' | 'reviewer' | 'admin';
 export type UserStatus = 'active' | 'suspended';
 
 export interface UserDoc {
