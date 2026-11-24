@@ -47,7 +47,20 @@ export interface ThemeToggleProps {
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 
-const TOKENS: Record<Theme, Record<string, string>> = {
+export interface ThemeTokens {
+  pageBg: string;
+  pageText: string;
+  barBg: string;
+  barText: string;
+  barBorder: string;
+  btnBg: string;
+  btnText: string;
+  btnRing: string;
+  inputBg: string;
+  inputText: string;
+}
+
+const TOKENS: Record<Theme, ThemeTokens> = {
   light: {
     pageBg:    "#f3ede1",
     pageText:  "#1a1a1a",
@@ -159,7 +172,7 @@ export function ThemeToggle({
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
   const curtainColorRef       = useRef<string>("");
-  const t                     = TOKENS[theme];
+  const t                     = TOKENS[theme] ?? TOKENS.light;
 
   // Sync with global Tailwind dark class on mount
   useEffect(() => {
@@ -176,7 +189,8 @@ export function ThemeToggle({
   const toggle = useCallback(() => {
     if (phase !== "idle") return;
     const next: Theme = theme === "light" ? "dark" : "light";
-    curtainColorRef.current = TOKENS[next].pageBg;
+    const nextTokens = TOKENS[next] ?? TOKENS.light;
+    curtainColorRef.current = nextTokens.pageBg;
     setPhase("falling");
 
     setTimeout(() => {
