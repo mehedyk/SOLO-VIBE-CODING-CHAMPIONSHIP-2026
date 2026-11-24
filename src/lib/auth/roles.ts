@@ -15,6 +15,8 @@ export type Capability =
 
 const ROLE_PERMISSIONS: Record<UserRole, Capability[]> = {
   guest: ['lesson:read', 'application:submit'],
+  student: ['lesson:read', 'application:submit'],
+  teacher: ['lesson:read', 'lesson:review', 'application:submit'],
   contributor: ['lesson:read', 'lesson:create', 'lesson:edit_own', 'application:submit'],
   reviewer: ['lesson:read', 'lesson:review', 'lesson:quarantine'],
   admin: [
