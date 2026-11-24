@@ -45,9 +45,28 @@ export async function createUser(data: {
   return doc;
 }
 
+const DEMO_ACCOUNTS: Record<string, { name: string; role: UserRole }> = {
+  'student@primarylab.org': { name: 'Demo Student (আকাশ)', role: 'student' },
+  'teacher@primarylab.org': { name: 'Demo Teacher (রাহিমা খানম)', role: 'teacher' },
+  'author@primarylab.org': { name: 'Demo Author (তানভীর আহমেদ)', role: 'contributor' },
+  'admin@primarylab.org': { name: 'Demo Admin (সিস্টেম অ্যাডমিন)', role: 'admin' },
+};
+
 export async function authenticateUser(email: string, password: string): Promise<UserDoc | null> {
   const db = await getDb();
-  const user: UserDoc | null = await db.collection('users').findOne({ email: email.toLowerCase() });
+  let user: UserDoc | null = await db.collection('users').findOne({ email: email.toLowerCase() });
+
+  // Auto-provision standard demo accounts on first login
+  if (!user && DEMO_ACCOUNTS[email.toLowerCase()] && password === 'demo1234') {
+    const info = DEMO_ACCOUNTS[email.toLowerCase()]!;
+    user = await createUser({
+      email: email.toLowerCase(),
+      name: info.name,
+      role: info.role,
+      password: 'demo1234',
+    });
+  }
+
   if (!user || !user.passwordHash) return null;
 
   const valid = verifyPassword(password, user.passwordHash);
