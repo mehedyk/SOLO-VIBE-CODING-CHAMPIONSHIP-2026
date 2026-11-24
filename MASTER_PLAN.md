@@ -33,7 +33,7 @@ Track: Educational. Score: M01–M08 = 60, two declared advanced challenges = 40
 | 4 | Authentication, sessions, capability model, suspension, audit log | ✅ |
 | 5 | Contributor applications + admin decisions | ✅ |
 | 6 | Structured authoring, validation, immutable versions + content hash, reviews | ✅ |
-| 7 | Publication workflow with failure/retry/recovery (A07) | ⬜ |
+| 7 | Publication workflow with failure/retry/recovery (A07) | ✅ |
 | 8 | Reports, moderation, quarantine, replacement; A03 evidence | ⬜ |
 | 9 | Two more templates (fraction bars, number line) + small lesson set | ⬜ |
 | 10 | Security headers/CSP, a11y pass, deploy guide, demo runbook, final docs | ⬜ |
