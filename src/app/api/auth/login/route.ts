@@ -18,7 +18,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'USER_SUSPENDED', message: 'Your account has been suspended' }, { status: 403 });
     }
 
-    const session = await createSession(user.id);
+    const userAgent = req.headers.get('user-agent') || undefined;
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || undefined;
+
+    const session = await createSession(user.id, { userAgent, ip });
     return NextResponse.json({
       success: true,
       user: { id: user.id, email: user.email, name: user.name, role: user.role, status: user.status },
