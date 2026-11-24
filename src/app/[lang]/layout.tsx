@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import LangSwitch from "../../components/LangSwitch";
+import { ModeTypographyToggle } from "../../components/ModeTypographyToggle";
 import { MeridianFooter } from "../../components/MeridianFooter";
 import { LANGS, dict, isLang } from "../../lib/i18n/dict";
 
@@ -56,7 +57,10 @@ export default async function RootLayout({ children, params }: { children: React
             </svg>
             <span>{d.appName}</span>
           </Link>
-          <LangSwitch lang={lang} />
+          <div className="flex items-center gap-2">
+            <ModeTypographyToggle lang={lang} />
+            <LangSwitch lang={lang} />
+          </div>
         </header>
         <main id="main">{children}</main>
         <MeridianFooter lang={lang} />
