@@ -1,58 +1,54 @@
 import React from 'react';
 import Link from 'next/link';
 
-export default function NotFound() {
+export default function RootNotFound() {
   return (
-    <div className="not-found-page min-h-screen bg-[#0a1827] text-white flex flex-col items-center justify-center p-6 text-center select-none">
-      <div className="max-w-lg w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-8 shadow-2xl flex flex-col items-center">
-        {/* 'P' monogram brand mark */}
-        <div className="w-16 h-16 mb-2 flex items-center justify-center rounded-2xl bg-slate-800 border border-slate-700/80">
-          <svg className="w-10 h-10 text-emerald-400" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-            <rect x="6" y="4" width="8" height="32" rx="2" fill="#34d399" />
-            <rect x="18" y="4" width="6" height="6" rx="1.5" fill="#fbbf24" />
-            <rect x="26" y="4" width="6" height="6" rx="1.5" fill="#fbbf24" />
-            <rect x="26" y="12" width="6" height="6" rx="1.5" fill="#fbbf24" />
-            <rect x="26" y="20" width="6" height="6" rx="1.5" fill="#fbbf24" />
-            <rect x="18" y="20" width="6" height="6" rx="1.5" fill="#fbbf24" />
-          </svg>
+    <html lang="bn">
+      <body>
+        <div className="error-screen-container">
+          <div className="error-video-bg" aria-hidden="true">
+            <video
+              className="error-ambient-video"
+              autoPlay
+              loop
+              muted
+              playsInline
+              disablePictureInPicture
+            >
+              <source src="/video/meridian_ambient.mp4" type="video/mp4" />
+              <source
+                src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260928_144832_2b6b23aa-4416-4fcb-9df4-132349c59edc.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <div className="error-scrim" />
+          </div>
+
+          <div className="error-card">
+            <div className="error-brand-icon">
+              <img
+                src="/images/logo_mark.svg"
+                alt="Primary Visual Lab Logo"
+                width={48}
+                height={48}
+                style={{ width: '48px', height: '48px' }}
+              />
+            </div>
+
+            <div className="error-code">404</div>
+            <h1 className="error-heading">Page Not Found · পৃষ্ঠা পাওয়া যায়নি</h1>
+            <p className="error-desc">
+              The page or lesson you requested does not exist on our map. Return to safe exploration.
+            </p>
+
+            <div className="error-actions">
+              <Link href="/bn" className="btn primary">
+                🏠 Return to Home / মূল পাতা
+              </Link>
+            </div>
+          </div>
         </div>
-
-        <div className="text-6xl sm:text-7xl font-extrabold text-amber-400 font-serif tracking-tight mt-2 mb-1">
-          404
-        </div>
-
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-100 mb-2">
-          Off the Beaten Track · পৃষ্ঠাটি পাওয়া যায়নি
-        </h1>
-
-        <p className="text-slate-400 text-sm mb-6 leading-relaxed max-w-md">
-          The requested lesson or route is not on our parchment. The route leads to unmapped territory.
-          নিচের বোতামগুলো ব্যবহার করে নিরাপদে মূল পাতায় ফিরে যান।
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-3 w-full justify-center">
-          <Link
-            href="/bn"
-            className="inline-flex items-center justify-center gap-2 py-2.5 px-6 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition shadow-md"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-              <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            </svg>
-            মূল পাতা (Home)
-          </Link>
-          <Link
-            href="/bn/lessons"
-            className="inline-flex items-center justify-center py-2.5 px-6 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm border border-slate-700 transition"
-          >
-            পাঠ তালিকা (Lessons)
-          </Link>
-        </div>
-
-        <p className="text-xs text-slate-500 mt-6 pt-4 border-t border-slate-800/80 w-full">
-          Primary Visual Lab · All trails lead home.
-        </p>
-      </div>
-    </div>
+      </body>
+    </html>
   );
 }
