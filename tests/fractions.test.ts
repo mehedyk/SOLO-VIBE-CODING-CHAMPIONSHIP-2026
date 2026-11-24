@@ -38,12 +38,12 @@ test('Fractions: step generation preserves parts and reports equivalence', () =>
   const steps = buildFractionComparisonSteps([1, 2], [2, 4]);
   assert.equal(steps.length, 4);
 
-  assert.equal(steps[0].kind, 'initial');
-  assert.equal(steps[1].kind, 'partition');
-  assert.equal(steps[2].kind, 'highlight');
-  assert.equal(steps[3].kind, 'result');
+  assert.equal(steps[0]!.kind, 'initial');
+  assert.equal(steps[1]!.kind, 'partition');
+  assert.equal(steps[2]!.kind, 'highlight');
+  assert.equal(steps[3]!.kind, 'result');
 
-  assert.equal(steps[3].equivalent, true);
-  assert.ok(steps[3].noteBn.includes('সমতুল্য'));
-  assert.ok(steps[3].noteEn.includes('equivalent'));
+  assert.equal(steps[3]!.equivalent, true);
+  assert.ok(steps[3]!.noteBn.includes('সমতুল্য'));
+  assert.ok(steps[3]!.noteEn.includes('equivalent'));
 });
