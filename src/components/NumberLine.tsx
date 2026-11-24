@@ -1,133 +1,214 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { NumberLineStep } from '../lib/math/numberline';
 
 interface NumberLineProps {
-  step: NumberLineStep;
+  step?: NumberLineStep;
   width?: number;
   height?: number;
+  interactive?: boolean;
 }
 
-export function NumberLine({ step, width = 700, height = 200 }: NumberLineProps) {
-  const lineY = 120;
-  const paddingX = 50;
+export function NumberLine({
+  step: propStep,
+  width = 720,
+  height = 220,
+  interactive = true,
+}: NumberLineProps) {
+  const [start, setStart] = useState<number>(4);
+  const [jump, setJump] = useState<number>(7);
+  const [op, setOp] = useState<'+' | '−'>('+');
+
+  const activeMin = propStep ? propStep.min : 0;
+  const activeMax = propStep ? propStep.max : 20;
+  const activeStart = propStep ? propStep.start : start;
+  const activeJump = propStep ? propStep.jump : jump;
+  const activeOp = propStep ? propStep.operation : op;
+  const activeTarget = propStep
+    ? propStep.target
+    : activeOp === '+'
+    ? Math.min(activeMax, activeStart + activeJump)
+    : Math.max(activeMin, activeStart - activeJump);
+
+  const lineY = 140;
+  const paddingX = 55;
   const lineWidth = width - paddingX * 2;
-  const totalTicks = step.max - step.min;
+  const totalTicks = activeMax - activeMin;
   const tickSpacing = lineWidth / totalTicks;
 
-  const startX = paddingX + (step.start - step.min) * tickSpacing;
-  const targetX = paddingX + (step.target - step.min) * tickSpacing;
+  const startX = paddingX + (activeStart - activeMin) * tickSpacing;
+  const targetX = paddingX + (activeTarget - activeMin) * tickSpacing;
 
   // Jump arc control point
   const midX = (startX + targetX) / 2;
-  const arcHeight = Math.min(80, Math.abs(targetX - startX) * 0.45 + 30);
+  const arcHeight = Math.min(85, Math.abs(targetX - startX) * 0.45 + 35);
   const arcY = lineY - arcHeight;
 
   return (
-    <div className="number-line-container flex flex-col items-center p-4 bg-slate-900 rounded-xl border border-slate-800 shadow-md">
-      <svg
-        width="100%"
-        height="100%"
-        viewBox={`0 0 ${width} ${height}`}
-        className="w-full max-w-2xl select-none"
-        role="img"
-        aria-label="Interactive Number Line"
-      >
-        {/* Main horizontal axis line */}
-        <line
-          x1={paddingX - 15}
-          y1={lineY}
-          x2={width - paddingX + 15}
-          y2={lineY}
-          stroke="#94a3b8"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-
-        {/* Axis arrows */}
-        <polygon
-          points={`${width - paddingX + 22},${lineY} ${width - paddingX + 12},${lineY - 6} ${width - paddingX + 12},${lineY + 6}`}
-          fill="#94a3b8"
-        />
-        <polygon
-          points={`${paddingX - 22},${lineY} ${paddingX - 12},${lineY - 6} ${paddingX - 12},${lineY + 6}`}
-          fill="#94a3b8"
-        />
-
-        {/* Ticks and number labels */}
-        {Array.from({ length: totalTicks + 1 }).map((_, i) => {
-          const val = step.min + i;
-          const x = paddingX + i * tickSpacing;
-          const isKey = val === step.start || val === step.target;
-
-          return (
-            <g key={val}>
-              <line
-                x1={x}
-                y1={lineY - (isKey ? 10 : 6)}
-                x2={x}
-                y2={lineY + (isKey ? 10 : 6)}
-                stroke={isKey ? '#38bdf8' : '#64748b'}
-                strokeWidth={isKey ? '3' : '1.5'}
+    <div className="number-line-container">
+      {/* Interactive Controls when in self-interactive mode */}
+      {interactive && !propStep && (
+        <div className="numberline-interactive-controls">
+          <div className="nl-control-item">
+            <label>
+              শুরুর অবস্থান (Start): <strong>{start}</strong>
+              <input
+                type="range"
+                min={0}
+                max={15}
+                value={start}
+                onChange={(e) => setStart(Number(e.target.value))}
               />
-              <text
-                x={x}
-                y={lineY + 28}
-                fill={isKey ? '#38bdf8' : '#cbd5e1'}
-                fontSize={isKey ? '15' : '12'}
-                fontWeight={isKey ? 'bold' : 'normal'}
-                textAnchor="middle"
-              >
-                {val}
-              </text>
-            </g>
-          );
-        })}
+            </label>
+          </div>
 
-        {/* Jump Arc */}
-        {step.kind !== 'start' && (
-          <g>
+          <div className="nl-control-item">
+            <label>
+              লাফের পরিমাণ (Jump Step): <strong>{jump}</strong>
+              <input
+                type="range"
+                min={1}
+                max={10}
+                value={jump}
+                onChange={(e) => setJump(Number(e.target.value))}
+              />
+            </label>
+          </div>
+
+          <div className="nl-op-toggle">
+            <button
+              type="button"
+              onClick={() => setOp('+')}
+              className={`btn ${op === '+' ? 'primary' : 'ghost'}`}
+            >
+              + ডানদিকে লাফ (Add)
+            </button>
+            <button
+              type="button"
+              onClick={() => setOp('−')}
+              className={`btn ${op === '−' ? 'primary' : 'ghost'}`}
+            >
+              − বামদিকে পিছানো (Subtract)
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* SVG Canvas */}
+      <div className="numberline-svg-wrapper">
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          className="number-line-svg select-none"
+          role="img"
+          aria-label="Interactive Number Line"
+        >
+          {/* Main horizontal axis line */}
+          <line
+            x1={paddingX - 15}
+            y1={lineY}
+            x2={width - paddingX + 15}
+            y2={lineY}
+            stroke="#94a3b8"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+          />
+
+          {/* Axis arrows */}
+          <polygon
+            points={`${width - paddingX + 22},${lineY} ${width - paddingX + 10},${lineY - 6} ${width - paddingX + 10},${lineY + 6}`}
+            fill="#94a3b8"
+          />
+          <polygon
+            points={`${paddingX - 22},${lineY} ${paddingX - 10},${lineY - 6} ${paddingX - 10},${lineY + 6}`}
+            fill="#94a3b8"
+          />
+
+          {/* Ticks and integer labels */}
+          {Array.from({ length: totalTicks + 1 }).map((_, i) => {
+            const val = activeMin + i;
+            const x = paddingX + i * tickSpacing;
+            const isMilestone = val === activeStart || val === activeTarget;
+
+            return (
+              <g key={i}>
+                <line
+                  x1={x}
+                  y1={lineY - (isMilestone ? 10 : 6)}
+                  x2={x}
+                  y2={lineY + (isMilestone ? 10 : 6)}
+                  stroke={isMilestone ? '#fbbf24' : '#64748b'}
+                  strokeWidth={isMilestone ? '2.5' : '1.5'}
+                />
+                <text
+                  x={x}
+                  y={lineY + 28}
+                  fill={isMilestone ? '#fbbf24' : '#94a3b8'}
+                  fontSize={isMilestone ? '15' : '12'}
+                  fontWeight={isMilestone ? '800' : '500'}
+                  textAnchor="middle"
+                  fontFamily="system-ui, sans-serif"
+                >
+                  {val}
+                </text>
+              </g>
+            );
+          })}
+
+          {/* Jump trajectory arc */}
+          {activeStart !== activeTarget && (
             <path
               d={`M ${startX} ${lineY} Q ${midX} ${arcY} ${targetX} ${lineY}`}
               fill="none"
-              stroke="#fbbf24"
+              stroke="#38bdf8"
               strokeWidth="3.5"
-              strokeDasharray={step.kind === 'jump' ? '6 6' : 'none'}
+              strokeDasharray="6 4"
+              className="jump-arc-path"
             />
-            {/* Jump label */}
-            <rect
-              x={midX - 22}
-              y={arcY - 22}
-              width="44"
-              height="24"
-              rx="4"
-              fill="#fbbf24"
-            />
-            <text
-              x={midX}
-              y={arcY - 6}
-              fill="#0f172a"
-              fontSize="14"
-              fontWeight="bold"
-              textAnchor="middle"
-            >
-              {step.operation}{step.jump}
-            </text>
-          </g>
-        )}
+          )}
 
-        {/* Start Position Marker */}
-        <circle cx={startX} cy={lineY} r="7" fill="#0284c7" stroke="#ffffff" strokeWidth="2" />
+          {/* Start marker pin */}
+          <circle cx={startX} cy={lineY} r="7" fill="#fbbf24" stroke="#0f172a" strokeWidth="2" />
 
-        {/* Current / Result Marker */}
-        {step.kind === 'result' && (
-          <circle cx={targetX} cy={lineY} r="8" fill="#10b981" stroke="#ffffff" strokeWidth="2" />
-        )}
-      </svg>
+          {/* Target marker flag/pin */}
+          <circle cx={targetX} cy={lineY} r="8" fill="#34d399" stroke="#0f172a" strokeWidth="2.5" />
 
-      <div className="mt-4 px-4 py-2 bg-slate-800 rounded-lg text-slate-200 text-sm font-medium text-center">
-        {step.noteBn}
+          {/* Delta Jump label */}
+          {activeStart !== activeTarget && (
+            <g>
+              <rect
+                x={midX - 24}
+                y={arcY - 24}
+                width="48"
+                height="22"
+                rx="6"
+                fill="#1e293b"
+                stroke="#38bdf8"
+                strokeWidth="1.5"
+              />
+              <text
+                x={midX}
+                y={arcY - 9}
+                fill="#38bdf8"
+                fontSize="13"
+                fontWeight="800"
+                textAnchor="middle"
+                fontFamily="system-ui, sans-serif"
+              >
+                {activeOp === '+' ? `+${activeJump}` : `−${activeJump}`}
+              </text>
+            </g>
+          )}
+        </svg>
+      </div>
+
+      {/* Invariant Equation Display */}
+      <div className="nl-equation-display">
+        <span>
+          {activeOp === '+'
+            ? `💡 সমীকরণ: ${activeStart} + ${activeJump} = ${activeTarget} (ডানদিকে ${activeJump} ঘর দূরত্বে লাফ)`
+            : `💡 সমীকরণ: ${activeStart} − ${activeJump} = ${activeTarget} (বামদিকে ${activeJump} ঘর দূরত্বে পিছানো)`}
+        </span>
       </div>
     </div>
   );
