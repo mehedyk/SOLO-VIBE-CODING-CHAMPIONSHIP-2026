@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { dict, isLang } from '../../lib/i18n/dict';
 import { LESSONS, lessonText } from '../../lib/lessons/registry';
 import { MeadowbellHero } from '../../components/MeadowbellHero';
+import { RoleWorkspaceHub } from '../../components/RoleWorkspaceHub';
+import { NationalPortals } from '../../components/NationalPortals';
 import { NCTB_CURRICULUM } from '../../lib/curriculum/nctb';
 import { formatInt } from '../../lib/math/numerals';
 
@@ -140,6 +142,9 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         </div>
       </section>
 
+      {/* Role-Specific Workspaces Hub */}
+      <RoleWorkspaceHub lang={lang} />
+
       {/* Complete NCTB Curriculum Classes (1 to 5) */}
       <section className="nctb-curriculum-section">
         <div className="section-header">
@@ -240,6 +245,9 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           })}
         </ul>
       </section>
+
+      {/* Bangladesh Primary Education Portals */}
+      <NationalPortals lang={lang} />
     </div>
   );
 }
