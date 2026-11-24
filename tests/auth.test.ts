@@ -47,6 +47,34 @@ test('Sessions: token creation, validation, and revocation', async () => {
   assert.equal(checkRevoked.reason, 'SESSION_REVOKED');
 });
 
+test('Multi-device Sessions: multiple active internet logins in MongoDB', async () => {
+  const email = `multi_${Date.now()}@example.com`;
+  const user = await createUser({ email, name: 'Multi User', password: 'password123' });
+
+  // Login 1: Desktop Chrome
+  const session1 = await createSession(user.id, {
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0',
+    ip: '103.205.71.1',
+  });
+
+  // Login 2: Mobile Safari
+  const session2 = await createSession(user.id, {
+    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0) Safari/604.1',
+    ip: '103.205.71.2',
+  });
+
+  // Both sessions are valid concurrently in MongoDB
+  const val1 = await validateSession(session1.token);
+  const val2 = await validateSession(session2.token);
+  assert.equal(val1.valid, true);
+  assert.equal(val2.valid, true);
+
+  // Revoking phone session does not kill desktop session
+  await revokeSession(session2.token);
+  assert.equal((await validateSession(session2.token)).valid, false);
+  assert.equal((await validateSession(session1.token)).valid, true);
+});
+
 test('Capability Model: roles, capabilities, and ownership checks', async () => {
   const guestUser = { id: 'u_guest', email: 'g@e.com', name: 'G', role: 'guest' as const, status: 'active' as const, createdAt: '', updatedAt: '' };
   const contrib1 = { id: 'u_c1', email: 'c1@e.com', name: 'C1', role: 'contributor' as const, status: 'active' as const, createdAt: '', updatedAt: '' };
