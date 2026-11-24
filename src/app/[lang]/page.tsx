@@ -18,9 +18,9 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         browseLabel={d.browseLessons}
       />
 
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-slate-100 mb-2">{isBnLang(lang) ? 'ডেমো পাঠসমূহ' : 'Available Labs'}</h2>
-        <p className="text-sm text-slate-400 mb-4">{d.homeIntro}</p>
+      <div className="section-header">
+        <h2>{isBnLang(lang) ? 'ডেমো পাঠসমূহ' : 'Available Labs'}</h2>
+        <p className="meta">{d.homeIntro}</p>
       </div>
 
       <ul className="cards-list">
