@@ -33,27 +33,29 @@ export function ModeTypographyToggle({ lang }: ModeTypographyToggleProps) {
     }
   }, []);
 
-  const toggleMode = useCallback(() => {
-    if (phase !== 'idle') return;
-    const next: UserMode = mode === 'teacher' ? 'student' : 'teacher';
+  const switchMode = useCallback(
+    (targetMode: UserMode) => {
+      if (phase !== 'idle' || mode === targetMode) return;
 
-    // Set curtain color based on mode
-    curtainColorRef.current = next === 'student' ? '#fbbf24' : '#0f2a43';
-    setPhase('falling');
+      // Set curtain accent color based on mode
+      curtainColorRef.current = targetMode === 'student' ? '#fbbf24' : '#0f2a43';
+      setPhase('falling');
 
-    setTimeout(() => {
-      setMode(next);
-      try {
-        localStorage.setItem('primary_lab_mode', next);
-      } catch {}
-      if (typeof document !== 'undefined') {
-        document.documentElement.setAttribute('data-mode', next);
-      }
+      setTimeout(() => {
+        setMode(targetMode);
+        try {
+          localStorage.setItem('primary_lab_mode', targetMode);
+        } catch {}
+        if (typeof document !== 'undefined') {
+          document.documentElement.setAttribute('data-mode', targetMode);
+        }
 
-      setPhase('rising');
-      setTimeout(() => setPhase('idle'), DURATION + 60);
-    }, DURATION);
-  }, [phase, mode]);
+        setPhase('rising');
+        setTimeout(() => setPhase('idle'), DURATION + 60);
+      }, DURATION);
+    },
+    [phase, mode]
+  );
 
   const curtainStyle: React.CSSProperties = {
     position: 'fixed',
@@ -68,42 +70,65 @@ export function ModeTypographyToggle({ lang }: ModeTypographyToggleProps) {
   };
 
   return (
-    <div className="mode-toggle-wrap">
+    <div className="header-control-cluster">
       {/* Curtain animation overlay */}
       <div aria-hidden="true" style={curtainStyle} />
 
-      {/* Typography Mode Toggle Button */}
-      <button
-        onClick={toggleMode}
-        type="button"
-        className={`mode-toggle-btn ${mode === 'teacher' ? 'mode-teacher' : 'mode-student'}`}
-        title={
-          mode === 'teacher'
-            ? isBn
-              ? 'শিক্ষার্থী মোডে বদলান (প্লেফুল ফ্রন্ট)'
-              : 'Switch to Student Mode (Playful Typography)'
-            : isBn
-              ? 'শিক্ষক মোডে বদলান (ফর্মাল ফ্রন্ট)'
-              : 'Switch to Teacher Mode (Formal Typography)'
-        }
-        aria-label="Toggle typography mode between teacher and student"
+      {/* Segmented Mode Switcher (Teacher Formal vs Student Playful) */}
+      <div
+        className="segmented-mode-switch"
+        role="group"
+        aria-label="Typography and Audience Mode"
       >
-        {mode === 'teacher' ? (
-          <>
-            <span className="mode-icon">👨‍🏫</span>
-            <span className="mode-label">{isBn ? 'শিক্ষক মোড (ফর্মাল)' : 'Teacher (Formal)'}</span>
-          </>
-        ) : (
-          <>
-            <span className="mode-icon">🎨</span>
-            <span className="mode-label">{isBn ? 'শিক্ষার্থী মোড (প্লেফুল)' : 'Student (Playful)'}</span>
-          </>
-        )}
-      </button>
+        <button
+          type="button"
+          onClick={() => switchMode('teacher')}
+          className={`segment-btn ${mode === 'teacher' ? 'active' : ''}`}
+          title={isBn ? 'শিক্ষক মোড (ফর্মাল টাইপোগ্রাফি)' : 'Teacher Mode (Formal Typography)'}
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+            <path d="M6 12v5c3 3 9 3 12 0v-5" />
+          </svg>
+          <span className="segment-label">{isBn ? 'শিক্ষক' : 'Teacher'}</span>
+        </button>
 
-      {/* Curtain Theme Toggle Icon */}
-      <div className="theme-toggle-inline">
-        <ThemeToggle variant="icon" defaultTheme="dark" duration={DURATION} buttonSize={32} />
+        <button
+          type="button"
+          onClick={() => switchMode('student')}
+          className={`segment-btn ${mode === 'student' ? 'active' : ''}`}
+          title={isBn ? 'শিক্ষার্থী মোড (মজার ও প্লেফুল ফন্ট)' : 'Student Mode (Playful Typography)'}
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+          <span className="segment-label">{isBn ? 'শিক্ষার্থী' : 'Student'}</span>
+        </button>
+      </div>
+
+      {/* Curtain Theme Toggle (Light / Dark) */}
+      <div className="theme-toggle-cluster-item" title="Toggle Light/Dark Theme">
+        <ThemeToggle variant="icon" defaultTheme="dark" duration={DURATION} buttonSize={34} />
       </div>
     </div>
   );
