@@ -1,0 +1,53 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { authorizeRequest } from '@/lib/auth/guard';
+import { updateLesson, getLessonVersions } from '@/lib/lessons/authoring';
+import { getDb } from '@/lib/db/client';
+
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const db = await getDb();
+    const lesson = await db.collection('lessons').findOne({ id });
+    if (!lesson) {
+      return NextResponse.json({ error: 'NOT_FOUND' }, { status: 404 });
+    }
+
+    const versions = await getLessonVersions(id);
+    return NextResponse.json({ lesson, versions });
+  } catch (err: any) {
+    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+  }
+}
+
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const db = await getDb();
+    const lesson = await db.collection('lessons').findOne({ id });
+    if (!lesson) {
+      return NextResponse.json({ error: 'NOT_FOUND' }, { status: 404 });
+    }
+
+    const auth = await authorizeRequest(req, 'lesson:edit_own', {
+      resourceOwnerId: lesson.authorId,
+      resourceId: id,
+      resourceType: 'lesson',
+    });
+
+    if (!auth.allowed || !auth.user) {
+      return NextResponse.json({ error: auth.error || 'UNAUTHORIZED' }, { status: auth.status || 403 });
+    }
+
+    const payload = await req.json();
+    const result = await updateLesson(auth.user, id, payload);
+    return NextResponse.json({ success: true, ...result });
+  } catch (err: any) {
+    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+  }
+}
