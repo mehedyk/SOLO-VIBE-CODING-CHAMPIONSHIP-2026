@@ -37,7 +37,7 @@ Track: Educational. Score: M01–M08 = 60, two declared advanced challenges = 40
 | 8 | Reports, moderation, quarantine, replacement; A03 evidence | ✅ |
 | 9 | Two more templates (fraction bars, number line) + small lesson set | ✅ |
 | 10 | Security headers/CSP, a11y pass, deploy guide, demo runbook, final docs | ✅ |
-| 11 | Future resources integration: Meadowbell hero, Meridian footer, brand identity SVG/PNG, Kalpurush fonts, custom 404 & error recovery pages | ✅ |
+| 11 | Future resources & UI integration: Meadowbell hero, Meridian footer, brand identity SVG/PNG, Kalpurush fonts, custom 404 & error recovery, curtain mode & formal/playful typography toggle | ✅ |
 
 ## Requirement → test matrix (Phase 0–1 rows executed)
 | Requirement | Test | Result |
