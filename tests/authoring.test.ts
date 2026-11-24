@@ -93,8 +93,8 @@ test('Lesson Lifecycle: create, immutable versioning, hash check, and peer revie
   // Verify versions history preserves both v1 and v2 immutably
   const versions = await getLessonVersions(lesson.id);
   assert.equal(versions.length, 2);
-  assert.equal(versions[0].version, 1);
-  assert.equal(versions[1].version, 2);
+  assert.equal(versions[0]!.version, 1);
+  assert.equal(versions[1]!.version, 2);
 
   // Submit for review
   const submitted = await submitLessonForReview(author1, lesson.id);
