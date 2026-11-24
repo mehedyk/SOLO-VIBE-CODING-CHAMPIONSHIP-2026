@@ -4,7 +4,10 @@ import { SessionDoc, UserDoc } from '../db/schema';
 
 const SESSION_DURATION_HOURS = 24;
 
-export async function createSession(userId: string): Promise<SessionDoc> {
+export async function createSession(
+  userId: string,
+  metadata?: { userAgent?: string; ip?: string }
+): Promise<SessionDoc> {
   const db = await getDb();
   const token = crypto.randomBytes(32).toString('hex');
   const now = new Date();
@@ -16,6 +19,8 @@ export async function createSession(userId: string): Promise<SessionDoc> {
     token,
     expiresAt: expires.toISOString(),
     revoked: false,
+    userAgent: metadata?.userAgent,
+    ip: metadata?.ip,
     createdAt: now.toISOString(),
   };
 
