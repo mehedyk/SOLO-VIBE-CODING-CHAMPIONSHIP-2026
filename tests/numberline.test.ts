@@ -27,17 +27,17 @@ test('Number Line: step progression and invariant target check', () => {
   assert.equal(steps.length, 3);
 
   // Step 0: start
-  assert.equal(steps[0].kind, 'start');
-  assert.equal(steps[0].current, 8);
+  assert.equal(steps[0]!.kind, 'start');
+  assert.equal(steps[0]!.current, 8);
 
   // Step 1: jump
-  assert.equal(steps[1].kind, 'jump');
-  assert.equal(steps[1].jump, 5);
+  assert.equal(steps[1]!.kind, 'jump');
+  assert.equal(steps[1]!.jump, 5);
 
   // Step 2: result
-  assert.equal(steps[2].kind, 'result');
-  assert.equal(steps[2].target, 13);
-  assert.equal(steps[2].current, 13);
-  assert.ok(steps[2].noteBn.includes('13'));
-  assert.ok(steps[2].noteEn.includes('13'));
+  assert.equal(steps[2]!.kind, 'result');
+  assert.equal(steps[2]!.target, 13);
+  assert.equal(steps[2]!.current, 13);
+  assert.ok(steps[2]!.noteBn.includes('13'));
+  assert.ok(steps[2]!.noteEn.includes('13'));
 });
