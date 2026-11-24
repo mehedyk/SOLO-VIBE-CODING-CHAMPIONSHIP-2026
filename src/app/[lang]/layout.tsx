@@ -5,6 +5,7 @@ import Link from "next/link";
 import LangSwitch from "../../components/LangSwitch";
 import { ModeTypographyToggle } from "../../components/ModeTypographyToggle";
 import { MeridianFooter } from "../../components/MeridianFooter";
+import { AcademicDateHeader } from "../../components/AcademicDateHeader";
 import { LANGS, dict, isLang } from "../../lib/i18n/dict";
 
 export const dynamicParams = false;
@@ -41,6 +42,7 @@ export default async function RootLayout({ children, params }: { children: React
     <html lang={lang}>
       <body>
         <a className="skip" href="#main">{d.skip}</a>
+        <AcademicDateHeader lang={lang} />
         <header className="site-head">
           <div className="head-left">
             <Link href={`/${lang}`} className="brand">
