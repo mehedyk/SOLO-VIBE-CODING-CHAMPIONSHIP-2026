@@ -183,7 +183,7 @@ export async function executeWorkflow(
       };
 
       const isLast = i === wf.steps.length - 1;
-      const nextStatus = isLast ? 'completed' : getStatusForStep(wf.steps[i + 1]);
+      const nextStatus = isLast ? 'completed' : getStatusForStep(wf.steps[i + 1] ?? '');
 
       await db.collection('workflows').updateOne(
         { id: workflowId },
@@ -262,7 +262,7 @@ export async function retryPublicationWorkflow(
     { id: workflowId },
     {
       $set: {
-        status: getStatusForStep(wf.steps[wf.currentStep] || wf.steps[0]),
+        status: getStatusForStep(wf.steps[wf.currentStep] ?? (wf.steps[0] ?? '')),
         retryCount,
         updatedAt: now,
       },
