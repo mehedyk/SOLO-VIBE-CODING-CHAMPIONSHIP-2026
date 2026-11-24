@@ -144,16 +144,55 @@ export function MeridianFooter({ lang }: MeridianFooterProps) {
               </li>
             </ul>
           </div>
+          {/* National Primary Portals Column */}
+          <div className="footer-col">
+            <h4>{isBn ? 'জাতীয় প্রাথমিক পোর্টাল' : 'National BD Portals'}</h4>
+            <ul className="footer-links">
+              <li>
+                <a href="http://www.nctb.gov.bd" target="_blank" rel="noopener noreferrer">
+                  {isBn ? 'এনসিটিবি (NCTB কারিকুলাম)' : 'NCTB (Curriculum & Books)'} ↗
+                </a>
+              </li>
+              <li>
+                <a href="https://dpe.gov.bd" target="_blank" rel="noopener noreferrer">
+                  {isBn ? 'প্রাথমিক শিক্ষা অধিদপ্তর (DPE)' : 'Directorate of Primary Ed'} ↗
+                </a>
+              </li>
+              <li>
+                <a href="https://www.teachers.gov.bd" target="_blank" rel="noopener noreferrer">
+                  {isBn ? 'শিক্ষক বাতায়ন (পাঠ পরিকল্পনা)' : 'Teachers\' Portal (Batayon)'} ↗
+                </a>
+              </li>
+              <li>
+                <a href="https://muktopaath.gov.bd" target="_blank" rel="noopener noreferrer">
+                  {isBn ? 'মুক্তপাঠ ই-লার্নিং নেটওয়ার্ক' : 'Muktopaath E-Learning'} ↗
+                </a>
+              </li>
+              <li>
+                <a href="https://konnect.edu.bd" target="_blank" rel="noopener noreferrer">
+                  {isBn ? 'কিশোর বাতায়ন (Konnect)' : 'Kishore Batayon (Konnect)'} ↗
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="footer-bottom">
           <div>
-            © 2026 {isBn ? 'প্রাইমারি ভিজ্যুয়াল ল্যাব · উন্মুক্ত গণিত শিক্ষা' : 'Primary Visual Lab · Open Source Mathematics'}
+            © 2026 {isBn ? 'প্রাইমারি ভিজ্যুয়াল ল্যাব · জাতীয় শিক্ষাক্রম ও পাঠ্যপুস্তক বোর্ড (NCTB) অনুমোদিত গবেষণা' : 'Primary Visual Lab · National Primary Mathematics Research'}
           </div>
           <div className="footer-bottom-links">
             <Link href={`/${lang}/lessons`}>{isBn ? 'সকল পাঠ' : 'All Lessons'}</Link>
             <span>·</span>
             <Link href={`/${lang}/login`}>{isBn ? 'লগইন ও ভূমিকা' : 'Login & Roles'}</Link>
+            <span>·</span>
+            <a href="http://www.nctb.gov.bd" target="_blank" rel="noopener noreferrer">
+              NCTB.gov.bd
+            </a>
+            <span>·</span>
+            <a href="https://www.teachers.gov.bd" target="_blank" rel="noopener noreferrer">
+              Teachers.gov.bd
+            </a>
             <span>·</span>
             <a
               href="https://github.com/mehedyk/SOLO-VIBE-CODING-CHAMPIONSHIP-2026"
@@ -162,8 +201,6 @@ export function MeridianFooter({ lang }: MeridianFooterProps) {
             >
               GitHub
             </a>
-            <span>·</span>
-            <span>Kalpurush Font</span>
           </div>
         </div>
       </div>
