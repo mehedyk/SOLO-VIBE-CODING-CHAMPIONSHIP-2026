@@ -10,14 +10,26 @@ export interface UserDoc {
   role: UserRole;
   status: UserStatus;
   passwordHash?: string;
+  lastLoginAt?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+/** The only user shape that may be sent to a browser (never includes passwordHash). */
+export interface PublicUser {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  status: UserStatus;
+  createdAt: string;
 }
 
 export interface SessionDoc {
   id: string;
   userId: string;
-  token: string;
+  /** SHA-256 of the cookie token. The raw token is never stored. */
+  tokenHash: string;
   expiresAt: string;
   revoked: boolean;
   userAgent?: string;
@@ -143,7 +155,10 @@ export async function ensureIndexes(db: Db | any): Promise<void> {
     await db.collection('attempts').createIndex({ userId: 1, lessonSlug: 1 });
     await db.collection('attempts').createIndex({ guestId: 1, lessonSlug: 1 });
     await db.collection('users').createIndex({ email: 1 }, { unique: true });
-    await db.collection('sessions').createIndex({ token: 1 }, { unique: true });
+    await db.collection('sessions').createIndex({ tokenHash: 1 }, { unique: true });
+    await db.collection('sessions').createIndex({ userId: 1 });
+    await db.collection('throttle').createIndex({ key: 1 }, { unique: true });
+    await db.collection('throttle').createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 });
     await db.collection('sessions').createIndex({ expiresAt: 1 });
     await db.collection('lessons').createIndex({ slug: 1 }, { unique: true });
     await db.collection('lessons').createIndex({ status: 1 });
