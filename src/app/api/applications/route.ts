@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authorizeRequest } from '@/lib/auth/guard';
 import { submitApplication, listApplications } from '@/lib/applications/service';
+import { apiError } from '@/lib/http';
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
     if (err.message === 'PENDING_APPLICATION_EXISTS') {
       return NextResponse.json({ error: 'PENDING_APPLICATION_EXISTS', message: 'You already have an application under review' }, { status: 409 });
     }
-    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+    return apiError(500, 'SERVER_ERROR', undefined, err);
   }
 }
 
@@ -37,6 +38,6 @@ export async function GET(req: NextRequest) {
     const applications = await listApplications(status || undefined);
     return NextResponse.json({ applications });
   } catch (err: any) {
-    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+    return apiError(500, 'SERVER_ERROR', undefined, err);
   }
 }
