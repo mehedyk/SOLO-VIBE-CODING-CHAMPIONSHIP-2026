@@ -1,26 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateSession } from '@/lib/auth/session';
+import { currentUserFromRequest } from '@/lib/auth/guard';
+import { toPublicUser } from '@/lib/auth/current';
+import { apiError } from '@/lib/http';
 
 export async function GET(req: NextRequest) {
   try {
-    const authHeader = req.headers.get('authorization');
-    const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
-
-    if (!token) {
-      return NextResponse.json({ authenticated: false }, { status: 401 });
-    }
-
-    const result = await validateSession(token);
-    if (!result.valid || !result.user) {
-      return NextResponse.json({ authenticated: false, reason: result.reason }, { status: 401 });
-    }
-
-    const { id, email, name, role, status, createdAt } = result.user;
-    return NextResponse.json({
-      authenticated: true,
-      user: { id, email, name, role, status, createdAt },
-    });
-  } catch (err: any) {
-    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+    const user = await currentUserFromRequest(req);
+    if (!user) return NextResponse.json({ authenticated: false }, { status: 401 });
+    return NextResponse.json({ authenticated: true, user: toPublicUser(user) });
+  } catch (err) {
+    return apiError(500, 'SERVER_ERROR', undefined, err);
   }
 }
