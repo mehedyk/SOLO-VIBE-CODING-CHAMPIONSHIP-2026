@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authorizeRequest } from '@/lib/auth/guard';
 import { dismissReport } from '@/lib/moderation/service';
+import { apiError } from '@/lib/http';
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,6 +18,6 @@ export async function POST(req: NextRequest) {
     const report = await dismissReport(auth.user, reportId, note || 'Dismissed by moderator');
     return NextResponse.json({ success: true, report });
   } catch (err: any) {
-    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+    return apiError(500, 'SERVER_ERROR', undefined, err);
   }
 }
