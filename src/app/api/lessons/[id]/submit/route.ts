@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authorizeRequest } from '@/lib/auth/guard';
 import { submitLessonForReview } from '@/lib/lessons/authoring';
 import { getDb } from '@/lib/db/client';
+import { apiError } from '@/lib/http';
 
 export async function POST(
   req: NextRequest,
@@ -28,6 +29,6 @@ export async function POST(
     const updated = await submitLessonForReview(auth.user, id);
     return NextResponse.json({ success: true, lesson: updated });
   } catch (err: any) {
-    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+    return apiError(500, 'SERVER_ERROR', undefined, err);
   }
 }
