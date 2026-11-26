@@ -2,6 +2,7 @@ import { getDb } from '../db/client';
 import { LessonDoc, ReportDoc, UserDoc } from '../db/schema';
 import { hasCapability } from '../auth/roles';
 import { logAuditEvent } from '../auth/audit';
+import { newId } from '../util/id';
 
 export async function reportLesson(
   reporter: UserDoc | { id: string },
@@ -15,7 +16,7 @@ export async function reportLesson(
 
   const now = new Date().toISOString();
   const reportDoc: ReportDoc = {
-    id: 'rep_' + Math.random().toString(36).substring(2, 11),
+    id: newId('rep'),
     targetType: 'lesson',
     targetId: lessonId,
     reporterId: reporter.id,
