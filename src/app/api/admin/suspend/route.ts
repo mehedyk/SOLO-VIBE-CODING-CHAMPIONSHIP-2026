@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authorizeRequest } from '@/lib/auth/guard';
 import { suspendUser, reactivateUser } from '@/lib/auth/service';
+import { apiError } from '@/lib/http';
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,6 +23,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, user });
     }
   } catch (err: any) {
-    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+    return apiError(500, 'SERVER_ERROR', undefined, err);
   }
 }
