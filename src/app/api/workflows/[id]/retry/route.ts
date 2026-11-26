@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authorizeRequest } from '@/lib/auth/guard';
 import { retryPublicationWorkflow } from '@/lib/workflow/publisher';
+import { apiError } from '@/lib/http';
 
 export async function POST(
   req: NextRequest,
@@ -22,6 +23,6 @@ export async function POST(
     if (err.message === 'MAX_RETRIES_EXCEEDED') {
       return NextResponse.json({ error: 'MAX_RETRIES_EXCEEDED', message: 'Maximum retry attempts reached' }, { status: 400 });
     }
-    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+    return apiError(500, 'SERVER_ERROR', undefined, err);
   }
 }
