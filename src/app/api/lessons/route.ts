@@ -1,24 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authorizeRequest } from '@/lib/auth/guard';
+import { authorizeRequest, currentUserFromRequest } from '@/lib/auth/guard';
 import { createLesson } from '@/lib/lessons/authoring';
 import { getDb } from '@/lib/db/client';
+import { apiError } from '@/lib/http';
 
 export async function GET(req: NextRequest) {
   try {
+    const user = await currentUserFromRequest(req);
+    if (!user) return apiError(401, 'UNAUTHENTICATED');
+
     const { searchParams } = new URL(req.url);
     const status = searchParams.get('status');
     const authorId = searchParams.get('authorId');
 
-    const db = await getDb();
+    // Visibility: everyone signed in sees published lessons; authors also see their own drafts;
+    // reviewers and admins see everything. (The old endpoint returned every draft to anyone.)
+    const privileged = user.role === 'admin' || user.role === 'reviewer';
     const query: any = {};
     if (status) query.status = status;
     if (authorId) query.authorId = authorId;
+    if (!privileged) query.$or = [{ status: 'published' }, { authorId: user.id }];
 
+    const db = await getDb();
     const cursor = await db.collection('lessons').find(query);
     const lessons = await cursor.toArray();
     return NextResponse.json({ lessons });
   } catch (err: any) {
-    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+    return apiError(500, 'SERVER_ERROR', undefined, err);
   }
 }
 
@@ -39,6 +47,6 @@ export async function POST(req: NextRequest) {
     if (err.message === 'SLUG_ALREADY_EXISTS') {
       return NextResponse.json({ error: 'SLUG_EXISTS', message: 'Lesson with this slug already exists' }, { status: 409 });
     }
-    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+    return apiError(500, 'SERVER_ERROR', undefined, err);
   }
 }
