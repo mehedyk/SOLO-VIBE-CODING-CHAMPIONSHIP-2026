@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authorizeRequest } from '@/lib/auth/guard';
 import { reviewLesson } from '@/lib/lessons/authoring';
+import { apiError } from '@/lib/http';
 
 export async function POST(
   req: NextRequest,
@@ -28,6 +29,6 @@ export async function POST(
     if (err.message === 'AUTHOR_CANNOT_REVIEW_OWN_LESSON') {
       return NextResponse.json({ error: 'CONFLICT_OF_INTEREST', message: 'Authors cannot review their own lessons' }, { status: 403 });
     }
-    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+    return apiError(500, 'SERVER_ERROR', undefined, err);
   }
 }
