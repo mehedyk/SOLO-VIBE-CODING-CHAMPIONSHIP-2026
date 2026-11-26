@@ -1,15 +1,19 @@
-import "../globals.css";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import LangSwitch from "../../components/LangSwitch";
-import { ModeTypographyToggle } from "../../components/ModeTypographyToggle";
-import { MeridianFooter } from "../../components/MeridianFooter";
-import { AcademicDateHeader } from "../../components/AcademicDateHeader";
-import { LANGS, dict, isLang } from "../../lib/i18n/dict";
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/lexend';
+import '@fontsource/noto-sans-bengali/400.css';
+import '@fontsource/noto-sans-bengali/700.css';
+import '@/styles/tokens.css';
+import '@/styles/labs.css';
+import '@/styles/base.css';
+import type { Metadata, Viewport } from 'next';
+import { notFound } from 'next/navigation';
+import SceneBackground from '@/components/SceneBackground';
+import { LANGS, dict, isLang } from '@/lib/i18n/dict';
 
 export const dynamicParams = false;
 export function generateStaticParams() { return LANGS.map((lang) => ({ lang })); }
+
+export const viewport: Viewport = { themeColor: '#0f2a43', width: 'device-width', initialScale: 1 };
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -17,67 +21,24 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return {
     title: { default: dict[lang].appName, template: `%s · ${dict[lang].appName}` },
     description: dict[lang].tagline,
-    icons: {
-      icon: [
-        { url: '/favicon.ico', sizes: 'any' },
-        { url: '/favicon.svg', type: 'image/svg+xml' },
-      ],
-      apple: '/apple-touch-icon.png',
-    },
-    openGraph: {
-      title: dict[lang].appName,
-      description: dict[lang].tagline,
-      images: [{ url: '/images/social_og_image.png', width: 1376, height: 768 }],
-    },
+    icons: { icon: [{ url: '/favicon.ico', sizes: 'any' }, { url: '/favicon.svg', type: 'image/svg+xml' }], apple: '/apple-touch-icon.png' },
+    openGraph: { title: dict[lang].appName, description: dict[lang].tagline, images: [{ url: '/images/social_og_image.png', width: 1376, height: 768 }] },
   };
 }
 
-export default async function RootLayout({ children, params }: { children: React.ReactNode; params: Promise<{ lang: string }> }) {
+// Applies the saved theme, display style and video preference before first paint (no flash).
+const INIT = `try{var d=document.documentElement,s=localStorage;if(s.getItem('pvl-theme')==='dark')d.classList.add('dark');if(s.getItem('primary_lab_mode')==='student')d.dataset.mode='student';if(s.getItem('pvl-scene')==='paused')d.dataset.scene='paused'}catch(e){}`;
+
+export default async function LangLayout({ children, params }: { children: React.ReactNode; params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
-  const d = dict[lang];
-  const isBn = lang === 'bn';
-
   return (
-    <html lang={lang}>
+    <html lang={lang} suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: INIT }} /></head>
       <body>
-        <a className="skip" href="#main">{d.skip}</a>
-        <AcademicDateHeader lang={lang} />
-        <header className="site-head">
-          <div className="head-left">
-            <Link href={`/${lang}`} className="brand">
-              <img
-                src="/images/logo_mark.svg"
-                alt="Primary Visual Lab Logo"
-                width={30}
-                height={30}
-                style={{ width: "30px", height: "30px", flexShrink: 0 }}
-                aria-hidden="true"
-              />
-              <span className="brand-text">{d.appName}</span>
-            </Link>
-
-            <nav className="head-nav" aria-label="Main Navigation">
-              <Link href={`/${lang}/lessons`} className="nav-link">
-                {isBn ? 'পাঠসমূহ (১ম-৫ম)' : 'Lessons (1-5)'}
-              </Link>
-              <Link href={`/${lang}/lessons/subtraction-regrouping`} className="nav-link">
-                {isBn ? 'ভিজ্যুয়াল ল্যাব' : 'Visual Lab'}
-              </Link>
-              <Link href={`/${lang}/login`} className="nav-link nav-demo-badge">
-                <span className="nav-key-icon">🔑</span>
-                <span>{isBn ? 'ডেমো অ্যাকাউন্ট' : 'Demo Login'}</span>
-              </Link>
-            </nav>
-          </div>
-
-          <div className="head-actions">
-            <ModeTypographyToggle lang={lang} />
-            <LangSwitch lang={lang} />
-          </div>
-        </header>
-        <main id="main">{children}</main>
-        <MeridianFooter lang={lang} />
+        <a className="skip" href="#main">{dict[lang].skip}</a>
+        <SceneBackground />
+        {children}
       </body>
     </html>
   );
