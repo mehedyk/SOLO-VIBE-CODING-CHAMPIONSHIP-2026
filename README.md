@@ -11,7 +11,7 @@
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas%20M0-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
 [![Vercel](https://img.shields.io/badge/Vercel-Hobby-000?style=for-the-badge&logo=vercel)](https://vercel.com)
 [![Bangla first](https://img.shields.io/badge/%E0%A6%AC%E0%A6%BE%E0%A6%82%E0%A6%B2%E0%A6%BE-default-fbbf24?style=for-the-badge)](#-bilingual)
-[![Tests](https://img.shields.io/badge/unit-36%20passed-34D399?style=for-the-badge)](TEST_PLAN.md) [![Browser](https://img.shields.io/badge/browser-111%20passed-34D399?style=for-the-badge)](TEST_PLAN.md)
+[![Tests](https://img.shields.io/badge/unit-75%20passed-34D399?style=for-the-badge)](TEST_PLAN.md) [![Browser](https://img.shields.io/badge/browser-111%20passed-34D399?style=for-the-badge)](TEST_PLAN.md)
 [![Cost](https://img.shields.io/badge/cost-%240-0f2a43?style=for-the-badge)](#-free-to-run)
 
 **Teacher-led visual maths lessons for primary school.**
@@ -42,12 +42,13 @@ The engine checks that **the total value never changes during an exchange** acro
 
 | Phase | What | State |
 |:--:|---|:--:|
-| 0 | Inspect, plan, docs | ✅ |
-| 1 | First lesson: exact engine, SVG board, presenter mode, bilingual UI | ✅ |
+| 1 | Base-10 subtraction engine, SVG board, presenter mode, bilingual UI | ✅ |
 | 2 | Catalogue + search/filter/sort, addition lesson, print prep page | ✅ |
-| 3–10 | DB, auth, review, workflow, moderation, deploy | ⬜ see [MASTER_PLAN](MASTER_PLAN.md) |
+| 3–4 | MongoDB Atlas persistence, scrypt auth, SHA-256 HttpOnly sessions, RBAC, audit logs | ✅ |
+| 5–8 | Contributor applications, versioned/hashed authoring, peer review, A07 publish workflow, A03 moderation | ✅ |
+| 9–11 | 7 visual tools, 56 Class 1–5 curriculum chapters, offline HTML slides, CSP/security headers, judge quick-login | ✅ |
 
-The first lesson is **demonstration content**, not claimed as official curriculum alignment.
+All visual lessons and curriculum mappings include demonstration interactive content and printable/offline classroom materials.
 
 ## 📸 Screenshots (synthetic numbers only)
 
@@ -60,15 +61,14 @@ The first lesson is **demonstration content**, not claimed as official curriculu
 </div>
 
 ## ✨ What works now
-- 📚 **Catalogue** with Bangla/English search, topic filter and sorting (works without JavaScript)
-- ➕ **Two lessons** on one shared engine interface: subtraction and addition with regrouping
-- 🖨 **Teacher prep page** (checklist, steps as text, practice lines) that prints cleanly
-- 🧱 Place-value blocks that stay in sync with the numbers, the written method and the explanation
-- 🔮 A **prediction question** before each column, with specific feedback
-- ➗ Exact integer arithmetic; exchanges never change the total value (checked exhaustively)
-- 🎬 Presenter mode, keyboard ← →, full screen, teacher notes you can hide
-- 📝 Text-only view, reduced motion (OS setting + button)
-- 🇧🇩 Bangla by default, English switch, Bangla or English digits accepted
+- 🧮 **Seven interactive visual math tools** across 10 primary topics: Base-10 Subtraction & Addition with regrouping, Dot & Token Counter, Number Line Jumps, Fraction Bars, Multiplication Array Matrix, Decimals & Percentages 100-Grid, and Geoboard Shapes
+- 📚 **Class-by-Class Curriculum & Search (Classes 1–5 · 56 chapters)** integrated directly on the Dashboard and `/lessons` catalogue with Bangla/English search, math-type filters, tool filters, and pre-seeded lab links
+- 📥 **Standalone offline HTML slides** (`/api/slides/[slug]`) + **Teacher prep print sheets** (`/print`) for low-connectivity classrooms
+- 🔮 **Prediction gates & invariant checks** keeping total value unchanged during every exchange (`tests/subtraction.test.ts` & `tests/addition.test.ts`)
+- 🔐 **A03 Security & Access Control**: scrypt passwords, SHA-256 HttpOnly sessions, 5-role RBAC (`student`, `teacher`, `contributor`, `reviewer`, `admin`), ownership checks, instant session revocation on suspension, rate limiting, and MongoDB `audit_logs`
+- ⚙️ **A07 Multi-Step Publication Workflow**: 4-step persisted pipeline (`validate_integrity` → `build_catalogue_index` → `generate_static_snapshot` → `finalize_publication`) with bounded retries and step-level resumption
+- 🎬 **Classroom Presenter Mode** (keyboard ← →, fullscreen, toggleable teacher notes), text-only view, reduced motion, and **Bangla-first** bilingual UI (`bn` / `en`)
+- 🧑‍⚖️ **Judge quick-login**: Set `ENABLE_DEMO_ACCOUNTS=true` to show passwordless one-click login buttons for all 5 roles on `/bn/login` (see [SETUP_GUIDE](SETUP_GUIDE.md))
 
 ## 🌐 Bilingual
 Bangla is the default; English is one switch away. Bangla text uses **Kalpurush**. Numerals follow the interface language (০–৯ / 0–9) and learners may type either. See the font licence caveat in [LIMITATIONS](LIMITATIONS.md).
@@ -79,15 +79,19 @@ Vercel Hobby + MongoDB Atlas M0 + GitHub. **Secrets live only in Vercel Environm
 ## 🏆 Hack the Vibe 2026
 Track: **Educational Problem Solver** · Advanced challenges: **A03** (access control) and **A07** (multi-step workflow). Details and checklist: [SUBMISSION](SUBMISSION.md). Repo: https://github.com/mehedyk/SOLO-VIBE-CODING-CHAMPIONSHIP-2026
 
-## 🚀 Run the tests
+## 🚀 Setup & Tests
+See [SETUP_GUIDE.md](SETUP_GUIDE.md) for MongoDB Atlas M0, `.env.local`, `make-admin`, and Vercel deployment instructions.
+
 ```bash
 npm install
-npm test        # 36 unit tests
-npm run dev     # open http://localhost:3000  (redirects to /bn)
+cp .env.example .env.local   # Add MONGODB_URI, MONGODB_DB=primary_visual_lab, and optional ENABLE_DEMO_ACCOUNTS=true
+npm run typecheck            # Strict TypeScript check
+npm test                     # 75 unit & integration tests
+npm run dev                  # Open http://localhost:3000 (redirects to /bn)
 ```
 Browser checks: see [TEST_PLAN](TEST_PLAN.md).
 
 ## 🗂 Docs
-[MASTER_PLAN](MASTER_PLAN.md) · [TEST_PLAN](TEST_PLAN.md) · [LIMITATIONS](LIMITATIONS.md) · [SUBMISSION](SUBMISSION.md) · [ASSET_PROMPTS](ASSET_PROMPTS.md) (logo / favicon / banner prompts for other AIs)
+[SETUP_GUIDE](SETUP_GUIDE.md) · [DEMO_RUNBOOK](DEMO_RUNBOOK.md) · [SUBMISSION](SUBMISSION.md) · [Architecture PDF](docs/Primary_Visual_Lab_Documentation.pdf) · [MASTER_PLAN](MASTER_PLAN.md) · [TEST_PLAN](TEST_PLAN.md) · [LIMITATIONS](LIMITATIONS.md)
 
 <img src="assets/divider.svg" width="900" alt=""/>

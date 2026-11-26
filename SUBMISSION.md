@@ -16,8 +16,8 @@ Source: the official problem statement PDF supplied by the participant.
 | ID | Marks | Planned evidence | Phase | Status |
 |---|---|---|---|---|
 | M01 Complete system | 12 | 3+ linked modules: lessons/presenter, contributor+review, moderation/admin; end-to-end draft→review→publish→learn→report | 1–9 | ✅ Completed |
-| M02 DB + persistence | 8 | MongoDB Atlas M0 CRUD, relations (lesson↔versions↔reviews↔reports), indexes, offline guest fallback | 3 | ✅ Completed |
-| M03 Auth + authz | 8 | Managed auth, session tokens, PBKDF2 hashing, capabilities, ownership, session revocation | 4 | ✅ Completed |
+| M02 DB + persistence | 8 | MongoDB Atlas M0 CRUD (`users`, `sessions`, `attempts`, `lessons`, `lesson_versions`, `reviews`, `workflows`, `reports`, `applications`, `audit_logs`, `throttle`), indexes, offline guest fallback | 3 | ✅ Completed |
+| M03 Auth + authz | 8 | Scrypt hashing (with automatic PBKDF2 rehash), SHA-256 HttpOnly cookie sessions, 5-role RBAC + ownership checks, IP/email rate limiting, session revocation, opt-in passwordless judge login (`ENABLE_DEMO_ACCOUNTS=true`) | 4 | ✅ Completed |
 | M04 Business logic | 10 | Publication state machine, review rules, application workflow, retry bounds | 5–7 | ✅ Completed |
 | M05 Data processing | 6 | Whitelist search, topic filters, sort, attempt scoring, statistics aggregation | 2, 3, 8 | ✅ Completed |
 | M06 Errors/edge cases | 8 | Input validation (integers, ranges), duplicate actions rejected, workflow failure recovery | 1–8 | ✅ Completed |
@@ -27,9 +27,9 @@ Source: the official problem statement PDF supplied by the participant.
 ## Advanced challenges (20 marks each; total 40 marks)
 - **A03 Advanced Security & Access Control:**
   - Demonstrated: user modifying another user's restricted record is rejected (HTTP 403) and logged to MongoDB `audit_logs` table.
-  - Granular role capability matrix (`guest`, `contributor`, `reviewer`, `admin`).
+  - Granular role capability matrix (`guest`, `student`, `teacher`, `contributor`, `reviewer`, `admin`).
   - Account suspension immediately revokes all active session tokens and blocks subsequent requests.
-  - Verified by `tests/auth.test.ts` and `tests/moderation_a03.test.ts`.
+  - Verified by `tests/auth.test.ts`, `tests/auth-hardening.test.ts`, and `tests/moderation_a03.test.ts`.
 - **A07 Automated Multi-Step Workflow:**
   - Demonstrated: 4-step publication pipeline (`validate_integrity` → `build_catalogue_index` → `generate_static_snapshot` → `finalize_publication`).
   - Intermediate step failure leaves workflow state visibly persisted in DB with detailed error logs.
