@@ -1,7 +1,5 @@
 import { MongoClient, Db } from 'mongodb';
-
-let client: MongoClient | null = null;
-let clientPromise: Promise<MongoClient> | null = null;
+import { ensureIndexes } from './schema';
 
 // In-memory collection fallback for offline/test environments without Atlas connection
 class MemoryCollection {
@@ -119,43 +117,43 @@ class MemoryDb {
 
 const memoryDbInstance = new MemoryDb();
 
+const isProd = () => process.env.NODE_ENV === 'production';
+
+/**
+ * Where data lives:
+ *  - MONGODB_URI set  -> MongoDB Atlas (indexes are created once per process).
+ *  - not set, dev/test -> in-memory store (data resets on restart).
+ *  - not set, production -> hard error. Serverless instances do not share memory, so a silent in-memory
+ *    fallback would make accounts and sessions vanish at random. Set ALLOW_MEMORY_DB=true to override for a demo.
+ */
 export async function getDb(): Promise<Db | any> {
   const uri = process.env.MONGODB_URI;
   if (!uri) {
+    if (isProd() && process.env.ALLOW_MEMORY_DB !== 'true') {
+      throw new Error('DATABASE_NOT_CONFIGURED: set MONGODB_URI in the environment variables.');
+    }
     return memoryDbInstance;
   }
 
-  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
-    // In dev and test, use global cache to preserve client across HMR
-    const globalWithMongo = global as typeof globalThis & {
-      _mongoClientPromise?: Promise<MongoClient>;
-    };
+  const g = global as typeof globalThis & {
+    _pvlMongo?: { promise: Promise<MongoClient>; indexed?: Promise<void> };
+  };
 
-    if (!globalWithMongo._mongoClientPromise) {
-      client = new MongoClient(uri);
-      globalWithMongo._mongoClientPromise = client.connect().catch((err) => {
-        console.warn('MongoDB connection failed, falling back to offline memory store:', err.message);
-        return null as any;
-      });
-    }
-    clientPromise = globalWithMongo._mongoClientPromise;
-  } else {
-    if (!clientPromise) {
-      client = new MongoClient(uri);
-      clientPromise = client.connect().catch((err) => {
-        console.warn('MongoDB connection failed, falling back to offline memory store:', err.message);
-        return null as any;
-      });
-    }
+  if (!g._pvlMongo) {
+    const c = new MongoClient(uri, { serverSelectionTimeoutMS: 8000, maxPoolSize: 10 });
+    g._pvlMongo = { promise: c.connect() };
   }
 
   try {
-    const connectedClient = await clientPromise;
-    if (!connectedClient) {
-      return memoryDbInstance;
-    }
-    return connectedClient.db(process.env.MONGODB_DB_NAME || 'primary_visual_lab');
-  } catch {
+    const connected = await g._pvlMongo.promise;
+    const db = connected.db(process.env.MONGODB_DB || process.env.MONGODB_DB_NAME || 'primary_visual_lab');
+    g._pvlMongo.indexed ??= ensureIndexes(db);
+    await g._pvlMongo.indexed;
+    return db;
+  } catch (err: any) {
+    g._pvlMongo = undefined; // do not cache a failed connection; the next request retries
+    if (isProd()) throw new Error(`DATABASE_UNAVAILABLE: ${err?.message ?? 'connection failed'}`);
+    console.warn('MongoDB connection failed, using the in-memory store for this dev run:', err?.message);
     return memoryDbInstance;
   }
 }
