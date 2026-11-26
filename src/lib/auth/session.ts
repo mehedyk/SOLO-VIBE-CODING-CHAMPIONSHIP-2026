@@ -1,66 +1,58 @@
 import crypto from 'node:crypto';
 import { getDb } from '../db/client';
 import { SessionDoc, UserDoc } from '../db/schema';
+import { newId } from '../util/id';
+import { SESSION_MAX_AGE_SECONDS } from './cookies';
 
-const SESSION_DURATION_HOURS = 24;
+export function hashToken(token: string): string {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
 
+/** Creates a server-side session. The returned `token` is shown once (set it as a cookie); only its hash is stored. */
 export async function createSession(
   userId: string,
   metadata?: { userAgent?: string; ip?: string }
-): Promise<SessionDoc> {
+): Promise<SessionDoc & { token: string }> {
   const db = await getDb();
-  const token = crypto.randomBytes(32).toString('hex');
+  const token = crypto.randomBytes(32).toString('base64url');
   const now = new Date();
-  const expires = new Date(now.getTime() + SESSION_DURATION_HOURS * 60 * 60 * 1000);
+  const expires = new Date(now.getTime() + SESSION_MAX_AGE_SECONDS * 1000);
 
   const doc: SessionDoc = {
-    id: 'ses_' + Math.random().toString(36).substring(2, 11),
+    id: newId('ses'),
     userId,
-    token,
+    tokenHash: hashToken(token),
     expiresAt: expires.toISOString(),
     revoked: false,
-    userAgent: metadata?.userAgent,
+    userAgent: metadata?.userAgent?.slice(0, 300),
     ip: metadata?.ip,
     createdAt: now.toISOString(),
   };
 
   await db.collection('sessions').insertOne(doc);
-  return doc;
+  return { ...doc, token };
 }
 
 export async function validateSession(token: string): Promise<{ valid: boolean; user: UserDoc | null; reason?: string }> {
-  if (!token) return { valid: false, user: null, reason: 'NO_TOKEN' };
+  if (!token || token.length > 200) return { valid: false, user: null, reason: 'NO_TOKEN' };
 
   const db = await getDb();
-  const session: SessionDoc | null = await db.collection('sessions').findOne({ token });
+  const session: SessionDoc | null = await db.collection('sessions').findOne({ tokenHash: hashToken(token) });
 
-  if (!session) {
-    return { valid: false, user: null, reason: 'SESSION_NOT_FOUND' };
-  }
-
-  if (session.revoked) {
-    return { valid: false, user: null, reason: 'SESSION_REVOKED' };
-  }
-
-  if (new Date(session.expiresAt) < new Date()) {
-    return { valid: false, user: null, reason: 'SESSION_EXPIRED' };
-  }
+  if (!session) return { valid: false, user: null, reason: 'SESSION_NOT_FOUND' };
+  if (session.revoked) return { valid: false, user: null, reason: 'SESSION_REVOKED' };
+  if (new Date(session.expiresAt) < new Date()) return { valid: false, user: null, reason: 'SESSION_EXPIRED' };
 
   const user: UserDoc | null = await db.collection('users').findOne({ id: session.userId });
-  if (!user) {
-    return { valid: false, user: null, reason: 'USER_NOT_FOUND' };
-  }
-
-  if (user.status === 'suspended') {
-    return { valid: false, user, reason: 'USER_SUSPENDED' };
-  }
+  if (!user) return { valid: false, user: null, reason: 'USER_NOT_FOUND' };
+  if (user.status === 'suspended') return { valid: false, user, reason: 'USER_SUSPENDED' };
 
   return { valid: true, user };
 }
 
 export async function revokeSession(token: string): Promise<boolean> {
   const db = await getDb();
-  const res = await db.collection('sessions').updateOne({ token }, { $set: { revoked: true } });
+  const res = await db.collection('sessions').updateOne({ tokenHash: hashToken(token) }, { $set: { revoked: true } });
   return res.modifiedCount > 0;
 }
 
