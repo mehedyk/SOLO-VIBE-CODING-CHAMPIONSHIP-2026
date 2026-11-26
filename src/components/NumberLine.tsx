@@ -8,6 +8,7 @@ interface NumberLineProps {
   width?: number;
   height?: number;
   interactive?: boolean;
+  lang?: 'bn' | 'en';
 }
 
 export function NumberLine({
@@ -15,6 +16,7 @@ export function NumberLine({
   width = 720,
   height = 220,
   interactive = true,
+  lang = 'bn',
 }: NumberLineProps) {
   const [start, setStart] = useState<number>(4);
   const [jump, setJump] = useState<number>(7);
@@ -52,7 +54,7 @@ export function NumberLine({
         <div className="numberline-interactive-controls">
           <div className="nl-control-item">
             <label>
-              শুরুর অবস্থান (Start): <strong>{start}</strong>
+              {lang === 'bn' ? 'শুরুর অবস্থান' : 'Start'}: <strong>{start}</strong>
               <input
                 type="range"
                 min={0}
@@ -65,7 +67,7 @@ export function NumberLine({
 
           <div className="nl-control-item">
             <label>
-              লাফের পরিমাণ (Jump Step): <strong>{jump}</strong>
+              {lang === 'bn' ? 'লাফের পরিমাণ' : 'Jump size'}: <strong>{jump}</strong>
               <input
                 type="range"
                 min={1}
@@ -82,14 +84,14 @@ export function NumberLine({
               onClick={() => setOp('+')}
               className={`btn ${op === '+' ? 'primary' : 'ghost'}`}
             >
-              + ডানদিকে লাফ (Add)
+              {lang === 'bn' ? '+ ডানদিকে লাফ (যোগ)' : '+ Jump right (add)'}
             </button>
             <button
               type="button"
               onClick={() => setOp('−')}
               className={`btn ${op === '−' ? 'primary' : 'ghost'}`}
             >
-              − বামদিকে পিছানো (Subtract)
+              {lang === 'bn' ? '− বামদিকে পিছানো (বিয়োগ)' : '− Jump left (subtract)'}
             </button>
           </div>
         </div>
@@ -206,8 +208,8 @@ export function NumberLine({
       <div className="nl-equation-display">
         <span>
           {activeOp === '+'
-            ? `💡 সমীকরণ: ${activeStart} + ${activeJump} = ${activeTarget} (ডানদিকে ${activeJump} ঘর দূরত্বে লাফ)`
-            : `💡 সমীকরণ: ${activeStart} − ${activeJump} = ${activeTarget} (বামদিকে ${activeJump} ঘর দূরত্বে পিছানো)`}
+            ? (lang === 'bn' ? `💡 সমীকরণ: ${activeStart} + ${activeJump} = ${activeTarget} (ডানদিকে ${activeJump} ঘর দূরত্বে লাফ)` : `💡 Equation: ${activeStart} + ${activeJump} = ${activeTarget} (jump ${activeJump} steps right)`)
+            : (lang === 'bn' ? `💡 সমীকরণ: ${activeStart} − ${activeJump} = ${activeTarget} (বামদিকে ${activeJump} ঘর দূরত্বে পিছানো)` : `💡 Equation: ${activeStart} − ${activeJump} = ${activeTarget} (jump ${activeJump} steps left)`)}
         </span>
       </div>
     </div>
