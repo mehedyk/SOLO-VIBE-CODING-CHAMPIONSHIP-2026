@@ -38,7 +38,24 @@ export default function LessonLab({ lang, mode, slug }: { lang: Lang; mode: Mode
     const step = steps[idx]!;
   const prev = idx > 0 ? steps[idx - 1] : undefined;
 
-  const resetFlow = useCallback(() => { setIdx(0); setDone(new Set()); setAsk(null); setPred(null); }, []);
+  // Prediction answers, kept so a finished run can be saved to the learner's dashboard.
+  const log = useRef<{ place: string; prediction: boolean; correct: boolean }[]>([]);
+  const savedKey = useRef("");
+  const resetFlow = useCallback(() => { setIdx(0); setDone(new Set()); setAsk(null); setPred(null); log.current = []; }, []);
+
+  // Reaching the last step of a run saves one attempt (once per set of numbers). Identity comes from the session cookie.
+  useEffect(() => {
+    if (mode !== "student" || !check.ok || idx !== steps.length - 1) return;
+    const key = `${slug}:${nums.m}:${nums.s}`;
+    if (savedKey.current === key) return;
+    savedKey.current = key;
+    const l = log.current;
+    const correct = l.filter((x) => x.correct).length;
+    void fetch("/api/attempts", {
+      method: "POST", headers: { "content-type": "application/json" }, credentials: "same-origin",
+      body: JSON.stringify({ lessonSlug: slug, inputs: { first: nums.m, second: nums.s }, completedSteps: steps.length, totalSteps: steps.length, score: l.length ? Math.round((100 * correct) / l.length) : 100, predictions: l }),
+    }).catch(() => undefined);
+  }, [idx, steps, nums, slug, mode, check.ok]);
 
   useEffect(() => {
     if (check.ok && (check.m !== nums.m || check.s !== nums.s)) { setNums({ m: check.m, s: check.s }); resetFlow(); }
@@ -66,6 +83,7 @@ export default function LessonLab({ lang, mode, slug }: { lang: Lang; mode: Mode
 
   const finishPrediction = () => {
     if (ask === null) return;
+    if (pred) log.current.push({ place: String(ask), prediction: pred.choice, correct: pred.correct });
     setDone((s) => new Set(s).add(ask));
     setAsk(null); setPred(null); setIdx((i) => i + 1);
   };
