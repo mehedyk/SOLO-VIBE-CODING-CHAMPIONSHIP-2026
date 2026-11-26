@@ -12,7 +12,7 @@ import { dict, fill, noteText, unitName, type Lang } from "../lib/i18n/dict";
 type Mode = "student" | "present";
 type Place = 0 | 1 | 2;
 
-export default function LessonLab({ lang, mode, slug }: { lang: Lang; mode: Mode; slug: string }) {
+export default function LessonLab({ lang, mode, slug, initialNums }: { lang: Lang; mode: Mode; slug: string; initialNums?: [number, number] }) {
   const d = dict[lang];
   const meta = findLesson(slug);
   if (!meta) throw new Error("unknown lesson");
@@ -21,9 +21,10 @@ export default function LessonLab({ lang, mode, slug }: { lang: Lang; mode: Mode
   const f = (n: number) => formatInt(n, lang);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const [mStr, setMStr] = useState(String(eng.defaults[0]));
-  const [sStr, setSStr] = useState(String(eng.defaults[1]));
-  const [nums, setNums] = useState({ m: eng.defaults[0], s: eng.defaults[1] });
+  const seed = initialNums ?? eng.defaults;
+  const [mStr, setMStr] = useState(String(seed[0]));
+  const [sStr, setSStr] = useState(String(seed[1]));
+  const [nums, setNums] = useState({ m: seed[0], s: seed[1] });
   const [idx, setIdx] = useState(0);
   const [done, setDone] = useState<Set<number>>(new Set());
   const [ask, setAsk] = useState<Place | null>(null);
