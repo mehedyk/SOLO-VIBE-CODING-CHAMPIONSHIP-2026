@@ -4,15 +4,16 @@ import React, { useState } from 'react';
 import { Lang } from '../lib/i18n/dict';
 import { formatInt } from '../lib/math/numerals';
 
-interface GeoboardProps {
-  lang: Lang;
-}
-
 type ShapeType = 'square' | 'triangle' | 'rectangle';
 
-export function GeoboardShapes({ lang }: GeoboardProps) {
+interface GeoboardProps {
+  lang: Lang;
+  initialShape?: ShapeType;
+}
+
+export function GeoboardShapes({ lang, initialShape = 'rectangle' }: GeoboardProps) {
   const isBn = lang === 'bn';
-  const [shape, setShape] = useState<ShapeType>('rectangle');
+  const [shape, setShape] = useState<ShapeType>(initialShape);
 
   const shapes = {
     square: {
