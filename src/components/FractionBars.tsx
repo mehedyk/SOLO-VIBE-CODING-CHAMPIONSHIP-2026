@@ -8,6 +8,7 @@ interface FractionBarsProps {
   width?: number;
   height?: number;
   interactive?: boolean;
+  lang?: 'bn' | 'en';
 }
 
 export function FractionBars({
@@ -15,6 +16,7 @@ export function FractionBars({
   width = 680,
   height = 240,
   interactive = true,
+  lang = 'bn',
 }: FractionBarsProps) {
   const [num1, setNum1] = useState(1);
   const [den1, setDen1] = useState(2);
@@ -41,11 +43,11 @@ export function FractionBars({
         <div className="fraction-interactive-controls">
           <div className="fraction-control-group">
             <span className="fraction-group-title" style={{ color: '#38bdf8' }}>
-              প্রথম ভগ্নাংশ (Fraction 1):
+              {lang === 'bn' ? 'প্রথম ভগ্নাংশ:' : 'First fraction:'}
             </span>
             <div className="fraction-inputs-row">
               <label>
-                লব: <strong>{num1}</strong>
+                {lang === 'bn' ? 'লব' : 'Numerator'}: <strong>{num1}</strong>
                 <input
                   type="range"
                   min={1}
@@ -55,7 +57,7 @@ export function FractionBars({
                 />
               </label>
               <label>
-                হর: <strong>{den1}</strong>
+                {lang === 'bn' ? 'হর' : 'Denominator'}: <strong>{den1}</strong>
                 <input
                   type="range"
                   min={2}
@@ -77,7 +79,7 @@ export function FractionBars({
             </span>
             <div className="fraction-inputs-row">
               <label>
-                লব: <strong>{num2}</strong>
+                {lang === 'bn' ? 'লব' : 'Numerator'}: <strong>{num2}</strong>
                 <input
                   type="range"
                   min={1}
@@ -87,7 +89,7 @@ export function FractionBars({
                 />
               </label>
               <label>
-                হর: <strong>{den2}</strong>
+                {lang === 'bn' ? 'হর' : 'Denominator'}: <strong>{den2}</strong>
                 <input
                   type="range"
                   min={2}
@@ -208,7 +210,7 @@ export function FractionBars({
       <div className={`fraction-feedback-banner ${isEquivalent ? 'equiv-ok' : 'equiv-no'}`}>
         <span>
           {isEquivalent
-            ? `✓ সমতুল্য প্রমাণ: ${currentBars[0]?.label} = ${currentBars[1]?.label} (উভয় ভগ্নাংশ একই দৈর্ঘ্য নির্দেশ করে)`
+            ? (lang === 'bn' ? `✓ সমতুল্য প্রমাণ: ${currentBars[0]?.label} = ${currentBars[1]?.label} (উভয় ভগ্নাংশ একই দৈর্ঘ্য নির্দেশ করে)` : `✓ Equivalent: ${currentBars[0]?.label} = ${currentBars[1]?.label} (both bars have the same length)`)
             : `≠ অসমান: ${currentBars[0]?.label} এবং ${currentBars[1]?.label} এর দৈর্ঘ্য এক নয়`}
         </span>
       </div>
