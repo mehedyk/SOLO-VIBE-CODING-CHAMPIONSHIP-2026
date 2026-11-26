@@ -1,12 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { findChapterBySlug, NCTB_CURRICULUM } from '@/lib/curriculum/nctb';
+import { findChapterBySlug } from '@/lib/curriculum/nctb';
+import { currentUserFromRequest } from '@/lib/auth/guard';
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  // Offline slide decks are for signed-in users only.
+  const user = await currentUserFromRequest(req);
+  if (!user) return NextResponse.json({ error: 'UNAUTHENTICATED' }, { status: 401 });
+
   const { slug } = await params;
-  const chapter = findChapterBySlug(slug) || NCTB_CURRICULUM[0]!;
+  // Unknown slugs used to silently return chapter 1; that hid broken links. Now they are a real 404.
+  const chapter = findChapterBySlug(slug);
+  if (!chapter) return NextResponse.json({ error: 'NOT_FOUND' }, { status: 404 });
 
   const htmlContent = `<!DOCTYPE html>
 <html lang="bn">
