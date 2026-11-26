@@ -51,7 +51,7 @@ export function DecimalsGrid({ lang, initialFilled = 65 }: DecimalsGridProps) {
         <div className="slider-box" style={{ width: '100%' }}>
           <label htmlFor="fill-range">
             {isBn ? '১০০-র মধ্যে নির্বাচিত ঘর:' : 'Selected units out of 100:'}{' '}
-            <strong>{formatInt(filled, lang)} / ১০০</strong>
+            <strong>{formatInt(filled, lang)} / {formatInt(100, lang)}</strong>
           </label>
           <input
             id="fill-range"
