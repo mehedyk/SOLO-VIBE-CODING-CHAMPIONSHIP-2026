@@ -2,6 +2,7 @@ import { getDb } from '../db/client';
 import { LessonDoc, WorkflowDoc, UserDoc } from '../db/schema';
 import { hasCapability } from '../auth/roles';
 import { logAuditEvent } from '../auth/audit';
+import { newId } from '../util/id';
 
 const PUBLISH_STEPS = [
   'validate_integrity',
@@ -38,7 +39,7 @@ export async function startPublicationWorkflow(
 
   const now = new Date().toISOString();
   const workflowDoc: WorkflowDoc = {
-    id: 'wf_' + Math.random().toString(36).substring(2, 11),
+    id: newId('wf'),
     type: 'publish_lesson',
     targetId: lessonId,
     status: 'pending',
