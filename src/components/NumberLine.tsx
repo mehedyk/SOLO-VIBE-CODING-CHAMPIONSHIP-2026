@@ -9,6 +9,9 @@ interface NumberLineProps {
   height?: number;
   interactive?: boolean;
   lang?: 'bn' | 'en';
+  initialStart?: number;
+  initialJump?: number;
+  initialOp?: '+' | '−';
 }
 
 export function NumberLine({
@@ -17,10 +20,13 @@ export function NumberLine({
   height = 220,
   interactive = true,
   lang = 'bn',
+  initialStart = 4,
+  initialJump = 7,
+  initialOp = '+',
 }: NumberLineProps) {
-  const [start, setStart] = useState<number>(4);
-  const [jump, setJump] = useState<number>(7);
-  const [op, setOp] = useState<'+' | '−'>('+');
+  const [start, setStart] = useState<number>(initialStart);
+  const [jump, setJump] = useState<number>(initialJump);
+  const [op, setOp] = useState<'+' | '−'>(initialOp);
 
   const activeMin = propStep ? propStep.min : 0;
   const activeMax = propStep ? propStep.max : 20;
