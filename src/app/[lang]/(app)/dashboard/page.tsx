@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Icon from '@/components/Icon';
 import ApplyForm from '@/components/dashboard/ApplyForm';
+import CurriculumExplorer from '@/components/dashboard/CurriculumExplorer';
 import { requireUser } from '@/lib/auth/current';
 import { getDb } from '@/lib/db/client';
 import { getAttemptsByUser } from '@/lib/db/attempts';
@@ -96,10 +97,12 @@ export default async function Dashboard({ params }: { params: Promise<{ lang: st
           <h2>{t.suggested}</h2>
           <ul className="quick">
             {LESSONS.map((l) => <li key={l.slug}><Link href={L(`/lessons/${l.slug}`)}><span>{lessonText(l, lang).title}<small>{lessonText(l, lang).objective?.slice(0, 80)}…</small></span><Icon name="right" /></Link></li>)}
-            {s.labs.items.filter((i) => i.href.startsWith('/manipulatives')).slice(0, 4).map((i) => <li key={i.slug}><Link href={L(i.href)}><span>{i.name}<small>{i.cls}</small></span><Icon name="right" /></Link></li>)}
+            {s.labs.items.filter((i) => i.href.startsWith('/manipulatives')).map((i) => <li key={i.slug}><Link href={L(i.href)}><span>{i.name}<small>{i.cls}</small></span><Icon name="right" /></Link></li>)}
           </ul>
         </section>
       </div>
+
+      <CurriculumExplorer lang={lang} isTeacher={isTeacher} />
 
       {(user.role === 'contributor' || user.role === 'reviewer') && <p><Link className="btn btn-navy" href={L('/dashboard/author')}><Icon name="pen" />{s.nav.author}</Link></p>}
       {user.role === 'admin' && <p><Link className="btn btn-navy" href={L('/dashboard/admin')}><Icon name="shield" />{s.nav.admin}</Link></p>}
