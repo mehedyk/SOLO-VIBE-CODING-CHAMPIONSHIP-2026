@@ -1,5 +1,6 @@
 import { getDb } from '../db/client';
 import { AuditLogDoc } from '../db/schema';
+import { newId } from '../util/id';
 
 export async function logAuditEvent(entry: {
   action: string;
@@ -13,7 +14,7 @@ export async function logAuditEvent(entry: {
 }): Promise<AuditLogDoc> {
   const db = await getDb();
   const doc: AuditLogDoc = {
-    id: 'aud_' + Math.random().toString(36).substring(2, 11),
+    id: newId('aud'),
     ...entry,
     timestamp: new Date().toISOString(),
   };
