@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authorizeRequest } from '@/lib/auth/guard';
 import { reviewApplication } from '@/lib/applications/service';
+import { apiError } from '@/lib/http';
 
 export async function POST(
   req: NextRequest,
@@ -27,6 +28,6 @@ export async function POST(
     if (err.message === 'APPLICATION_ALREADY_DECIDED') {
       return NextResponse.json({ error: 'ALREADY_DECIDED' }, { status: 409 });
     }
-    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+    return apiError(500, 'SERVER_ERROR', undefined, err);
   }
 }
