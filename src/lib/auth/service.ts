@@ -1,21 +1,9 @@
-import crypto from 'node:crypto';
 import { getDb } from '../db/client';
 import { UserDoc, UserRole, UserStatus } from '../db/schema';
 import { revokeAllUserSessions } from './session';
+import { burnPasswordCheck, hashPassword, verifyPassword } from './password';
 import { logAuditEvent } from './audit';
-
-function hashPassword(password: string): string {
-  const salt = crypto.randomBytes(16).toString('hex');
-  const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
-  return `${salt}:${hash}`;
-}
-
-function verifyPassword(password: string, storedHash: string): boolean {
-  const [salt, key] = storedHash.split(':');
-  if (!salt || !key) return false;
-  const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
-  return key === hash;
-}
+import { newId } from '../util/id';
 
 export async function createUser(data: {
   email: string;
@@ -24,55 +12,76 @@ export async function createUser(data: {
   role?: UserRole;
 }): Promise<UserDoc> {
   const db = await getDb();
-  const existing = await db.collection('users').findOne({ email: data.email.toLowerCase() });
+  const email = data.email.trim().toLowerCase();
+  const existing = await db.collection('users').findOne({ email });
   if (existing) {
     throw new Error('USER_ALREADY_EXISTS');
   }
 
   const now = new Date().toISOString();
   const doc: UserDoc = {
-    id: 'usr_' + Math.random().toString(36).substring(2, 11),
-    email: data.email.toLowerCase(),
-    name: data.name,
+    id: newId('usr'),
+    email,
+    name: data.name.trim(),
     role: data.role || 'guest',
     status: 'active',
-    passwordHash: data.password ? hashPassword(data.password) : undefined,
+    passwordHash: data.password ? await hashPassword(data.password) : undefined,
     createdAt: now,
     updatedAt: now,
   };
 
-  await db.collection('users').insertOne(doc);
+  try {
+    await db.collection('users').insertOne(doc);
+  } catch (err: any) {
+    // Unique index on users.email: two sign-ups racing for the same address.
+    if (err?.code === 11000) throw new Error('USER_ALREADY_EXISTS');
+    throw err;
+  }
   return doc;
 }
 
-const DEMO_ACCOUNTS: Record<string, { name: string; role: UserRole }> = {
-  'student@primarylab.org': { name: 'Demo Student (আকাশ)', role: 'student' },
-  'teacher@primarylab.org': { name: 'Demo Teacher (রাহিমা খানম)', role: 'teacher' },
-  'author@primarylab.org': { name: 'Demo Author (তানভীর আহমেদ)', role: 'contributor' },
-  'admin@primarylab.org': { name: 'Demo Admin (সিস্টেম অ্যাডমিন)', role: 'admin' },
-};
-
+/** Returns the user when the email/password pair is valid, otherwise null. Never reveals which part was wrong. */
 export async function authenticateUser(email: string, password: string): Promise<UserDoc | null> {
   const db = await getDb();
-  let user: UserDoc | null = await db.collection('users').findOne({ email: email.toLowerCase() });
+  const user: UserDoc | null = await db.collection('users').findOne({ email: email.trim().toLowerCase() });
 
-  // Auto-provision standard demo accounts on first login
-  if (!user && DEMO_ACCOUNTS[email.toLowerCase()] && password === 'demo1234') {
-    const info = DEMO_ACCOUNTS[email.toLowerCase()]!;
-    user = await createUser({
-      email: email.toLowerCase(),
-      name: info.name,
-      role: info.role,
-      password: 'demo1234',
-    });
+  if (!user || !user.passwordHash) {
+    await burnPasswordCheck(password); // same cost as a real check, so timing does not reveal valid emails
+    return null;
   }
 
-  if (!user || !user.passwordHash) return null;
+  const { ok, needsRehash } = await verifyPassword(password, user.passwordHash);
+  if (!ok) return null;
 
-  const valid = verifyPassword(password, user.passwordHash);
-  if (!valid) return null;
+  const patch: Partial<UserDoc> = { lastLoginAt: new Date().toISOString() };
+  if (needsRehash) patch.passwordHash = await hashPassword(password);
+  await db.collection('users').updateOne({ id: user.id }, { $set: patch });
 
-  return user;
+  return { ...user, ...patch };
+}
+
+// ── Optional demo accounts ──────────────────────────────────────────────────────────────────
+// Off by default. When ENABLE_DEMO_ACCOUNTS=true the login page shows one-click role buttons for judges.
+// These accounts have no password at all, so there is no credential anyone can guess or look up.
+export const DEMO_ROLES: Record<string, { name: string; role: UserRole }> = {
+  student: { name: 'Demo Student', role: 'student' },
+  teacher: { name: 'Demo Teacher', role: 'teacher' },
+  contributor: { name: 'Demo Author', role: 'contributor' },
+  admin: { name: 'Demo Admin', role: 'admin' },
+};
+
+export function demoAccountsEnabled(): boolean {
+  return process.env.ENABLE_DEMO_ACCOUNTS === 'true';
+}
+
+export async function getOrCreateDemoUser(roleKey: string): Promise<UserDoc | null> {
+  const info = DEMO_ROLES[roleKey];
+  if (!info) return null;
+  const db = await getDb();
+  const email = `demo-${roleKey}@demo.invalid`;
+  const existing: UserDoc | null = await db.collection('users').findOne({ email });
+  if (existing) return existing.status === 'suspended' ? null : existing;
+  return createUser({ email, name: info.name, role: info.role }); // no password => cannot be used to sign in normally
 }
 
 export async function suspendUser(adminId: string, targetUserId: string, reason: string): Promise<UserDoc> {
