@@ -2,9 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   NCTB_CURRICULUM,
+  CURRICULUM_MANIPULATIVES,
+  CURRICULUM_TOPICS,
+  TOPIC_LABELS,
+  VISUAL_TOOLS,
+  chapterInteractiveHref,
+  curriculumFacetCounts,
+  filterChapters,
   getChaptersByGrade,
   findChapterBySlug,
-  type NCTBChapter,
+  parseCurriculumQuery,
 } from '../src/lib/curriculum/nctb';
 
 test('NCTB Primary Mathematics Curriculum (Classes 1-5): covers all 56 chapters', () => {
@@ -104,4 +111,53 @@ test('NCTB Curriculum: findChapterBySlug correctly resolves all 56 slugs', () =>
   }
 
   assert.equal(findChapterBySlug('non-existent-slug'), undefined);
+});
+
+test('VISUAL_TOOLS covers all 7 manipulatives and valid routes', () => {
+  const covered = new Set(VISUAL_TOOLS.map((t) => t.manipulative));
+  for (const m of CURRICULUM_MANIPULATIVES) {
+    assert.equal(covered.has(m), true, `Missing visual tool for ${m}`);
+  }
+  for (const tp of CURRICULUM_TOPICS) {
+    assert.ok(TOPIC_LABELS[tp].bn.length > 0 && TOPIC_LABELS[tp].en.length > 0, tp);
+  }
+  for (const t of VISUAL_TOOLS) {
+    assert.ok(t.href.startsWith('/'));
+    assert.ok(t.titleBn.length > 0 && t.titleEn.length > 0);
+  }
+});
+
+test('Curriculum filtering, Bangla/English search, and query whitelist work across 56 chapters', () => {
+  const safe = parseCurriculumQuery({
+    grade: '99',
+    topic: '$ne',
+    tool: 'bad_tool',
+    sort: 'DROP',
+    q: 'x'.repeat(200),
+  });
+  assert.equal(safe.grade, undefined);
+  assert.equal(safe.topic, '');
+  assert.equal(safe.manipulative, '');
+  assert.equal(safe.sort, 'order');
+  assert.equal(safe.q.length, 80);
+
+  const g4Fractions = filterChapters(parseCurriculumQuery({ grade: '4', topic: 'fractions' }), 'en');
+  assert.ok(g4Fractions.length > 0);
+  assert.ok(g4Fractions.every((c) => c.grade === 4 && c.topic === 'fractions'));
+
+  const bnQuery = filterChapters(parseCurriculumQuery({ q: 'ভগ্নাংশ' }), 'en');
+  assert.ok(bnQuery.length > 0);
+  assert.ok(bnQuery.some((c) => c.topic === 'fractions'));
+
+  const digitQuery = filterChapters(parseCurriculumQuery({ q: 'শ্রেণি ৩' }), 'bn');
+  assert.ok(digitQuery.length > 0);
+  assert.ok(digitQuery.some((c) => c.grade === 3));
+
+  const facets = curriculumFacetCounts();
+  let gradeTotal = 0;
+  for (const count of facets.grades.values()) gradeTotal += count;
+  assert.equal(gradeTotal, 56);
+
+  const sample = NCTB_CURRICULUM[0]!;
+  assert.equal(chapterInteractiveHref(sample, 'bn'), `/bn${sample.interactiveRoute}?chapter=${encodeURIComponent(sample.slug)}`);
 });
