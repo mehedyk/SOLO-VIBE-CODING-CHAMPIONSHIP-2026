@@ -1,6 +1,7 @@
 import { getDb } from '../db/client';
 import { ContributorApplicationDoc, UserDoc } from '../db/schema';
 import { logAuditEvent } from '../auth/audit';
+import { newId } from '../util/id';
 
 export async function submitApplication(
   user: UserDoc,
@@ -23,7 +24,7 @@ export async function submitApplication(
 
   const now = new Date().toISOString();
   const doc: ContributorApplicationDoc = {
-    id: 'app_' + Math.random().toString(36).substring(2, 11),
+    id: newId('app'),
     userId: user.id,
     userEmail: user.email,
     userName: user.name,
