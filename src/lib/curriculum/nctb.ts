@@ -1004,3 +1004,277 @@ export function getChaptersByGrade(grade?: number): NCTBChapter[] {
 export function findChapterBySlug(slug: string): NCTBChapter | undefined {
   return NCTB_CURRICULUM.find((c) => c.slug === slug);
 }
+
+export type CurriculumTopic = NCTBChapter['topic'];
+export type CurriculumManipulative = NCTBChapter['manipulative'];
+export type CurriculumSort = 'order' | 'title' | 'topic' | 'grade';
+
+export const CURRICULUM_TOPICS: readonly CurriculumTopic[] = [
+  'counting',
+  'addition',
+  'subtraction',
+  'multiplication',
+  'division',
+  'fractions',
+  'decimals',
+  'measurement',
+  'geometry',
+  'statistics',
+] as const;
+
+export const CURRICULUM_MANIPULATIVES: readonly CurriculumManipulative[] = [
+  'base10',
+  'counting_dots',
+  'number_line',
+  'fraction_bars',
+  'multiplication_grid',
+  'decimals_grid',
+  'geoboard',
+] as const;
+
+export const CURRICULUM_SORTS: readonly CurriculumSort[] = ['order', 'title', 'topic', 'grade'] as const;
+
+export const TOPIC_LABELS: Record<CurriculumTopic, { bn: string; en: string }> = {
+  counting: { bn: 'গণনা ও সংখ্যা', en: 'Counting & Numbers' },
+  addition: { bn: 'যোগ', en: 'Addition' },
+  subtraction: { bn: 'বিয়োগ', en: 'Subtraction' },
+  multiplication: { bn: 'গুণ', en: 'Multiplication' },
+  division: { bn: 'ভাগ', en: 'Division' },
+  fractions: { bn: 'ভগ্নাংশ', en: 'Fractions' },
+  decimals: { bn: 'দশমিক', en: 'Decimals' },
+  measurement: { bn: 'পরিমাপ ও মুদ্রা', en: 'Measurement & Money' },
+  geometry: { bn: 'জ্যামিতি', en: 'Geometry' },
+  statistics: { bn: 'শতকরা ও পরিসংখ্যান', en: 'Percentages & Data' },
+};
+
+export const MANIPULATIVE_LABELS: Record<CurriculumManipulative, { bn: string; en: string }> = {
+  base10: { bn: 'বেস-১০ ব্লক', en: 'Base-10 Blocks' },
+  counting_dots: { bn: 'ডট কাউন্টার', en: 'Dot Counter' },
+  number_line: { bn: 'সংখ্যারেখা', en: 'Number Line' },
+  fraction_bars: { bn: 'ভগ্নাংশ বার', en: 'Fraction Bars' },
+  multiplication_grid: { bn: 'নামতা ম্যাট্রিক্স', en: 'Multiplication Array' },
+  decimals_grid: { bn: 'দশমিক গ্রিড', en: 'Decimals Grid' },
+  geoboard: { bn: 'জিওবোর্ড জ্যামিতি', en: 'Geoboard' },
+};
+
+export interface VisualToolInfo {
+  id: string;
+  manipulative: CurriculumManipulative;
+  href: string;
+  titleBn: string;
+  titleEn: string;
+  descBn: string;
+  descEn: string;
+  gradeRangeBn: string;
+  gradeRangeEn: string;
+  topics: readonly CurriculumTopic[];
+  badgeColor: 'mint' | 'amber' | 'sky';
+  lessonSlug?: string;
+}
+
+export const VISUAL_TOOLS: readonly VisualToolInfo[] = [
+  {
+    id: 'base10-sub',
+    manipulative: 'base10',
+    href: '/lessons/subtraction-regrouping',
+    titleBn: 'হাতে নিয়ে বিয়োগ (বেস-১০ ব্লক)',
+    titleEn: 'Subtraction with Regrouping (Base-10)',
+    descBn: 'একটি দশক ভেঙে ১০টি এককে নিয়ে মোট মান স্থির রেখে বিয়োগ দেখুন।',
+    descEn: 'Unbundle 1 ten into 10 ones with prediction gates and written method.',
+    gradeRangeBn: '১ম–৪র্থ শ্রেণি',
+    gradeRangeEn: 'Class 1–4',
+    topics: ['subtraction', 'counting'],
+    badgeColor: 'mint',
+    lessonSlug: 'subtraction-regrouping',
+  },
+  {
+    id: 'base10-add',
+    manipulative: 'base10',
+    href: '/lessons/addition-regrouping',
+    titleBn: 'হাতে রেখে যোগ (বেস-১০ ব্লক)',
+    titleEn: 'Addition with Regrouping (Base-10)',
+    descBn: '১০টি একক জোড়া দিয়ে ১টি নতুন দশক রড তৈরি ও হাতে রাখা দেখুন।',
+    descEn: 'Bundle 10 ones into 1 ten rod and follow the column carrying.',
+    gradeRangeBn: '১ম–৪র্থ শ্রেণি',
+    gradeRangeEn: 'Class 1–4',
+    topics: ['addition', 'counting'],
+    badgeColor: 'mint',
+    lessonSlug: 'addition-regrouping',
+  },
+  {
+    id: 'counting-dots',
+    manipulative: 'counting_dots',
+    href: '/manipulatives/counting',
+    titleBn: 'ডট ও টোকেন কাউন্টার',
+    titleEn: 'Dot & Token Counter',
+    descBn: 'ডট যোগ-বিয়োগ করে জোড়-বিজোড় সংখ্যা ও তুলনা শিখুন।',
+    descEn: 'Add, remove, and pair dot tokens to see even, odd, and comparison.',
+    gradeRangeBn: '১ম–২য়, ৫ম শ্রেণি',
+    gradeRangeEn: 'Class 1–2, 5',
+    topics: ['counting', 'measurement', 'statistics'],
+    badgeColor: 'sky',
+  },
+  {
+    id: 'number-line',
+    manipulative: 'number_line',
+    href: '/manipulatives/numberline',
+    titleBn: 'সংখ্যারেখা ও লাফের স্কেল',
+    titleEn: 'Number Line Jumps',
+    descBn: 'ডানে-বামে লাফিয়ে যোগ, বিয়োগ, ক্রম, সময়-দূরত্ব ও সমীকরণ দেখুন।',
+    descEn: 'Jump forward and back to model addition, subtraction, order, and gaps.',
+    gradeRangeBn: '১ম–৫ম শ্রেণি',
+    gradeRangeEn: 'Class 1–5',
+    topics: ['addition', 'subtraction', 'counting', 'measurement', 'statistics'],
+    badgeColor: 'amber',
+  },
+  {
+    id: 'fraction-bars',
+    manipulative: 'fraction_bars',
+    href: '/manipulatives/fractions',
+    titleBn: 'ভগ্নাংশ বার ও সমতুল্যতা',
+    titleEn: 'Fraction Bars & Equivalence',
+    descBn: 'লব ও হর বদলে ভগ্নাংশের অংশ ও সমতুল্যতা (১/২ = ২/৪) পাশাপাশি মিলিয়ে দেখুন।',
+    descEn: 'Partition two bars side-by-side to test and prove equivalent fractions.',
+    gradeRangeBn: '২য়–৫ম শ্রেণি',
+    gradeRangeEn: 'Class 2–5',
+    topics: ['fractions'],
+    badgeColor: 'sky',
+  },
+  {
+    id: 'multiplication-grid',
+    manipulative: 'multiplication_grid',
+    href: '/manipulatives/multiplication',
+    titleBn: 'নামতা ও গুণন ম্যাট্রিক্স',
+    titleEn: 'Multiplication Array Matrix',
+    descBn: 'সারি × কলামের গ্রিড দিয়ে গুণ, ভাগ, গুণনীয়ক ও ঐকিক নিয়ম দেখুন।',
+    descEn: 'Explore rows × columns, repeated addition, division, and factors.',
+    gradeRangeBn: '২য়–৫ম শ্রেণি',
+    gradeRangeEn: 'Class 2–5',
+    topics: ['multiplication', 'division'],
+    badgeColor: 'amber',
+  },
+  {
+    id: 'decimals-grid',
+    manipulative: 'decimals_grid',
+    href: '/manipulatives/decimals',
+    titleBn: 'দশমিক ও শতকরা ১০০-গ্রিড',
+    titleEn: 'Decimals & Percentages 100-Grid',
+    descBn: '১০০টি ঘরের গ্রিডে দশমিক, ভগ্নাংশ (n/১০০) ও শতকরা (%) একসাথে দেখুন।',
+    descEn: 'Shade squares in a 100-grid linking decimals, n/100, and percentages.',
+    gradeRangeBn: '৪র্থ–৫ম শ্রেণি',
+    gradeRangeEn: 'Class 4–5',
+    topics: ['decimals', 'statistics'],
+    badgeColor: 'mint',
+  },
+  {
+    id: 'geoboard',
+    manipulative: 'geoboard',
+    href: '/manipulatives/geometry',
+    titleBn: 'জিওবোর্ড ও জ্যামিতিক আকৃতি',
+    titleEn: 'Geoboard & Shapes',
+    descBn: 'বর্গ, আয়ত ও ত্রিভুজের বাহু, কোণ, পরিসীমা ও ক্ষেত্রফল দেখুন।',
+    descEn: 'Build squares, rectangles, and triangles with live area and perimeter.',
+    gradeRangeBn: '১ম–৫ম শ্রেণি',
+    gradeRangeEn: 'Class 1–5',
+    topics: ['geometry', 'measurement'],
+    badgeColor: 'sky',
+  },
+] as const;
+
+export interface CurriculumQuery {
+  q: string;
+  grade?: 1 | 2 | 3 | 4 | 5;
+  topic: CurriculumTopic | '';
+  manipulative: CurriculumManipulative | '';
+  sort: CurriculumSort;
+}
+
+const BN_TO_ASCII = (s: string) => s.replace(/[০-৯]/g, (d) => String('০১২৩৪৫৬৭৮৯'.indexOf(d)));
+const normCurriculum = (s: string) => BN_TO_ASCII(s).toLowerCase().normalize('NFC').replace(/\s+/g, ' ').trim();
+
+export function parseCurriculumQuery(raw: Record<string, string | string[] | undefined>): CurriculumQuery {
+  const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? '';
+  const q = one(raw.q).slice(0, 80);
+  const gNum = Number.parseInt(one(raw.grade), 10);
+  const grade = gNum >= 1 && gNum <= 5 ? (gNum as 1 | 2 | 3 | 4 | 5) : undefined;
+  const topicRaw = one(raw.topic);
+  const toolRaw = one(raw.tool) || one(raw.manipulative);
+  const sortRaw = one(raw.sort);
+  return {
+    q,
+    grade,
+    topic: (CURRICULUM_TOPICS as readonly string[]).includes(topicRaw) ? (topicRaw as CurriculumTopic) : '',
+    manipulative: (CURRICULUM_MANIPULATIVES as readonly string[]).includes(toolRaw)
+      ? (toolRaw as CurriculumManipulative)
+      : '',
+    sort: (CURRICULUM_SORTS as readonly string[]).includes(sortRaw) ? (sortRaw as CurriculumSort) : 'order',
+  };
+}
+
+function chapterHaystack(ch: NCTBChapter): string {
+  const tLbl = TOPIC_LABELS[ch.topic];
+  const mLbl = MANIPULATIVE_LABELS[ch.manipulative];
+  return normCurriculum(
+    [
+      ch.titleBn,
+      ch.titleEn,
+      ch.objectiveBn,
+      ch.objectiveEn,
+      ch.summaryBn,
+      ch.summaryEn,
+      ch.topic,
+      tLbl.bn,
+      tLbl.en,
+      mLbl.bn,
+      mLbl.en,
+      `class ${ch.grade}`,
+      `grade ${ch.grade}`,
+      `${ch.grade}ম শ্রেণি`,
+      `chapter ${ch.chapterNumber}`,
+      `অধ্যায় ${ch.chapterNumber}`,
+      `অধ্যায় ${ch.chapterNumber}`,
+    ].join(' ')
+  );
+}
+
+export function filterChapters(query: CurriculumQuery, lang: 'bn' | 'en'): NCTBChapter[] {
+  const tokens = normCurriculum(query.q).split(' ').filter(Boolean);
+  const filtered = NCTB_CURRICULUM.filter((ch) => {
+    if (query.grade && ch.grade !== query.grade) return false;
+    if (query.topic && ch.topic !== query.topic) return false;
+    if (query.manipulative && ch.manipulative !== query.manipulative) return false;
+    if (tokens.length > 0) {
+      const hay = chapterHaystack(ch);
+      if (!tokens.every((tok) => hay.includes(tok))) return false;
+    }
+    return true;
+  });
+
+  if (query.sort === 'order') return filtered;
+
+  const collator = new Intl.Collator(lang === 'bn' ? 'bn' : 'en');
+  const title = (c: NCTBChapter) => (lang === 'bn' ? c.titleBn : c.titleEn);
+  const topic = (c: NCTBChapter) => TOPIC_LABELS[c.topic][lang];
+
+  return [...filtered].sort((a, b) => {
+    if (query.sort === 'grade') return a.grade - b.grade || a.chapterNumber - b.chapterNumber;
+    if (query.sort === 'topic') return collator.compare(topic(a), topic(b)) || a.grade - b.grade || a.chapterNumber - b.chapterNumber;
+    return collator.compare(title(a), title(b));
+  });
+}
+
+export function curriculumFacetCounts(all: readonly NCTBChapter[] = NCTB_CURRICULUM) {
+  const topics = new Map<CurriculumTopic, number>();
+  const manipulatives = new Map<CurriculumManipulative, number>();
+  const grades = new Map<number, number>();
+  for (const ch of all) {
+    topics.set(ch.topic, (topics.get(ch.topic) ?? 0) + 1);
+    manipulatives.set(ch.manipulative, (manipulatives.get(ch.manipulative) ?? 0) + 1);
+    grades.set(ch.grade, (grades.get(ch.grade) ?? 0) + 1);
+  }
+  return { topics, manipulatives, grades };
+}
+
+export function chapterInteractiveHref(ch: NCTBChapter, lang: 'bn' | 'en'): string {
+  return `/${lang}${ch.interactiveRoute}?chapter=${encodeURIComponent(ch.slug)}`;
+}
