@@ -3,6 +3,7 @@ import { getDb } from '../db/client';
 import { LessonDoc, LessonVersionDoc, ReviewDoc, UserDoc } from '../db/schema';
 import { hasCapability } from '../auth/roles';
 import { logAuditEvent } from '../auth/audit';
+import { newId } from '../util/id';
 
 export function computeContentHash(data: any): string {
   const str = typeof data === 'string' ? data : JSON.stringify(data, Object.keys(data).sort());
@@ -85,7 +86,7 @@ export async function createLesson(
   });
 
   const now = new Date().toISOString();
-  const lessonId = 'les_' + Math.random().toString(36).substring(2, 11);
+  const lessonId = newId('les');
 
   const lessonDoc: LessonDoc = {
     id: lessonId,
@@ -105,7 +106,7 @@ export async function createLesson(
   };
 
   const versionDoc: LessonVersionDoc = {
-    id: 'ver_' + Math.random().toString(36).substring(2, 11),
+    id: newId('ver'),
     lessonId,
     version: 1,
     data: payload.data,
@@ -182,7 +183,7 @@ export async function updateLesson(
   const now = new Date().toISOString();
 
   const versionDoc: LessonVersionDoc = {
-    id: 'ver_' + Math.random().toString(36).substring(2, 11),
+    id: newId('ver'),
     lessonId,
     version: nextVersion,
     data: merged.data,
@@ -279,7 +280,7 @@ export async function reviewLesson(
 
   const now = new Date().toISOString();
   const reviewDoc: ReviewDoc = {
-    id: 'rev_' + Math.random().toString(36).substring(2, 11),
+    id: newId('rev'),
     lessonId,
     version: lesson.version,
     reviewerId: reviewer.id,
