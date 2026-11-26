@@ -5,11 +5,13 @@ import type { Metadata } from 'next';
 import { isLang, LANGS, type Lang } from '@/lib/i18n/dict';
 import { CountingDots } from '@/components/CountingDots';
 import Icon from '@/components/Icon';
+import ChapterBanner from '@/components/ChapterBanner';
 import { NumberLine } from '@/components/NumberLine';
 import { FractionBars } from '@/components/FractionBars';
 import { MultiplicationGrid } from '@/components/MultiplicationGrid';
 import { DecimalsGrid } from '@/components/DecimalsGrid';
 import { GeoboardShapes } from '@/components/GeoboardShapes';
+import { findChapterBySlug } from '@/lib/curriculum/nctb';
 
 const SLUGS = ['counting', 'numberline', 'fractions', 'multiplication', 'decimals', 'geometry'] as const;
 type ManipulativeSlug = (typeof SLUGS)[number];
@@ -45,14 +47,38 @@ const LAB_NAMES: Record<string, { bn: string; en: string }> = {
   multiplication: { bn: 'গুণ', en: 'Multiplication' }, decimals: { bn: 'দশমিক', en: 'Decimals' }, geometry: { bn: 'জ্যামিতি', en: 'Geometry' },
 };
 
+const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
+
 export default async function ManipulativePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ lang: string; slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { lang, slug } = await params;
   if (!isLang(lang) || !SLUGS.includes(slug as ManipulativeSlug)) notFound();
   const isBn = lang === 'bn';
+  const sp = await searchParams;
+  const chapterSlug = typeof sp.chapter === 'string' ? sp.chapter : undefined;
+  const chapter = chapterSlug ? findChapterBySlug(chapterSlug) : undefined;
+  const [d0, d1] = chapter?.demoNumbers ?? [0, 0];
+
+  const nlOp: '+' | '−' = chapter?.topic === 'subtraction' ? '−' : '+';
+  const nlStart = chapter ? clamp(d0, 0, 15) : 4;
+  const nlJump = chapter ? clamp(d1 || 1, 1, 10) : 7;
+
+  const den1 = chapter ? clamp(d1 >= 2 ? d1 : 4, 2, 12) : 2;
+  const num1 = chapter ? clamp(d0 >= 1 ? d0 : 1, 1, den1) : 1;
+  const den2 = chapter ? (den1 * 2 <= 12 ? den1 * 2 : den1) : 4;
+  const num2 = chapter ? (den2 === den1 ? num1 : Math.min(den2, num1 * 2)) : 2;
+
+  const geoText = chapter ? `${chapter.titleEn} ${chapter.titleBn}` : '';
+  const geoShape: 'square' | 'triangle' | 'rectangle' = /triangle|ত্রিভুজ|area/i.test(geoText)
+    ? 'triangle'
+    : /square|বর্গ/i.test(geoText)
+      ? 'square'
+      : 'rectangle';
 
   return (
     <div className="manipulative-page-wrap">
@@ -61,6 +87,12 @@ export default async function ManipulativePage({
           <Icon name="left" />{isBn ? 'সকল পাঠ' : 'All lessons'}
         </Link>
         <div className="manipulative-quick-nav">
+          <Link href={`/${lang}/lessons/subtraction-regrouping`} className="quick-pill">
+            {isBn ? 'বিয়োগ ব্লক' : 'Subtraction'}
+          </Link>
+          <Link href={`/${lang}/lessons/addition-regrouping`} className="quick-pill">
+            {isBn ? 'যোগ ব্লক' : 'Addition'}
+          </Link>
           {SLUGS.map((s) => (
             <Link
               key={s}
@@ -73,8 +105,10 @@ export default async function ManipulativePage({
         </div>
       </div>
 
+      {chapter && <ChapterBanner chapter={chapter} lang={lang} />}
+
       <div className="manipulative-container">
-        {slug === 'counting' && <CountingDots lang={lang as Lang} />}
+        {slug === 'counting' && <CountingDots lang={lang as Lang} initialCount={chapter ? clamp(d0, 1, 20) : 7} />}
         {slug === 'numberline' && (
           <div className="manipulative-card">
             <div className="manipulative-header">
@@ -87,7 +121,7 @@ export default async function ManipulativePage({
                 </p>
               </div>
             </div>
-            <NumberLine interactive={true} lang={lang as Lang} />
+            <NumberLine interactive={true} lang={lang as Lang} initialStart={nlStart} initialJump={nlJump} initialOp={nlOp} />
           </div>
         )}
         {slug === 'fractions' && (
@@ -102,12 +136,23 @@ export default async function ManipulativePage({
                 </p>
               </div>
             </div>
-            <FractionBars interactive={true} lang={lang as Lang} />
+            <FractionBars interactive={true} lang={lang as Lang} initialNum1={num1} initialDen1={den1} initialNum2={num2} initialDen2={den2} />
           </div>
         )}
-        {slug === 'multiplication' && <MultiplicationGrid lang={lang as Lang} />}
-        {slug === 'decimals' && <DecimalsGrid lang={lang as Lang} />}
-        {slug === 'geometry' && <GeoboardShapes lang={lang as Lang} />}
+        {slug === 'multiplication' && (
+          <MultiplicationGrid
+            lang={lang as Lang}
+            initialRows={chapter ? clamp(d0, 1, 10) : 4}
+            initialCols={chapter ? clamp(d1, 1, 10) : 6}
+          />
+        )}
+        {slug === 'decimals' && (
+          <DecimalsGrid
+            lang={lang as Lang}
+            initialFilled={chapter ? clamp(d0 <= 100 ? d0 : 50, 0, 100) : 65}
+          />
+        )}
+        {slug === 'geometry' && <GeoboardShapes lang={lang as Lang} initialShape={geoShape} />}
       </div>
     </div>
   );
