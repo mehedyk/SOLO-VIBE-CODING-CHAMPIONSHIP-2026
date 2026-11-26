@@ -1,5 +1,6 @@
 import { getDb } from '../db/client';
 import { UserDoc, UserRole, UserStatus } from '../db/schema';
+import type { DemoRoleKey } from './roles';
 import { revokeAllUserSessions } from './session';
 import { burnPasswordCheck, hashPassword, verifyPassword } from './password';
 import { logAuditEvent } from './audit';
@@ -63,25 +64,41 @@ export async function authenticateUser(email: string, password: string): Promise
 // ── Optional demo accounts ──────────────────────────────────────────────────────────────────
 // Off by default. When ENABLE_DEMO_ACCOUNTS=true the login page shows one-click role buttons for judges.
 // These accounts have no password at all, so there is no credential anyone can guess or look up.
-export const DEMO_ROLES: Record<string, { name: string; role: UserRole }> = {
+export const DEMO_ROLES: Record<DemoRoleKey, { name: string; role: UserRole }> = Object.freeze({
   student: { name: 'Demo Student', role: 'student' },
   teacher: { name: 'Demo Teacher', role: 'teacher' },
   contributor: { name: 'Demo Author', role: 'contributor' },
+  reviewer: { name: 'Demo Reviewer', role: 'reviewer' },
   admin: { name: 'Demo Admin', role: 'admin' },
-};
+});
 
 export function demoAccountsEnabled(): boolean {
   return process.env.ENABLE_DEMO_ACCOUNTS === 'true';
 }
 
 export async function getOrCreateDemoUser(roleKey: string): Promise<UserDoc | null> {
-  const info = DEMO_ROLES[roleKey];
-  if (!info) return null;
+  if (!demoAccountsEnabled()) return null;
+  if (!Object.hasOwn(DEMO_ROLES, roleKey)) return null;
+  const info = DEMO_ROLES[roleKey as DemoRoleKey];
   const db = await getDb();
   const email = `demo-${roleKey}@demo.invalid`;
   const existing: UserDoc | null = await db.collection('users').findOne({ email });
-  if (existing) return existing.status === 'suspended' ? null : existing;
-  return createUser({ email, name: info.name, role: info.role }); // no password => cannot be used to sign in normally
+  if (existing) {
+    // Demo sign-in must never attach to an account that has a password credential.
+    if (existing.passwordHash) return null;
+    const now = new Date().toISOString();
+    await db.collection('users').updateOne({ id: existing.id }, { $set: { lastLoginAt: now } });
+    return { ...existing, lastLoginAt: now };
+  }
+  try {
+    return await createUser({ email, name: info.name, role: info.role }); // no password => cannot be used to sign in normally
+  } catch (err: any) {
+    if (err?.message === 'USER_ALREADY_EXISTS') {
+      const raced: UserDoc | null = await db.collection('users').findOne({ email });
+      return raced && !raced.passwordHash ? raced : null;
+    }
+    throw err;
+  }
 }
 
 export async function suspendUser(adminId: string, targetUserId: string, reason: string): Promise<UserDoc> {

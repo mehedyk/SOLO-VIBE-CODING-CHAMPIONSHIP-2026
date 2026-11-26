@@ -8,6 +8,8 @@ import { safeNextPath } from '@/lib/auth/validation';
 import { isLang } from '@/lib/i18n/dict';
 import { site } from '@/lib/i18n/site';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLang(lang)) return {};

@@ -16,7 +16,7 @@ export interface Site {
     name: string; email: string; password: string; show: string; hide: string; role: string;
     student: string; studentD: string; teacher: string; teacherD: string;
     loginBtn: string; signupBtn: string; loading: string; noAccount: string; haveAccount: string;
-    pitchTitle: string; pitch: string[]; expired: string; demoTitle: string;
+    pitchTitle: string; pitch: string[]; expired: string; demoTitle: string; demoNote: string;
     pwHelp: string; strength: string[];
     err: Record<string, string>;
   };
@@ -88,6 +88,7 @@ const en: Site = {
     pitchTitle: 'Maths you can see.',
     pitch: ['Break a ten into ones and watch the total stay the same', 'Prove 1/2 = 2/4 by cutting bars', 'Present in class or practise at home'],
     expired: 'Your session ended. Please log in again.', demoTitle: 'Judges: try a role without a password',
+    demoNote: 'One-click passwordless sessions for evaluation. Disable via ENABLE_DEMO_ACCOUNTS after judging.',
     pwHelp: 'At least 8 characters, mixing letters and numbers.', strength: ['Too weak', 'Weak', 'Good', 'Strong'],
     err: {
       INVALID_CREDENTIALS: 'That email and password don’t match.', TOO_MANY_ATTEMPTS: 'Too many tries. Wait a few minutes and try again.', USER_SUSPENDED: 'This account has been suspended.',
@@ -165,6 +166,7 @@ const bn: Site = {
     pitchTitle: 'চোখে দেখা গণিত।',
     pitch: ['দশককে এককে ভাঙুন, আর দেখুন মোট মান একই থাকে', 'বার কেটে প্রমাণ করুন ১/২ = ২/৪', 'ক্লাসে উপস্থাপন করুন বা বাড়িতে অনুশীলন করুন'],
     expired: 'আপনার সেশন শেষ হয়েছে। আবার লগইন করুন।', demoTitle: 'বিচারকদের জন্য: পাসওয়ার্ড ছাড়াই একটি ভূমিকা দেখুন',
+    demoNote: 'মূল্যায়নের জন্য পাসওয়ার্ডবিহীন এক-ক্লিক সেশন। বিচার শেষে ENABLE_DEMO_ACCOUNTS বন্ধ করুন।',
     pwHelp: 'কমপক্ষে ৮ অক্ষর, অক্ষর ও সংখ্যা মিশিয়ে।', strength: ['খুব দুর্বল', 'দুর্বল', 'ভালো', 'শক্তিশালী'],
     err: {
       INVALID_CREDENTIALS: 'ইমেইল ও পাসওয়ার্ড মিলছে না।', TOO_MANY_ATTEMPTS: 'অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পর আবার চেষ্টা করুন।', USER_SUSPENDED: 'এই অ্যাকাউন্টটি স্থগিত করা হয়েছে।',

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { site } from '../lib/i18n/site';
+import { DEMO_ROLE_KEYS } from '../lib/auth/roles';
 import type { Lang } from '../lib/i18n/dict';
 
 type Mode = 'login' | 'signup';
@@ -113,9 +114,10 @@ export default function AuthForm({ lang, mode, next, expired, demoEnabled, initi
       {demoEnabled && !isSignup && (
         <div className="demo-box">
           <h3>{t.demoTitle}</h3>
+          <p className="field-hint" style={{ marginBottom: '.6rem' }}>{t.demoNote}</p>
           <div className="demo-row">
-            {(['student', 'teacher', 'contributor', 'admin'] as const).map((r) => (
-              <button key={r} type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={() => void post('/api/auth/demo', { role: r, lang, next })}>{site[lang].app.roleName[r]}</button>
+            {DEMO_ROLE_KEYS.map((r) => (
+              <button key={r} type="button" className="btn btn-ghost btn-sm" title={`demo-${r}@demo.invalid`} disabled={busy} onClick={() => void post('/api/auth/demo', { role: r, lang, next })}>{site[lang].app.roleName[r]}</button>
             ))}
           </div>
         </div>

@@ -1,5 +1,8 @@
 import { UserDoc, UserRole } from '../db/schema';
 
+export const DEMO_ROLE_KEYS = ['student', 'teacher', 'contributor', 'reviewer', 'admin'] as const;
+export type DemoRoleKey = (typeof DEMO_ROLE_KEYS)[number];
+
 export type Capability =
   | 'lesson:read'
   | 'lesson:create'

@@ -58,7 +58,7 @@ Normal path for authors: a user applies from their dashboard, and you approve it
 4. **Deploy.** Open the site, sign up, then run `make-admin` locally against the same `MONGODB_URI` (your `.env.local`) to promote yourself.
 
 ### For the judges
-Add `ENABLE_DEMO_ACCOUNTS` = `true` in Vercel and redeploy. The login page then shows one-click Student / Teacher / Author / Admin buttons. These accounts have **no password**, so there is nothing to leak. **Remove the variable after judging** and redeploy: the buttons disappear and the endpoint returns 404.
+Add `ENABLE_DEMO_ACCOUNTS` = `true` in Vercel and redeploy. The login page then shows one-click Student / Teacher / Author / Reviewer / Admin buttons. These accounts have **no password**, so there is nothing to leak. **Remove the variable after judging** and redeploy: the buttons disappear and the endpoint returns 404.
 
 ## 5. Check it works
 

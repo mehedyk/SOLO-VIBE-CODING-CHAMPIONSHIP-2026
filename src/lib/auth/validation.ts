@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { PASSWORD_MAX, PASSWORD_MIN } from './password';
+import { DEMO_ROLE_KEYS } from './roles';
 
 export const SELF_SERVICE_ROLES = ['student', 'teacher'] as const;
 
@@ -23,8 +24,15 @@ export const registerSchema = z.object({
   role: z.enum(SELF_SERVICE_ROLES).default('student'),
 });
 
+export const demoLoginSchema = z.object({
+  role: z.enum(DEMO_ROLE_KEYS),
+  lang: z.enum(['bn', 'en']).optional(),
+  next: z.string().max(300).optional(),
+});
+
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
+export type DemoLoginInput = z.infer<typeof demoLoginSchema>;
 
 /**
  * Only ever redirect to a same-site, language-prefixed path. Blocks open redirects such as
