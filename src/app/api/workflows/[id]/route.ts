@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { authorizeRequest } from '@/lib/auth/guard';
 import { getWorkflow } from '@/lib/workflow/publisher';
+import { apiError } from '@/lib/http';
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await authorizeRequest(req, 'lesson:publish', { resourceType: 'workflow' });
+    if (!auth.allowed) return apiError(auth.status || 403, auth.error || 'FORBIDDEN');
+
     const { id } = await params;
     const workflow = await getWorkflow(id);
     if (!workflow) {
@@ -13,6 +18,6 @@ export async function GET(
     }
     return NextResponse.json({ workflow });
   } catch (err: any) {
-    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+    return apiError(500, 'SERVER_ERROR', undefined, err);
   }
 }
