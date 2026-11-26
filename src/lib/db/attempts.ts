@@ -1,11 +1,12 @@
 import { getDb } from './client';
 import { AttemptDoc } from './schema';
+import { newId } from '../util/id';
 
 export async function saveAttempt(attempt: Omit<AttemptDoc, 'id' | 'completedAt'> & { id?: string; completedAt?: string }): Promise<AttemptDoc> {
   const db = await getDb();
   const doc: AttemptDoc = {
     ...attempt,
-    id: attempt.id || 'att_' + Math.random().toString(36).substring(2, 11),
+    id: attempt.id || newId('att'),
     completedAt: attempt.completedAt || new Date().toISOString(),
   };
 
