@@ -1,34 +1,65 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateUser } from '@/lib/auth/service';
 import { createSession } from '@/lib/auth/session';
+import { setSessionCookie } from '@/lib/auth/cookies';
+import { loginSchema, safeNextPath } from '@/lib/auth/validation';
+import { checkThrottle, clientIp, isSameOrigin, recordHit, resetThrottle } from '@/lib/auth/throttle';
+import { logAuditEvent } from '@/lib/auth/audit';
+import { toPublicUser } from '@/lib/auth/current';
+import { apiError } from '@/lib/http';
+
+const WINDOW = 15 * 60 * 1000;
+const MAX_PER_EMAIL = 5;
+const MAX_PER_IP = 30;
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json();
-    if (!email || !password) {
-      return NextResponse.json({ error: 'MISSING_CREDENTIALS', message: 'Email and password required' }, { status: 400 });
+    if (!isSameOrigin(req.headers)) return apiError(403, 'CROSS_SITE_REQUEST_BLOCKED');
+
+    const parsed = loginSchema.safeParse(await req.json().catch(() => null));
+    if (!parsed.success) return apiError(400, 'INVALID_INPUT');
+    const { email, password, next } = parsed.data;
+
+    const ip = clientIp(req.headers);
+    const emailKey = `login:email:${email}`;
+    const ipKey = `login:ip:${ip}`;
+
+    for (const key of [emailKey, ipKey]) {
+      const state = await checkThrottle(key);
+      if (state.limited) {
+        const res = apiError(429, 'TOO_MANY_ATTEMPTS', { retryAfterSec: state.retryAfterSec });
+        res.headers.set('Retry-After', String(state.retryAfterSec));
+        return res;
+      }
     }
 
     const user = await authenticateUser(email, password);
     if (!user) {
-      return NextResponse.json({ error: 'INVALID_CREDENTIALS', message: 'Invalid email or password' }, { status: 401 });
+      await recordHit(emailKey, MAX_PER_EMAIL, WINDOW);
+      await recordHit(ipKey, MAX_PER_IP, WINDOW);
+      return apiError(401, 'INVALID_CREDENTIALS');
     }
 
     if (user.status === 'suspended') {
-      return NextResponse.json({ error: 'USER_SUSPENDED', message: 'Your account has been suspended' }, { status: 403 });
+      await logAuditEvent({ action: 'LOGIN_BLOCKED_SUSPENDED', actorId: user.id, targetResource: 'user', targetId: user.id, allowed: false, reason: 'USER_SUSPENDED', ip });
+      return apiError(403, 'USER_SUSPENDED');
     }
 
-    const userAgent = req.headers.get('user-agent') || undefined;
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || undefined;
+    await resetThrottle(emailKey);
+    const session = await createSession(user.id, { userAgent: req.headers.get('user-agent') || undefined, ip });
+    const lang = req.headers.get('x-lang') === 'en' ? 'en' : 'bn';
 
-    const session = await createSession(user.id, { userAgent, ip });
-    return NextResponse.json({
+    const res = NextResponse.json({
       success: true,
-      user: { id: user.id, email: user.email, name: user.name, role: user.role, status: user.status },
-      token: session.token,
+      user: toPublicUser(user),
+      redirectTo: safeNextPath(next, lang),
       expiresAt: session.expiresAt,
+      // `token` stays in the body only so scripts/tests can use `Authorization: Bearer`; browsers rely on the HttpOnly cookie.
+      token: session.token,
     });
-  } catch (err: any) {
-    return NextResponse.json({ error: 'SERVER_ERROR', message: err.message }, { status: 500 });
+    setSessionCookie(res, session.token);
+    return res;
+  } catch (err) {
+    return apiError(500, 'SERVER_ERROR', undefined, err);
   }
 }
