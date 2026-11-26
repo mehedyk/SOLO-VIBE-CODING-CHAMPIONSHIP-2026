@@ -1,0 +1,41 @@
+/* ───────── Tokens ─────────
+   Palette comes from the logo: navy ink, mint ten-rod, amber unit squares. Everything else is neutral. */
+@font-face { font-family: "Kalpurush"; src: url("/fonts/Kalpurush.ttf") format("truetype"); font-display: swap; }
+
+:root {
+  --navy: #0f2a43; --navy-2: #163b5c;
+  --mint: #34d399; --mint-deep: #047857;
+  --amber: #fbbf24; --amber-deep: #92400e;
+  --sky: #38bdf8; --rose: #e11d48;
+
+  --ink: #0f2a43; --ink-2: #3a4e63; --ink-3: #5b6e82;
+  --glass: rgba(255,255,255,.80); --glass-strong: rgba(255,255,255,.92);
+  --line: rgba(15,42,67,.16); --line-soft: rgba(15,42,67,.09);
+  --hover: rgba(15,42,67,.06);
+  --focus: #1d4ed8;
+  --shadow: 0 24px 60px -28px rgba(8,24,40,.55), 0 2px 6px rgba(8,24,40,.08);
+
+  /* names the lab styles still use */
+  --green: #14532d; --bg: #eef5ee; --card: rgba(255,255,255,.93); --muted: #4b5b6b;
+  --bad: #9b1c1c; --ok: #14532d;
+
+  --font-display: "Bricolage Grotesque Variable", "Lexend Variable", system-ui, sans-serif;
+  --font-en: "Lexend Variable", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-bn: "Kalpurush", "Noto Sans Bengali", "Nirmala UI", sans-serif;
+  --r-sm: 10px; --r-md: 16px; --r-lg: 28px;
+  --head-h: 68px;
+}
+
+html.dark {
+  --ink: #eaf3fa; --ink-2: #b5c7d6; --ink-3: #8ba3b6;
+  --glass: rgba(8,20,33,.74); --glass-strong: rgba(8,20,33,.88);
+  --line: rgba(255,255,255,.18); --line-soft: rgba(255,255,255,.09);
+  --hover: rgba(255,255,255,.07);
+  --focus: #7dd3fc;
+  --mint-deep: #6ee7b7; --amber-deep: #fcd34d;
+  --bg: #0b1826; --muted: #9db2c4;
+  --shadow: 0 24px 60px -28px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,.3);
+}
+
+/* Student mode: rounder and bigger. Teacher mode (default): compact and formal. */
+html[data-mode="student"] { --r-sm: 14px; --r-md: 22px; --r-lg: 34px; font-size: 19px; }
