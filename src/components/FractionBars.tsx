@@ -9,6 +9,10 @@ interface FractionBarsProps {
   height?: number;
   interactive?: boolean;
   lang?: 'bn' | 'en';
+  initialNum1?: number;
+  initialDen1?: number;
+  initialNum2?: number;
+  initialDen2?: number;
 }
 
 export function FractionBars({
@@ -17,11 +21,15 @@ export function FractionBars({
   height = 240,
   interactive = true,
   lang = 'bn',
+  initialNum1 = 1,
+  initialDen1 = 2,
+  initialNum2 = 2,
+  initialDen2 = 4,
 }: FractionBarsProps) {
-  const [num1, setNum1] = useState(1);
-  const [den1, setDen1] = useState(2);
-  const [num2, setNum2] = useState(2);
-  const [den2, setDen2] = useState(4);
+  const [num1, setNum1] = useState(initialNum1);
+  const [den1, setDen1] = useState(initialDen1);
+  const [num2, setNum2] = useState(initialNum2);
+  const [den2, setDen2] = useState(initialDen2);
 
   const isEquivalent = propStep ? propStep.equivalent : num1 * den2 === num2 * den1;
 
