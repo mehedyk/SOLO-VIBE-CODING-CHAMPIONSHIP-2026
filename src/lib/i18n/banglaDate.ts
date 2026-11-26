@@ -32,11 +32,11 @@ export function getAcademicDate(lang: Lang, now = new Date()): FormattedDate {
     const monthName = BN_MONTHS[monthIndex];
     const dayBn = formatInt(dayNum, 'bn');
     const yearBn = formatInt(year, 'bn');
-    const banglaYear = formatInt(year - 593, 'bn');
+    const banglaYear = formatInt(monthIndex > 3 || (monthIndex === 3 && dayNum >= 14) ? year - 593 : year - 594, 'bn');
 
     return {
       dateStr: `${dayName}, ${dayBn} ${monthName} ${yearBn}`,
-      banglaYearStr: `১৪৩৩ বঙ্গাব্দ`,
+      banglaYearStr: `${banglaYear} বঙ্গাব্দ`,
       termNotice: `২০২৬ শিক্ষাবর্ষ · ১ম–৫ম শ্রেণি জাতীয় শিক্ষাক্রম (NCTB) অনুমোদিত ল্যাব`,
     };
   }
